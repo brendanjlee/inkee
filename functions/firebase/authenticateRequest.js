@@ -1,3 +1,4 @@
+// TODO: IMPLEMENT WHEN POSSIBLE.
 const validateFirebaseIdToken = async (req, res, next) => {
   functions.logger.log('Check if request is authorized with Firebase ID token');
 
