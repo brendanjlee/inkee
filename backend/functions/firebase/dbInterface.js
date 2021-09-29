@@ -1,23 +1,12 @@
 const admin = require("./firebase");
-const gameInit = require('../classes/gameSettings');
-const usersInit = require('../classes/users');
-
-/**
- * Returns game_id reference from database.
- *
- * @param {string} gameId the game_id string.
- * @return {string} the path reference of the game associated with game_id.
- */
-function getGameReference(gameId) {
-  return admin.database().ref('games').child(gameId);
-}
+const invites = require('../classes/invites');
 
 /**
  * Creates a game object in the backend and returns the game_id.
  * 
  * @param {Object} userInfo the user object used to create game instance.
  * @param {Object} gameConfiguration the object containing game configuration.
- * @return {string} the unique game key returned from the backend.
+ * @return {Promise} the promise result of the new game instance.
  */
 function createGameInstance(userInfo, gameConfiguration) {
   const db = admin.database();
@@ -25,14 +14,16 @@ function createGameInstance(userInfo, gameConfiguration) {
   const newGameId = gameRef.push().key;
 
   const updates = {};
-  updates[`/games/${newGameId}`] = {
-    admin: userInfo.userId,
+  updates[newGameId] = {
+    admin: userInfo.uid,
     messages: [],
-    users: [userInfo],
     settings: gameConfiguration,
+    invite: invites.Invite(),
   };
 
-  return gameRef.update(ref(db), updates);
+  const result = gameRef.update(updates);
+  addNewUser(newGameId, userInfo);
+  return result;
 }
 
 /**
@@ -40,16 +31,33 @@ function createGameInstance(userInfo, gameConfiguration) {
  * 
  * @param {string} gameId the gameId that has been generated.
  * @param {Object} userInfo the new user info.
- * @return {string} the reference key of the new user.
+ * @return {Promise} the promise result of the added user.
  */
 function addNewUser(gameId, userInfo) {
   const db = admin.database();
-  const ref = db.ref(`games/${gameId}/users`);
-  const newUserKey = ref.push().key;
+  const usersRef = db.ref(`games/${gameId}/users`);
+  const newUserKey = usersRef.push().key;
 
   const updates = {};
-  updates[`/games/${gameId}/users/` + newUserKey] = userInfo;
-  return ref.update(ref(db), updates);
+  updates[newUserKey] = userInfo;
+  return usersRef.update(updates);
+}
+
+/**
+ * Adds provided user to the game associated with the invite code.
+ * 
+ * @param {string} inviteCode the invite code associated with the game.
+ * @param {Object} userInfo the new user info.
+ * @return {Promise} the promise result of the added user or null if unsuccessful.
+ */
+function inviteClicked(inviteCode, userInfo) {
+  const db = admin.database();
+  const gameRef = db.ref('games');
+  gameRef.orderByChild('invite').equalTo(inviteCode).limitToFirst(1).on('child_added', (snapshot) => {
+    console.log(snapshot.key);
+    addNewUser(snapshot.key, userInfo);
+  });
+  return null;
 }
 
 /**
@@ -57,16 +65,16 @@ function addNewUser(gameId, userInfo) {
  * 
  * @param {string} gameId the gameId that has been generated.
  * @param {Object} userInfo the new user info.
- * @return {string} the reference key of the new user.
+ * @return {Promise} the promise result of the game update.
  */
 function updateGameConfiguration(gameId, gameConfiguration) {
   const gameRef = admin.database().ref(`games/${gameId}/settings`);
-  gameRef.set(gameConfiguration);
+  return gameRef.set(gameConfiguration);
 }
 
 module.exports = {
-  getGameReference,
   createGameInstance,
   addNewUser,
   updateGameConfiguration,
+  inviteClicked,
 };
