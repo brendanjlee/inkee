@@ -1,23 +1,12 @@
 const admin = require("./firebase");
-const gameInit = require('../classes/gameSettings');
-const usersInit = require('../classes/users');
-
-/**
- * Returns game_id reference from database.
- *
- * @param {string} gameId the game_id string.
- * @return {string} the path reference of the game associated with game_id.
- */
-function getGameReference(gameId) {
-  return admin.database().ref('games').child(gameId);
-}
+const invites = require('../classes/invites');
 
 /**
  * Creates a game object in the backend and returns the game_id.
  * 
  * @param {Object} userInfo the user object used to create game instance.
  * @param {Object} gameConfiguration the object containing game configuration.
- * @return {string} the unique game key returned from the backend.
+ * @return {string} the string ID of the new game instance, null if error.
  */
 function createGameInstance(userInfo, gameConfiguration) {
   const db = admin.database();
@@ -25,14 +14,22 @@ function createGameInstance(userInfo, gameConfiguration) {
   const newGameId = gameRef.push().key;
 
   const updates = {};
-  updates[`/games/${newGameId}`] = {
-    admin: userInfo.userId,
+  updates[newGameId] = {
+    admin: userInfo.uid,
     messages: [],
-    users: [userInfo],
     settings: gameConfiguration,
+    invite: invites.Invite(),
   };
 
-  return gameRef.update(ref(db), updates);
+  gameRef.update(updates)
+    .then((value) => {
+      console.log(`Game created successfully: ${value}`);
+      addNewUser(newGameId, userInfo);
+      return newGameId;
+    }).catch((error) => {
+      console.log(`Error creating game: ${error}`);
+      return null;
+    });
 }
 
 /**
@@ -40,16 +37,48 @@ function createGameInstance(userInfo, gameConfiguration) {
  * 
  * @param {string} gameId the gameId that has been generated.
  * @param {Object} userInfo the new user info.
- * @return {string} the reference key of the new user.
+ * @return {string} the user ID on success, null if error.
  */
 function addNewUser(gameId, userInfo) {
   const db = admin.database();
-  const ref = db.ref(`games/${gameId}/users`);
-  const newUserKey = ref.push().key;
+  const usersRef = db.ref(`games/${gameId}/users`);
+  const newUserId = usersRef.push().key;
 
   const updates = {};
-  updates[`/games/${gameId}/users/` + newUserKey] = userInfo;
-  return ref.update(ref(db), updates);
+  updates[newUserId] = userInfo;
+  usersRef.update(updates)
+    .then((value) => {
+      console.log(`User added successfully: ${value}`);
+      return newUserId;
+    }).catch((error) => {
+      console.log(`Error adding user: ${error}`);
+      return null;
+    });
+}
+
+/**
+ * Adds provided user to the game associated with the invite code.
+ * 
+ * @param {string} inviteCode the invite code associated with the game.
+ * @param {Object} userInfo the new user info.
+ * @return {string} string ID of user being added by invite, null if error.
+ */
+function inviteClicked(inviteCode, userInfo) {
+  const db = admin.database();
+  const gameRef = db.ref('games');
+  gameRef.orderByChild('invite').equalTo(inviteCode).limitToFirst(1).once('child_added')
+    .then((snapshot) => {
+      if (snapshot.exists()){
+        return addNewUser(snapshot.key, userInfo);
+      }
+      throw `Error locating game using invite code ${inviteCode}`;
+    })
+    .catch((error) => {
+      console.log(`Error occurred while finding game: ${error}`);
+      return null;
+    });
+
+  return null;
 }
 
 /**
@@ -57,16 +86,23 @@ function addNewUser(gameId, userInfo) {
  * 
  * @param {string} gameId the gameId that has been generated.
  * @param {Object} userInfo the new user info.
- * @return {string} the reference key of the new user.
+ * @return {boolean} indicating if the game update was successful.
  */
 function updateGameConfiguration(gameId, gameConfiguration) {
   const gameRef = admin.database().ref(`games/${gameId}/settings`);
-  gameRef.set(gameConfiguration);
+  gameRef.set(gameConfiguration)
+    .then((value) => {
+      console.log(`Update Successful: ${value}`);
+      return true;
+    }).catch((error) => {
+      console.log(`Error Updating Game: ${error}`);
+      return false;
+    });
 }
 
 module.exports = {
-  getGameReference,
   createGameInstance,
   addNewUser,
   updateGameConfiguration,
+  inviteClicked,
 };
