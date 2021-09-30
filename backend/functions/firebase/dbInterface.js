@@ -6,7 +6,7 @@ const invites = require('../classes/invites');
  * 
  * @param {Object} userInfo the user object used to create game instance.
  * @param {Object} gameConfiguration the object containing game configuration.
- * @return {Promise} the promise result of the new game instance.
+ * @return {string} the string ID of the new game instance, null if error.
  */
 function createGameInstance(userInfo, gameConfiguration) {
   const db = admin.database();
@@ -21,9 +21,15 @@ function createGameInstance(userInfo, gameConfiguration) {
     invite: invites.Invite(),
   };
 
-  const result = gameRef.update(updates);
-  addNewUser(newGameId, userInfo);
-  return result;
+  gameRef.update(updates)
+    .then((value) => {
+      console.log(`Game created successfully: ${value}`);
+      addNewUser(newGameId, userInfo);
+      return newGameId;
+    }).catch((error) => {
+      console.log(`Error creating game: ${error}`);
+      return null;
+    });
 }
 
 /**
@@ -31,16 +37,23 @@ function createGameInstance(userInfo, gameConfiguration) {
  * 
  * @param {string} gameId the gameId that has been generated.
  * @param {Object} userInfo the new user info.
- * @return {Promise} the promise result of the added user.
+ * @return {string} the user ID on success, null if error.
  */
 function addNewUser(gameId, userInfo) {
   const db = admin.database();
   const usersRef = db.ref(`games/${gameId}/users`);
-  const newUserKey = usersRef.push().key;
+  const newUserId = usersRef.push().key;
 
   const updates = {};
-  updates[newUserKey] = userInfo;
-  return usersRef.update(updates);
+  updates[newUserId] = userInfo;
+  usersRef.update(updates)
+    .then((value) => {
+      console.log(`User added successfully: ${value}`);
+      return newUserId;
+    }).catch((error) => {
+      console.log(`Error adding user: ${error}`);
+      return null;
+    });
 }
 
 /**
@@ -48,15 +61,23 @@ function addNewUser(gameId, userInfo) {
  * 
  * @param {string} inviteCode the invite code associated with the game.
  * @param {Object} userInfo the new user info.
- * @return {Promise} the promise result of the added user or null if unsuccessful.
+ * @return {string} string ID of user being added by invite, null if error.
  */
 function inviteClicked(inviteCode, userInfo) {
   const db = admin.database();
   const gameRef = db.ref('games');
-  gameRef.orderByChild('invite').equalTo(inviteCode).limitToFirst(1).on('child_added', (snapshot) => {
-    console.log(snapshot.key);
-    addNewUser(snapshot.key, userInfo);
-  });
+  gameRef.orderByChild('invite').equalTo(inviteCode).limitToFirst(1).once('child_added')
+    .then((snapshot) => {
+      if (snapshot.exists()){
+        return addNewUser(snapshot.key, userInfo);
+      }
+      throw `Error locating game using invite code ${inviteCode}`;
+    })
+    .catch((error) => {
+      console.log(`Error occurred while finding game: ${error}`);
+      return null;
+    });
+
   return null;
 }
 
@@ -65,11 +86,18 @@ function inviteClicked(inviteCode, userInfo) {
  * 
  * @param {string} gameId the gameId that has been generated.
  * @param {Object} userInfo the new user info.
- * @return {Promise} the promise result of the game update.
+ * @return {boolean} indicating if the game update was successful.
  */
 function updateGameConfiguration(gameId, gameConfiguration) {
   const gameRef = admin.database().ref(`games/${gameId}/settings`);
-  return gameRef.set(gameConfiguration);
+  gameRef.set(gameConfiguration)
+    .then((value) => {
+      console.log(`Update Successful: ${value}`);
+      return true;
+    }).catch((error) => {
+      console.log(`Error Updating Game: ${error}`);
+      return false;
+    });
 }
 
 module.exports = {
