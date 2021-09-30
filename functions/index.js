@@ -19,7 +19,7 @@ const game = require('./classes/gameSettings');
 const userInfo = user.User('Neel', 'SOMETHING', false, 'TEST', 'test');
 
 const gameConfiguration = game.GameSettings();
-const gameInstance = dbWrapper.createGameInstance(userInfo, gameConfiguration);
+dbWrapper.createGameInstance(userInfo, gameConfiguration);
 
 // Set up API endpoint.
 app.get('/', (req, res) => {
