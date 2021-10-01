@@ -17,7 +17,7 @@ function Invite(gameId) {
 function generateInvite(length) {
   let invite = '';
   for (let i = 0; i < length; i++) {
-      let numOrLetter = parseInt(Math.random() * 2, 10);
+      const numOrLetter = parseInt(Math.random() * 2, 10);
       let nextVal = null;
       switch (numOrLetter) {
           case 0:

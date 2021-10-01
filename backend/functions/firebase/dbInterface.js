@@ -16,9 +16,10 @@ function createGameInstance(userInfo, gameConfiguration) {
   const updates = {};
   updates[newGameId] = {
     admin: userInfo.uid,
+    invite: invites.Invite(),
+    inProgress: false,
     messages: [],
     settings: gameConfiguration,
-    invite: invites.Invite(),
   };
 
   gameRef.update(updates)
@@ -98,6 +99,17 @@ function updateGameConfiguration(gameId, gameConfiguration) {
       console.log(`Error Updating Game: ${error}`);
       return false;
     });
+}
+
+/**
+ * Opens up a socket connection between the gameId and the userId.
+ * 
+ * @param {string} gameId the gameId that is being streamed to the user.
+ * @param {Object} userId the user ID that is receiving the stream.
+ * @return {boolean} indicating if the stream connection was successful.
+ */
+function establishGameStream(gameId, userId) {
+  
 }
 
 module.exports = {
