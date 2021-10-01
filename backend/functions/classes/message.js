@@ -8,7 +8,7 @@
  * @param {string} message the text of the chat message.
  * @return {Object} the message object formed by the parameters.
  */
-function ChatMessage(uid, username, messageId, gameId, message) {
+function Message(uid, username, messageId, gameId, message) {
   return {
     uid: uid,
     username: username,
@@ -19,5 +19,5 @@ function ChatMessage(uid, username, messageId, gameId, message) {
 }
 
 module.exports = {
-  ChatMessage,
+  Message,
 }
