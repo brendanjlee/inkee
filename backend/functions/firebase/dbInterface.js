@@ -1,5 +1,5 @@
-const admin = require("./firebase");
-const invites = require('../classes/invite');
+import admin from './firebase';
+import invites from '../classes/invite';
 
 /**
  * Creates a game object in the backend and returns the game_id.
@@ -64,7 +64,7 @@ function addNewUser(gameId, userInfo) {
  * @param {Object} userInfo the new user info.
  * @return {string} string ID of user being added by invite, null if error.
  */
-function inviteClicked(inviteCode, userInfo) {
+function handleInvite(inviteCode, userInfo) {
   const db = admin.database();
   const gameRef = db.ref('games');
   gameRef.orderByChild('invite').equalTo(inviteCode).limitToFirst(1).once('child_added')
@@ -135,6 +135,6 @@ module.exports = {
   createGameInstance,
   addNewUser,
   updateGameConfiguration,
-  inviteClicked,
+  handleInvite,
   postNewMessage,
 };
