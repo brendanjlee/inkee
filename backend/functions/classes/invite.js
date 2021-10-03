@@ -1,11 +1,11 @@
+/** Generates an invite code for ongoing games. */
 class Invite {
   /**
    * Constructs a new Invite object.
    * 
    * @param {string} gameId the game ID that the user is associated with.
    */
-  constructor(gameId) {
-    this.gameId = gameId;
+  constructor() {
     this.inviteCode = generateInvite(5);
   }
 

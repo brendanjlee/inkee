@@ -1,3 +1,4 @@
+/** Represents a game user. */
 class User {
   /**
    * Constructs a new User object.
