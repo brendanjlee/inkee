@@ -1,12 +1,13 @@
-import logo from './logo.svg';
 import './App.css';
-import background from './assets/background-one.png'
+import React from 'react'
+import TitleScreen from './components/TitleScreen';
 
 function App() {
   return (
-    <div  styles={{ backgroundImage:`url(${background})` }}>
+    <div class="background">
+      <button class="button">See the Graph</button>
+      <TitleScreen></TitleScreen>
     </div>
   );
 }
-
 export default App;
