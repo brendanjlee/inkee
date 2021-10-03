@@ -36,3 +36,30 @@
     transform: rotate(360deg);
   }
 }
+
+.background 
+{
+    background-color: #00ACD5;
+    height: 100vh;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.title
+{
+    background-image: url(./assets/inkee-logo.png);
+    height: 100vh;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.button
+{
+  width: 672px;
+  height: 125px;
+  background-color: white;
+  border: 9px solid #000000;
+  box-sizing: border-box;
+}
