@@ -1,5 +1,5 @@
 import admin from './firebase';
-import invites from '../classes/invite';
+import Invite from '../classes/invite';
 
 /**
  * Creates a game object in the backend and returns the game_id.
@@ -16,7 +16,7 @@ function createGameInstance(userInfo, gameConfiguration) {
   const updates = {};
   updates[newGameId] = {
     admin: userInfo.uid,
-    invite: invites.Invite(),
+    invite: new Invite().inviteCode,
     inProgress: false,
     messages: [],
     settings: gameConfiguration,
