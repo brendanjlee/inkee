@@ -13,14 +13,6 @@ router.use(cors({origin: true}));
 // app.use(cookieParser);
 // app.use(validateFirebaseIdToken);
 
-const dbWrapper = require('./firebase/dbInterface');
-const user = require('./classes/users');
-const game = require('./classes/gameSettings');
-const userInfo = user.User('Neel', 'SOMETHING', false, 'TEST', 'test');
-
-const gameConfiguration = game.GameSettings();
-dbWrapper.createGameInstance(userInfo, gameConfiguration);
-
 // Set up API endpoint.
 app.get('/', (req, res) => {
   const answer = JSON.stringify('Hello from Inkee Backend.');
