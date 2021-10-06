@@ -1,5 +1,5 @@
 import React from 'react'
-import Logo from '../assets/inkee-logo.png'
+import Logo from '../../assets/inkee-logo.png'
 import { Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 

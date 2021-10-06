@@ -1,6 +1,6 @@
 import React from "react";
 
-function setupProfile() {
+function SetupProfile() {
   <div>
     <div className='setupProfile'>
       <div classname='usernameContainer'>
@@ -13,4 +13,4 @@ function setupProfile() {
   </div>
 }
 
-export default setupProfile
+export default SetupProfile

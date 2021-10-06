@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "react-bootstrap";
 
-function createLobby() {
+function CreateLobby() {
   return (
     <div>
       <div className="createLobby">
@@ -52,4 +52,4 @@ function createLobby() {
   );
 }
 
-export default createLobby
+export default CreateLobby
