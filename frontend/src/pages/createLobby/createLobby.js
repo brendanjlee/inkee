@@ -7,7 +7,7 @@ import './createLobby.css'
 
 function CreateLobby() {
   return (
-    <div>
+    <div className='root'>
       <CreateHeader />
       <div className='content'>
         <h2>Lobby</h2>
@@ -45,7 +45,7 @@ function CreateLobby() {
             <h2>Word List Placeholder</h2>
           </div> 
           <Link to='/prestartLobby'>
-              <Button varian='primary'>Start Game</Button>{' '}
+              <Button variant='primary'>Start Game</Button>{' '}
             </Link>
         </form>
       </div>
