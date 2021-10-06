@@ -1,6 +1,6 @@
 import React from "react";
 
-function joinLobby() {
+function JoinLobby() {
   return (
     <div>
       <div className="joinLobby">
@@ -12,4 +12,4 @@ function joinLobby() {
   );
 }
 
-export default joinLobby
+export default JoinLobby

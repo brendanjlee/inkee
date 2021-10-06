@@ -2,14 +2,14 @@ import './App.css';
 import React from 'react'
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom'
 
-import Home from './pages/home';
-import createLobby from './pages/createLobby';
-import joinLobby from './pages/joinLobby';
-import prestartLobby from './pages/prestartLobby';
-import setupProfile from './pages/setupProfile'
-import game from './pages/game';
-import gameDrawer from './pages/gameDrawer';
-import gameGuesser from './pages/gameGuesser';
+import Home from './pages/home/home';
+import CreateLobby from './pages/createLobby/createLobby';
+import JoinLobby from './pages/joinLobby/joinLobby';
+import PrestartLobby from './pages/prestartLobby/prestartLobby';
+import SetupProfile from './pages/setupProfile/setupProfile'
+import Game from './pages/game/game';
+import GameDrawer from './pages/game/gameDrawer';
+import GameGuesser from './pages/game/gameGuesser';
 import testPage from './reactTesting/testPage';
 
 
@@ -19,13 +19,13 @@ function App() {
       <div className="App">
         <Switch>
           <Route path='/' exact component={Home}/>
-          <Route path='/createLobby' component={createLobby}/>
-          <Route path='/joinLobby' component={joinLobby}/>
-          <Route path='/prestartLobby' component={prestartLobby}/>
-          <Route path='/setupProfile' component={setupProfile}/>
-          <Route path='/game' component={game}/>
-          <Route path='/game/gameDrawer' component={gameDrawer}/>
-          <Route path='/game/gameGuesser' component={gameGuesser}/>
+          <Route path='/createLobby' component={CreateLobby}/>
+          <Route path='/joinLobby' component={JoinLobby}/>
+          <Route path='/prestartLobby' component={PrestartLobby}/>
+          <Route path='/setupProfile' component={SetupProfile}/>
+          <Route path='/game' component={Game}/>
+          <Route path='/game/gameDrawer' component={GameDrawer}/>
+          <Route path='/game/gameGuesser' component={GameGuesser}/>
           <Route path='/testPage' component={testPage} />
         </Switch>
       </div>

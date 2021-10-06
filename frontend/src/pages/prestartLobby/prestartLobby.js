@@ -1,7 +1,6 @@
 import React from "react";
-import '../styles/prestartLobby.css'
 
-function prestartLobby() {
+function PrestartLobby() {
   return (
     <div>
       <div className='prestartLobby'>
@@ -23,4 +22,4 @@ function prestartLobby() {
   );
 }
 
-export default prestartLobby
+export default PrestartLobby
