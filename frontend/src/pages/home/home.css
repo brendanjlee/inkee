@@ -1,0 +1,29 @@
+.root {
+  align-items: center;
+  font-size: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.content {
+  border-style: solid;
+  margin: 1rem 10rem 5rem 10rem;
+  padding: 10px;
+}
+
+img {
+  width: 40rem;
+}
+
+.avatar-img {
+  width: 20rem;
+}
+
+.button-div {
+  display: block;
+}
