@@ -10,6 +10,7 @@ import setupProfile from './pages/setupProfile'
 import game from './pages/game';
 import gameDrawer from './pages/gameDrawer';
 import gameGuesser from './pages/gameGuesser';
+import testPage from './reactTesting/testPage';
 
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
           <Route path='/game' component={game}/>
           <Route path='/game/gameDrawer' component={gameDrawer}/>
           <Route path='/game/gameGuesser' component={gameGuesser}/>
+          <Route path='/testPage' component={testPage} />
         </Switch>
       </div>
     </Router>
