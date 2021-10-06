@@ -1,10 +1,14 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "react-bootstrap";
+// Components
+import CreateHeader from "../header/header";
 
 function CreateLobby() {
   return (
     <div>
+      <div className='content'>
+      </div>
       <div className="createLobby">
         <h2>Lobby</h2>
         <div className="containerSettings">

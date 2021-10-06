@@ -1,7 +1,6 @@
 import './App.css';
 import React from 'react'
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom'
-
 import Home from './pages/home/home';
 import CreateLobby from './pages/createLobby/createLobby';
 import JoinLobby from './pages/joinLobby/joinLobby';
