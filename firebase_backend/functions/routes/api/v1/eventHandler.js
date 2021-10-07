@@ -17,38 +17,63 @@ router.post('/games/creategame', (req, res) => {
   const gameConfiguration = serializer.deserialize(req.body.gameConfiguration);
   const userData = serializer.deserialize(req.body.userData);
   
-  const gameId = functions.createGame(gameConfiguration);
+  let gameId = null;
+  try {
+    gameId = functions.createGame(gameConfiguration);
+  } catch (error) {
+    console.log(error);
+  }
+
   if (gameId === null) {
     res.status(500).send("Error creating game.");
     return;
   }
 
-  const userId = functions.addNewUser(gameId, userData);
+  let userId = null;
+  try {
+    userId = functions.addNewUser(gameId, userData);
+  } catch (error) {
+    console.log(error);
+  }
+
   if (userId === null) {
     res.status(500).send("Error adding user to the created game.");
     return;
   } 
 
-  const userAdmin = functions.makeAdmin(userId, gameId);
-  if (userId === null) {
+  let userAdmin = null;
+  try {
+    userAdmin = functions.makeAdmin(userId, gameId);
+  } catch (error) {
+    console.log(error);
+  }
+
+  if (userAdmin === null) {
     res.status(500).send("Error making user admin of the created game.");
     return;
   }
 
-  res.status(200).send(`Successfully created game ${gameId} with admin ${userId}!`);
+  const result = [gameId, userId];
+  res.status(200).send(JSON.stringify(result));
 });
 
 /* Add user to game in Firebase Realtime Database */
 router.post('/games/:gameId/adduser', (req, res) => {
   const gameId = req.params.gameId;
   const newUser = serializer.deserialize(req.body);
-  const result = functions.addNewUser(gameId, newUser);
+  let result = null;
+
+  try {
+    result = functions.addNewUser(gameId, newUser)
+  } catch (error) {
+    console.log(error);
+  }
 
   switch (result) {
     case null:
       res.status(500).send("Error adding user to the game.");
     default:
-      res.status(200).send('Success!');
+      res.status(200).send(JSON.stringify([gameId, result]));
   }
 });
 
@@ -56,13 +81,19 @@ router.post('/games/:gameId/adduser', (req, res) => {
 router.post('/games/adduser/:invite', (req, res) => {
   const invite = req.params.invite;
   const newUser = serializer.deserialize(req.body);
-  const result = res.send(functions.handleInvite(invite, newUser));
+  let result = null;
+  
+  try {
+    result = functions.handleInvite(invite, newUser);
+  } catch (error) {
+    console.log(error);
+  }
 
   switch (result) {
     case null:
       res.status(500).send(`Error adding user using invite code ${invite}.`);
     default:
-      res.status(200).send('Success!');
+      res.status(200).send(JSON.stringify(result));
   }
 });
 
