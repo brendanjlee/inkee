@@ -34,8 +34,18 @@ class Invite {
     
     return invite;
   }
+
+  /**
+   * Constructs a Invite object from deserialized JSON object.
+   * 
+   * @param {Object} obj deserialized object that has been parsed from JSON.
+   * @return {Object} an Invite object.
+   */
+   deserialize(obj) {
+    return new Invite(obj.inviteCode);
+  }
 }
 
-export default {
+module.exports = {
   Invite,
 }

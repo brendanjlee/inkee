@@ -2,19 +2,16 @@
 require('./firebase/firebase');
 
 const functions = require('firebase-functions');
-// const cookieParser = require('cookie-parser')();
 const express = require('express');
 const cors = require('cors');
-
-const app = express();
 const router = express.Router();
+const api = require('./routes/api');
 
 router.use(cors({origin: true}));
-// app.use(cookieParser);
-// app.use(validateFirebaseIdToken);
+router.use('/api', api);
 
 // Set up API endpoint.
-app.get('/', (req, res) => {
+router.get('/', (req, res) => {
   const answer = JSON.stringify('Hello from Inkee Backend.');
   res.send(answer);
 });
