@@ -1,21 +1,19 @@
-import admin from './firebase';
-import Invite from '../classes/invite';
+const admin = require('./firebase');
+const Invite = require('../classes/invite');
 
 /**
  * Creates a game object in the backend and returns the game_id.
  * 
- * @param {Object} userInfo the user object used to create game instance.
  * @param {Object} gameConfiguration the object containing game configuration.
  * @return {string} the string ID of the new game instance, null if error.
  */
-function createGameInstance(userInfo, gameConfiguration) {
+function createGameInstance(gameConfiguration) {
   const db = admin.database();
   const gameRef = db.ref('games');
   const newGameId = gameRef.push().key;
 
   const updates = {};
   updates[newGameId] = {
-    admin: userInfo.uid,
     invite: new Invite().inviteCode,
     inProgress: false,
     messages: [],
@@ -25,11 +23,28 @@ function createGameInstance(userInfo, gameConfiguration) {
   gameRef.update(updates)
     .then((value) => {
       console.log(`Game created successfully: ${value}`);
-      addNewUser(newGameId, userInfo);
       return newGameId;
     }).catch((error) => {
       console.log(`Error creating game: ${error}`);
       return null;
+    });
+}
+
+function makeAdmin(userInfo, gameId) {
+  const db = admin.database();
+  const gameRef = db.ref('games');
+  
+  updates[gameId] = {
+    admin: userInfo.uid,
+  }
+
+  gameRef.update(updates)
+    .then((value) => {
+      console.log(`User ${userInfo.uid} added as admin successfully to game ${gameId}: ${value}`);
+      return true;
+    }).catch((error) => {
+      console.log(`Error adding user ${userInfo.uid} as admin to game ${gameId}: ${error}`);
+      return false;
     });
 }
 
@@ -82,59 +97,9 @@ function handleInvite(inviteCode, userInfo) {
   return null;
 }
 
-/**
- * Updates the game configuration of the specified game.
- * 
- * @param {string} gameId the gameId that has been generated.
- * @param {Object} gameSetting the new game setting configuration.
- * @return {boolean} indicating if the game update was successful.
- */
-function updateGameConfiguration(gameId, gameSetting) {
-  const db = admin.database();
-  const gameRef = db.ref(`games/${gameId}/settings`);
-  
-  const updates = {};
-  updates[`${gameSetting.setting}`] = gameSetting.value;
-  gameRef.update(updates)
-    .then((value) => {
-      console.log(`Update Successful: ${value}`);
-      return true;
-    })
-    .catch((error) => {
-      console.log(`Error Updating Game: ${error}`);
-      return false;
-    });
-}
-
-/**
- * Adds a new message to the game chat.
- * 
- * @param {string} gameId the gameId that has been generated.
- * @param {Object} messageInfo the new message info.
- * @return {boolean} indicating if the message was successfully posted.
- */
-function postNewMessage(gameId, messageInfo) {
-  // TODO: Check for profanity filter setting.
-  const db = admin.database();
-  const gameRef = db.ref(`games/${gameId}/messages`);
-  const newMessageId = gameRef.push().key;
-
-  const updates = {};
-  updates[newMessageId] = messageInfo;
-  gameRef.update(updates)
-    .then((value) => {
-      console.log(`Message posted successfully: ${value}`);
-      return true;
-    }).catch((error) => {
-      console.log(`Error posting message: ${error}`);
-      return false;
-    });
-}
-
 module.exports = {
   createGameInstance,
   addNewUser,
-  updateGameConfiguration,
   handleInvite,
-  postNewMessage,
+  makeAdmin,
 };
