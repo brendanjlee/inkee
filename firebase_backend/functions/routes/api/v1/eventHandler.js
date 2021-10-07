@@ -9,10 +9,10 @@ const Serializer = require('../../../classes/serializer');
 
 // Database Interfacing Functions.
 const functions = require('../../../firebase/dbInterface');
-
 // Serializer Class.
 const serializer = new Serializer([User, Invite, GameConfiguration]);
 
+/* Create game in Firebase Realtime Database */
 router.post('/games/creategame', (req, res) => {
   const gameConfiguration = serializer.deserialize(req.body.gameConfiguration);
   const userData = serializer.deserialize(req.body.userData);
@@ -38,6 +38,7 @@ router.post('/games/creategame', (req, res) => {
   res.status(200).send(`Successfully created game ${gameId} with admin ${userId}!`);
 });
 
+/* Add user to game in Firebase Realtime Database */
 router.post('/games/:gameId/adduser', (req, res) => {
   const gameId = req.params.gameId;
   const newUser = serializer.deserialize(req.body);
@@ -51,6 +52,7 @@ router.post('/games/:gameId/adduser', (req, res) => {
   }
 });
 
+/* Add user to game in Firebase Realtime Database using provided invite code */
 router.post('/games/adduser/:invite', (req, res) => {
   const invite = req.params.invite;
   const newUser = serializer.deserialize(req.body);
@@ -63,3 +65,7 @@ router.post('/games/adduser/:invite', (req, res) => {
       res.status(200).send('Success!');
   }
 });
+
+module.exports = {
+  router,
+}

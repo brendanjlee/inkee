@@ -37,6 +37,6 @@ class Message {
   }
 }
 
-export default {
+module.exports = {
   Message,
 }

@@ -30,6 +30,6 @@ class User {
   }
 }
 
-export default {
+module.exports = {
   User,
 }

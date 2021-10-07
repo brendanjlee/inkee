@@ -46,6 +46,6 @@ class Invite {
   }
 }
 
-export default {
+module.exports = {
   Invite,
 }

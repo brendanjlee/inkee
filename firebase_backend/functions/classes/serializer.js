@@ -11,7 +11,7 @@ class Serializer{
       if (idx == -1) {
         throw "type  '" + object.constructor.name + "' not initialized!";
       }
-      
+
       return JSON.stringify([idx, Object.entries(object)]);
   }
 
@@ -25,6 +25,6 @@ class Serializer{
   }
 }
 
-export default {
+module.exports = {
   Serializer,
 }
