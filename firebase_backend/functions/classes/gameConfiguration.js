@@ -30,6 +30,6 @@ class GameConfiguration {
   }
 }
 
-export default {
+module.exports = {
   GameConfiguration,
 }

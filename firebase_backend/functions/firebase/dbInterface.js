@@ -1,5 +1,5 @@
-import admin from './firebase';
-import Invite from '../classes/invite';
+const admin = require('./firebase');
+const Invite = require('../classes/invite');
 
 /**
  * Creates a game object in the backend and returns the game_id.
