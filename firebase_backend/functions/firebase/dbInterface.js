@@ -5,7 +5,7 @@ const Invite = require('../classes/invite');
  * Creates a game object in the backend and returns the game_id.
  * 
  * @param {Object} gameConfiguration the object containing game configuration.
- * @return {string} the string ID of the new game instance, null if error.
+ * @return {string} the game ID of the new game instance, throws error if error occurs.
  */
 function createGameInstance(gameConfiguration) {
   const db = admin.database();
@@ -26,7 +26,7 @@ function createGameInstance(gameConfiguration) {
       return newGameId;
     }).catch((error) => {
       console.log(`Error creating game: ${error}`);
-      return null;
+      throw `Error creating game: ${error}`;
     });
 }
 
@@ -44,7 +44,7 @@ function makeAdmin(userInfo, gameId) {
       return true;
     }).catch((error) => {
       console.log(`Error adding user ${userInfo.uid} as admin to game ${gameId}: ${error}`);
-      return false;
+      throw `Error adding user ${userInfo.uid} as admin to game ${gameId}: ${error}`;
     });
 }
 
@@ -53,7 +53,7 @@ function makeAdmin(userInfo, gameId) {
  * 
  * @param {string} gameId the gameId that has been generated.
  * @param {Object} userInfo the new user info.
- * @return {string} the user ID on success, null if error.
+ * @return {Array} the gameId and userId, throws error if error occurs.
  */
 function addNewUser(gameId, userInfo) {
   const db = admin.database();
@@ -65,10 +65,10 @@ function addNewUser(gameId, userInfo) {
   usersRef.update(updates)
     .then((value) => {
       console.log(`User added successfully: ${value}`);
-      return newUserId;
+      return [gameId, newUserId];
     }).catch((error) => {
       console.log(`Error adding user: ${error}`);
-      return null;
+      throw `Error adding user: ${error}`;
     });
 }
 
@@ -77,7 +77,7 @@ function addNewUser(gameId, userInfo) {
  * 
  * @param {string} inviteCode the invite code associated with the game.
  * @param {Object} userInfo the new user info.
- * @return {string} string ID of user being added by invite, null if error.
+ * @return {Array} game ID and userId, throws error if error occurs.
  */
 function handleInvite(inviteCode, userInfo) {
   const db = admin.database();
@@ -85,16 +85,17 @@ function handleInvite(inviteCode, userInfo) {
   gameRef.orderByChild('invite').equalTo(inviteCode).limitToFirst(1).once('child_added')
     .then((snapshot) => {
       if (snapshot.exists()){
-        return addNewUser(snapshot.key, userInfo);
+        const userId = addNewUser(snapshot.key, userInfo);
+        return [snapshot.key, userId]
       }
       throw `Error locating game using invite code ${inviteCode}`;
     })
     .catch((error) => {
       console.log(`Error occurred while finding game: ${error}`);
-      return null;
+      throw `Error occurred while finding game: ${error}`
     });
 
-  return null;
+  throw `Error occurred while finding game: ${error}`
 }
 
 module.exports = {
