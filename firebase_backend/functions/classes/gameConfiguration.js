@@ -17,7 +17,17 @@ class GameConfiguration {
       this.lobbySize = lobbySize;
       this.privateGame = privateGame;
       this.profanityFilter = profanityFilter;
-    }
+  }
+
+  /**
+   * Constructs a GameConfiguration object from deserialized JSON object.
+   * 
+   * @param {Object} obj deserialized object that has been parsed from JSON.
+   * @return {Object} a GameConfiguration object.
+   */
+   deserialize(obj) {
+    return new GameConfiguration(obj.numRounds, obj.roundLength, obj.lobbySize, obj.privateGame, obj.profanityFilter);
+  }
 }
 
 export default {
