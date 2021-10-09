@@ -1,4 +1,9 @@
 .root {
+  background-color: #00ACD5;
+  height: 100vh;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
   align-items: center;
   font-size: 20px;
   display: flex;
