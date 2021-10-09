@@ -1,2 +1,2 @@
 # Inkee
-A drawing web app game
+A drawing web app game.
