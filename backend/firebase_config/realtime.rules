@@ -1,0 +1,26 @@
+{
+  "rules": {
+    "games": {
+      "$game_id": {
+        "messages": {
+          "$message_id": {
+            ".read": "true",
+            ".write": "false"
+          }
+        },
+        "users": {
+          "$uid": {
+            ".read": "true",
+            ".write": "false"
+          }
+        },
+        "settings": {
+          "$setting_id": {
+            ".read": "true",
+            ".write": "false"
+          }
+        }
+      }
+    }
+  }
+}
