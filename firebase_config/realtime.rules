@@ -1,7 +1,6 @@
 {
   "rules": {
     "games": {
-      ".indexOn": ["invite", "users"],
       "$game_id": {
         "messages": {
           "$message_id": {
