@@ -1,11 +1,12 @@
 import React from 'react'
 import { Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import { ReactSketchCanvas } from "react-sketch-canvas";
 //Style
 import './home.css'
 // Assets
 import Logo from '../../assets/inkee-logo.png'
-import tempAvatar from '../../assets/temp_assets/avatarCreationTemp.png'
+
 
 
 function Home() {
@@ -19,8 +20,9 @@ function Home() {
         <form>
           <input className='username' type='text' placeholder="enter username"/>
         </form>
-        <div className='avatar-creation'>
-          <img className='avatar-img' src={tempAvatar} alt='avatar-placeholder'/>
+        <div align="center">
+        <ReactSketchCanvas width="24em" height="15rem" strokeWidth={4} strokeColor="black" style={{
+          border: ".5rem solid black",}}/>
         </div>
         <div>
           <Link to='../joinLobby/joinLobby.js'>
