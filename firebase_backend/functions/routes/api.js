@@ -1,8 +1,9 @@
 let express = require('express');
 let router = express.Router();
-const eventHandler = require('./api/v1/eventHandler');
+const eventHandler = require('./api/v1/event-handler');
 const functions = require('firebase-functions');
 const cookieParser = require('cookie-parser');
+const cors = require('cors');
 
 /**
  * Validates Firebase ID Tokens of users that send requests to /v1
@@ -60,6 +61,7 @@ const validateFirebaseIdToken = async (req, res, next) => {
 
 router.use(cookieParser);
 router.use(validateFirebaseIdToken);
+router.use(cors);
 router.use('/v1', eventHandler);
 
 module.exports = {
