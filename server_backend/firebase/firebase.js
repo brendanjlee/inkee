@@ -10,3 +10,7 @@ admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   databaseURL: config.databaseURL,
 });
+
+module.exports = {
+  admin,
+}
