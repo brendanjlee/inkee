@@ -78,6 +78,13 @@ class Game {
         } catch (error) {
             console.log(error);
         }
+
+        //Clear Time errors
+        console.log(error);
+        games[roomID].currentWord = word;
+        io.to(roomID).emit('clearCanvas');
+        games[roomID].startTime = Date.now() / 1000;
+        console.log(error);
     }
 
     // Guessing answer feature
