@@ -6,6 +6,7 @@ import { ReactSketchCanvas } from "react-sketch-canvas";
 import './home.css'
 // Assets
 import Logo from '../../assets/inkee-logo.png'
+import '../../components/DrawArea.js'
 
 
 
