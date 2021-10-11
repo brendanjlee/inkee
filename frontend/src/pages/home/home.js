@@ -6,7 +6,7 @@ import { ReactSketchCanvas } from "react-sketch-canvas";
 import './home.css'
 // Assets
 import Logo from '../../assets/inkee-logo.png'
-import '../../components/DrawArea.js'
+import Canvas from '../../components/Canvas';
 
 
 
@@ -22,8 +22,7 @@ function Home() {
           <input className='username' type='text' placeholder="enter username"/>
         </form>
         <div align="center">
-        <ReactSketchCanvas width="24em" height="15rem" strokeWidth={4} strokeColor="black" style={{
-          border: ".5rem solid black",}}/>
+        <Canvas></Canvas>
         </div>
         <div>
           <Link to='../joinLobby/joinLobby.js'>
