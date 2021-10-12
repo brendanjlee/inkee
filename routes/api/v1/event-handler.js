@@ -13,7 +13,7 @@ const functions = require('../../../firebase/dbInterface');
 const serializer = new Serializer([User, Invite, GameConfiguration]);
 
 /* Create game in Firebase Realtime Database */
-router.post('/games/creategame', (req, res) => {
+router.post('/games', (req, res) => {
   const gameConfiguration = serializer.deserialize(req.body.gameConfiguration);
   const userData = serializer.deserialize(req.body.userData);
   
@@ -58,7 +58,7 @@ router.post('/games/creategame', (req, res) => {
 });
 
 /* Add user to game in Firebase Realtime Database */
-router.post('/games/:gameId/adduser', (req, res) => {
+router.post('/games/:gameId/users', (req, res) => {
   const gameId = req.params.gameId;
   const newUser = serializer.deserialize(req.body);
   let result = null;
@@ -78,7 +78,7 @@ router.post('/games/:gameId/adduser', (req, res) => {
 });
 
 /* Add user to game in Firebase Realtime Database using provided invite code */
-router.post('/games/adduser/:invite', (req, res) => {
+router.post('/games/users/:invite', (req, res) => {
   const invite = req.params.invite;
   const newUser = serializer.deserialize(req.body);
   let result = null;
