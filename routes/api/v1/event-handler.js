@@ -78,7 +78,7 @@ router.post('/games/:gameId/users', (req, res) => {
 });
 
 /* Add user to game in Firebase Realtime Database using provided invite code */
-router.post('/games/users/:invite', (req, res) => {
+router.post('/games/:invite', (req, res) => {
   const invite = req.params.invite;
   const newUser = serializer.deserialize(req.body);
   let result = null;
