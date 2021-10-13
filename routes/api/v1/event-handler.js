@@ -8,8 +8,9 @@ const GameConfiguration = require('../../../classes/gameConfiguration');
 const Serializer = require('../../../classes/serializer');
 
 // Database Interfacing Functions.
-const functions = require('../../../firebase/dbInterface');
-// Serializer Class.
+const functions = require('../../../firebase/db-interface');
+
+// Initialize Serializer.
 const serializer = new Serializer([User, Invite, GameConfiguration]);
 
 /* Create game in Firebase Realtime Database */
