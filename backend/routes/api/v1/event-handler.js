@@ -6,6 +6,7 @@ const User = require('../../../classes/user');
 const Invite = require('../../../classes/invite');
 const GameConfiguration = require('../../../classes/gameConfiguration');
 const Serializer = require('../../../classes/serializer');
+const imageUploader = require('../../../helpers/image-upload');
 
 // Database Interfacing Functions.
 const functions = require('../../../firebase/db-interface');
@@ -76,6 +77,12 @@ router.post('/games/:gameId/users', (req, res) => {
     default:
       res.status(200).send(JSON.stringify([gameId, result]));
   }
+});
+
+/* Post user avatar to storage bucket. */
+router.post('/games/:gameId/users/:userId/avatar', (req, res) => {
+  const gameId = req.params.gameId;
+  const userId = req.params.userId;
 });
 
 module.exports = {

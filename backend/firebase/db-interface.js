@@ -100,9 +100,42 @@ function handleInvite(inviteCode, userInfo) {
   });
 }
 
+/**
+ * Updates the provided user and param with the new value.
+ * 
+ * @param {string} userId the user id of the user being updated.
+ * @param {string} param the name of the field being updates
+ * @param {Object} newValue the new value of the user param.
+ * @return {boolean} if success, throws error if error occurs
+ */
+function updateUser(userId, param, newValue) {
+  const db = admin.database();
+  const gameRef = db.ref('games/users');
+  get(child(gameRef, userId)).then((snapshot) => {
+    if (snapshot.exists()){
+      const updates = {};
+      updates[`${userId}/${param}`] = newValue;
+
+      gameRef.update(updates)
+      .then((value) => {
+        console.log(`User updated successfully: ${value}`);
+        return true;
+      }).catch((error) => {
+        console.log(`Error updating user: ${error}`);
+        throw `Error adding user: ${error}`;
+      });;
+    }
+    throw `Error locating user using userId ${userId}`;
+  }).catch((error) => {
+    console.log(`Error occurred while finding user: ${error}`);
+    throw `Error occurred while finding user: ${error}`
+  });
+}
+
 module.exports = {
   createGameInstance,
   addNewUser,
   handleInvite,
   makeAdmin,
+  updateUser,
 };
