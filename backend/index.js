@@ -1,21 +1,12 @@
 const express = require('express');
-const io = require('socket.io');
-const cors = require('cors');
+const app = express();
+require('./startup/routes')(app);
 
 
 // App Initialization
 const port = process.env.PORT || 3000;
-const app = express();
-const server = app.listen(port, () => {
-  console.log(`Listening on port ${PORT}`);
-  console.log(`http://localhost:${PORT}`);
+app.get('/', function(req, res) {
+  res.sendFile(__dirname + '/index.html');
 });
-app.use(cors);
-
-// Socket setup
-const io = socket(server);
-
-io.on("connection", (socket) => {
-  console.log("Made socket connection");
-});
+app.listen(port, () => console.log(`Listening on port ${port}...`));
 
