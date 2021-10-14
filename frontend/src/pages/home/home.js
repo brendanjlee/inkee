@@ -1,40 +1,40 @@
 import React from 'react'
 import { Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import { ReactSketchCanvas } from "react-sketch-canvas";
 //Style
 import './home.css'
 // Assets
 import Logo from '../../assets/inkee-logo.png'
-import tempAvatar from '../../assets/temp_assets/avatarCreationTemp.png'
+import Canvas from '../../components/Canvas';
+
 
 
 function Home() {
   return (
     <div className='root'>
+      <div className='purpleSplat'>
+      <div className='orangeSplat'>
       <div className='header'>
         <img classname='logo' src={Logo} alt='inkee-logo'/>
       </div>
-
-      <div className='content'>
-        <div className='avatar-creation'>
-          <img className='avatar-img' src={tempAvatar} alt='avatar-placeholder'/>
-        </div>
         <form>
-          <label>Username: </label>
-          <input type='text'/>
+          <input className='username' type='text' placeholder="enter username"/>
         </form>
-        <div classname='button-div'>
-          <Link to='../createLobby/createLobby.js'>
-            <Button variant="outline-primary" size='lg'>Create Game</Button>{' '}
-          </Link>
+        <div align="center">
+        <Canvas></Canvas>
+        </div>
+        <div>
           <Link to='../joinLobby/joinLobby.js'>
-            <Button variant="secondary" size='lg'>Join Game</Button>{' '}
+            <Button className='btn' variant="secondary" size='lg'>join game</Button>{' '}
+          </Link>
+        </div>
+        <div>
+          <Link to='../createLobby/createLobby.js'>
+            <Button className='btn' variant="outline-primary" size='lg'>create game</Button>{' '}
           </Link>
         </div>
       </div>
-
-      <div classname='footer'>
-        <p>CS 307 Inkee Team</p>
       </div>
     </div>
   );
