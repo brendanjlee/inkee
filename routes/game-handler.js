@@ -2,20 +2,19 @@ const express = require('express');
 const router = express.Router();
 
 // Classes required.
-const User = require('../../../classes/user');
-const Invite = require('../../../classes/invite');
-const GameConfiguration = require('../../../classes/gameConfiguration');
-const Serializer = require('../../../classes/serializer');
-const imageUploader = require('../../../helpers/image-upload');
+const User = require('../classes/user');
+const Invite = require('../classes/invite');
+const GameConfiguration = require('../classes/game-configuration');
+const Serializer = require('../classes/serializer');
 
 // Database Interfacing Functions.
-const functions = require('../../../firebase/db-interface');
+const functions = require('../firebase/db-interface');
 
 // Initialize Serializer.
-const serializer = new Serializer([User, Invite, GameConfiguration]);
+const serializer = new Serializer.Serializer([User, Invite, GameConfiguration]);
 
 /* Create game in Firebase Realtime Database */
-router.post('/games', (req, res) => {
+router.post('/', (req, res) => {
   const gameConfiguration = serializer.deserialize(req.body.gameConfiguration);
   const userData = serializer.deserialize(req.body.userData);
   
@@ -60,7 +59,7 @@ router.post('/games', (req, res) => {
 });
 
 /* Add user to game in Firebase Realtime Database */
-router.post('/games/:gameId/users', (req, res) => {
+router.post('/:gameId/users', (req, res) => {
   const gameId = req.params.gameId;
   const newUser = serializer.deserialize(req.body);
   let result = null;
@@ -77,12 +76,6 @@ router.post('/games/:gameId/users', (req, res) => {
     default:
       res.status(200).send(JSON.stringify([gameId, result]));
   }
-});
-
-/* Post user avatar to storage bucket. */
-router.post('/games/:gameId/users/:userId/avatar', (req, res) => {
-  const gameId = req.params.gameId;
-  const userId = req.params.userId;
 });
 
 module.exports = {
