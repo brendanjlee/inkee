@@ -15,6 +15,7 @@ const Canvas = class extends React.Component {
         ref={this.canvas}
         width="24em" height="15rem" strokeWidth={4} strokeColor="black" style={{
         border: ".5rem solid black",}}/>
+
         <button
           onClick={() => {
             this.canvas.current
@@ -28,6 +29,13 @@ const Canvas = class extends React.Component {
           }}
         >
           Get Image
+        </button>
+
+        <button onClick= {() => {
+          this.canvas.current.clearCanvas()
+          console.log('cleared')
+        }}>
+          Clear Canvas
         </button>
       </div>
     );
