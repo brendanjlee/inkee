@@ -16,7 +16,7 @@ function Home() {
       <div className='purpleSplat'>
       <div className='orangeSplat'>
       <div className='header'>
-        <img classname='logo' src={Logo} alt='inkee-logo'/>
+        <img className='logo' src={Logo} alt='inkee-logo'/>
       </div>
         <form>
           <input className='username' type='text' placeholder="enter username"/>
