@@ -7,11 +7,10 @@ const Invite = require('../classes/invite');
  * @param {Object} gameConfiguration the object containing game configuration.
  * @return {string} the game ID of the new game instance, throws error if error occurs.
  */
-function createGameInstance(gameConfiguration) {
+function createGameInstance(gameConfiguration, inviteCode) {
   const db = admin.database();
   const gameRef = db.ref('games');
 
-  const inviteCode = new Invite().inviteCode;
   const updates = {};
   updates[inviteCode] = {
     inProgress: false,
@@ -20,12 +19,8 @@ function createGameInstance(gameConfiguration) {
   };
 
   gameRef.update(updates)
-    .then((value) => {
-      console.log(`Game created successfully: ${value}`);
-      return newGameId;
-    }).catch((error) => {
-      console.log(`Error creating game: ${error}`);
-      throw `Error creating game: ${error}`;
+    .catch((error) => {
+      throw `Error occurred while creating game instance ${error}`;
     });
 }
 
@@ -40,6 +35,7 @@ function makeAdmin(userInfo, gameId) {
   const db = admin.database();
   const gameRef = db.ref('games');
   
+  const updates = {};
   updates[gameId] = {
     admin: userInfo.uid,
   }
@@ -61,16 +57,16 @@ function makeAdmin(userInfo, gameId) {
  * @param {Object} userInfo the new user info.
  * @return {Array} the gameId and userId, throws error if error occurs.
  */
-function addNewUser(gameId, userInfo) {
+async function addNewUser(gameId, userInfo) {
   const db = admin.database();
   const usersRef = db.ref(`games/${gameId}/users`);
   const newUserId = usersRef.push().key;
 
   const updates = {};
   updates[newUserId] = userInfo;
-  usersRef.update(updates)
-    .then((value) => {
-      console.log(`User added successfully: ${value}`);
+  await usersRef.update(updates)
+    .then(() => {
+      console.log('User added successfully');
       return [gameId, newUserId];
     }).catch((error) => {
       console.log(`Error adding user: ${error}`);
