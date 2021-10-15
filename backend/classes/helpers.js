@@ -1,7 +1,10 @@
-/* global MAX_POINTS, round, games */
+const MAX_POINTS = 500;
+const games = {};
+const round = new EventEmitter();
 const { readFileSync } = require('fs');
 const Chance = require('chance');
 const GraphemeSplitter = require('grapheme-splitter');
+const { EventEmitter } = require('stream');
 
 const chance = new Chance();
 const splitter = new GraphemeSplitter();
