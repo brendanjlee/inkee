@@ -1,21 +1,20 @@
+// Initalize express and application routes.
 const express = require('express');
-const io = require('socket.io');
-const cors = require('cors');
-
-
-// App Initialization
-const port = process.env.PORT || 3000;
 const app = express();
-const server = app.listen(port, () => {
-  console.log(`Listening on port ${PORT}`);
-  console.log(`http://localhost:${PORT}`);
-});
-app.use(cors);
+require('./startup/routes')(app);
 
-// Socket setup
-const io = socket(server);
+// Set up server for Socket IO.
+const server = require('http').createServer(app);
+const io = require('socket.io')(server);
 
-io.on("connection", (socket) => {
-  console.log("Made socket connection");
+// Initalize Socket IO.
+require('./helpers/ws-handler')(io);
+
+// App Initialization.
+const port = process.env.PORT || 3000;
+app.get('/', function(req, res) {
+  res.sendFile(__dirname + '/index.html');
 });
+
+server.listen(port, () => console.log(`Listening on port ${port}...`));
 
