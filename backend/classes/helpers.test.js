@@ -6,3 +6,10 @@ test('getScore', () => {
     const roundTime = roundTime / 1000;
     expect(getScore(now, roundTime)).toBe(Math.floor(((roundTime - elapsedTime) / roundTime) * 500))
 });
+
+test('populateDisplayTime', () => {
+    const roundTime = roundTime / 1000;
+    const start = Math.floor(roundTime / 2);
+    const hints = Math.floor(start / 3)
+    expect(hints).toBe(Math.floor(start / 3));
+});
