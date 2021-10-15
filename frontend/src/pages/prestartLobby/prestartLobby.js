@@ -3,6 +3,7 @@ import { Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 import CreateHeader from "../header/header";
+import GameLink from "../../components/Gameinfo";
 import './prestartLobby.css'
 
 function PrestartLobby() {
@@ -14,8 +15,7 @@ function PrestartLobby() {
           <p>Game ID: 12390283A</p>
         </div>
         <div className='game-link'>
-          <p>Share the game link:</p><br/>
-          <p>https://www.google.com</p>
+          <GameLink game_url='www.google.com'/>
         </div>
         <div className='lobby-players'>
           <ul>
