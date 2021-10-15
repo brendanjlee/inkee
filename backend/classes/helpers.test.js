@@ -15,6 +15,6 @@ test('populateDisplayTime', () => {
 });
 
 test('get3Words', () => {
-    expect(get3Words(10)).length.toBe(0);
-    expect(get3Words(5)).length.toBe(3);
+    expect(helpers.get3Words(10)).length.toBe(0);
+    expect(helpers.get3Words(5)).length.toBe(3);
 });
