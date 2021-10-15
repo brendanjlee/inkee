@@ -1,12 +1,12 @@
-import React from "react";
+import React, { useRef } from "react";
 import { ReactSketchCanvas } from "react-sketch-canvas";
 
 const Canvas = class extends React.Component {
   constructor(props) {
     super(props);
-
+    this.notEmpty = false;
     this.canvas = React.createRef();
-  }
+  }  
 
   render() {
     return (
@@ -25,9 +25,17 @@ const Canvas = class extends React.Component {
               .catch(e => {
                 console.log(e);
               });
-          }}
+          }}hub
         >
-          Get Image
+          Create account
+        </button>
+        <button
+          onClick={() => {
+            this.canvas.current
+              .clearCanvas()
+          }}hub
+        >
+          Clear
         </button>
       </div>
     );
