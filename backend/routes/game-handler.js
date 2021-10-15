@@ -2,18 +2,19 @@ const express = require('express');
 const router = express.Router();
 
 // Classes required.
-const User = require('../../../classes/user');
-const Invite = require('../../../classes/invite');
-const GameConfiguration = require('../../../classes/gameConfiguration');
-const Serializer = require('../../../classes/serializer');
+const User = require('../classes/user');
+const Invite = require('../classes/invite');
+const GameConfiguration = require('../classes/game-configuration');
+const Serializer = require('../classes/serializer');
 
 // Database Interfacing Functions.
-const functions = require('../../../firebase/dbInterface');
-// Serializer Class.
-const serializer = new Serializer([User, Invite, GameConfiguration]);
+const functions = require('../firebase/db-interface');
+
+// Initialize Serializer.
+const serializer = new Serializer.Serializer([User, Invite, GameConfiguration]);
 
 /* Create game in Firebase Realtime Database */
-router.post('/games', (req, res) => {
+router.post('/', (req, res) => {
   const gameConfiguration = serializer.deserialize(req.body.gameConfiguration);
   const userData = serializer.deserialize(req.body.userData);
   
@@ -58,7 +59,7 @@ router.post('/games', (req, res) => {
 });
 
 /* Add user to game in Firebase Realtime Database */
-router.post('/games/:gameId/users', (req, res) => {
+router.post('/:gameId/users', (req, res) => {
   const gameId = req.params.gameId;
   const newUser = serializer.deserialize(req.body);
   let result = null;
@@ -74,26 +75,6 @@ router.post('/games/:gameId/users', (req, res) => {
       res.status(500).send("Error adding user to the game.");
     default:
       res.status(200).send(JSON.stringify([gameId, result]));
-  }
-});
-
-/* Add user to game in Firebase Realtime Database using provided invite code */
-router.post('/games/:invite', (req, res) => {
-  const invite = req.params.invite;
-  const newUser = serializer.deserialize(req.body);
-  let result = null;
-  
-  try {
-    result = functions.handleInvite(invite, newUser);
-  } catch (error) {
-    console.log(error);
-  }
-
-  switch (result) {
-    case null:
-      res.status(500).send(`Error adding user using invite code ${invite}.`);
-    default:
-      res.status(200).send(JSON.stringify(result));
   }
 });
 
