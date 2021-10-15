@@ -11,6 +11,7 @@ function createGameInstance(gameConfiguration, inviteCode) {
   const db = admin.database();
   const gameRef = db.ref('games');
 
+  const inviteCode = new Invite().inviteCode;
   const updates = {};
   updates[inviteCode] = {
     inProgress: false,

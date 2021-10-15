@@ -1,5 +1,7 @@
-/* global games, BONUS, round */
-
+const MAX_POINTS = 500;
+const games = {};
+const round = new EventEmitter();
+const BONUS = 250;
 const GraphemeSplitter = require('grapheme-splitter');
 const {
     get3Words,

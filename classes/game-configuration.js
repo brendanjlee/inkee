@@ -31,5 +31,5 @@ class GameConfiguration {
 }
 
 module.exports = {
-  GameConfiguration,
+  GameConfiguration, 
 }
