@@ -13,3 +13,8 @@ test('populateDisplayTime', () => {
     const hints = Math.floor(start / 3)
     expect(hints).toBe(Math.floor(start / 3));
 });
+
+test('get3Words', () => {
+    expect(get3Words(10)).length.toBe(0);
+    expect(get3Words(5)).length.toBe(3);
+});
