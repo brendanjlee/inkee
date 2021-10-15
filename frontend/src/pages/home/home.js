@@ -1,7 +1,6 @@
 import React from 'react'
 import { Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import { ReactSketchCanvas } from "react-sketch-canvas";
 //Style
 import './home.css'
 // Assets
