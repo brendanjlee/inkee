@@ -7,7 +7,7 @@ const Invite = require('../classes/invite');
  * @param {Object} gameConfiguration the object containing game configuration.
  * @return {string} the game ID of the new game instance, throws error if error occurs.
  */
-function createGameInstance(gameConfiguration, inviteCode) {
+function createGameInstance(gameConfiguration, inviteCode, userData) {
   const db = admin.database();
   const gameRef = db.ref('games');
 
@@ -15,7 +15,7 @@ function createGameInstance(gameConfiguration, inviteCode) {
   updates[inviteCode] = {
     inProgress: false,
     messages: [],
-    settings: gameConfiguration,
+    settings: gameConfiguration
   };
 
   gameRef.update(updates)
