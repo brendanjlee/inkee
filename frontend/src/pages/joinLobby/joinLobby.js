@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import CreateHeader from "../header/header";
+import LobbyForm from '../../components/LobbyForm';
 import './joinLobby.css'
 
 function JoinLobby() {
@@ -10,14 +11,9 @@ function JoinLobby() {
       <div className='greenSplat'>
         <div className='orangesplat'>
         <CreateHeader/>
-          <form className='form-group'>
-            <input className='username' type="text" placeholder="enter game ID"/><br />
-            <Link to='../prestartLobby/prestartLobby.js'>
-              <Button variant='primary'>Join Game</Button>
-            </Link>
-          </form>
+          <LobbyForm/>
         <Link to='../prestartLobby/prestartLobby.js'>
-            <Button variant='primary'>Join Random Game</Button>
+            <Button variant='primary'>join random game</Button>
         </Link>
         </div>
         </div>
