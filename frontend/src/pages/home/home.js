@@ -1,6 +1,4 @@
 import React from 'react'
-import { Button } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
 //Style
 import './home.css'
 // Assets
@@ -22,16 +20,6 @@ function Home() {
           </form>
           <div align="center">
             <Canvas></Canvas>
-          </div>
-          <div>
-            <Link to='../joinLobby/joinLobby.js'>
-              <Button className='btn' variant="secondary" size='lg'>join game</Button>{' '}
-            </Link>
-          </div>
-          <div>
-            <Link to='../createLobby/createLobby.js'>
-              <Button className='btn' variant="outline-primary" size='lg'>create game</Button>{' '}
-            </Link>
           </div>
         </div>
       </div>
