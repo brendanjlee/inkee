@@ -63,6 +63,26 @@ img {
   outline: 0;
 }
 
+.btn2
+{
+  width: 5;
+  height: 3rem;
+  background-color: white;
+  border: .40rem solid #000000;
+  box-sizing: border-box;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: bold;
+  text-align: center;
+  font-size: 1.5rem;
+  margin-top: -.25rem;
+}
+
+.btn2:hover {
+  color: #fff;
+  background-color: #000000;
+  outline: 0;
+}
+
 .logo {
   width: 54rem;
 }
