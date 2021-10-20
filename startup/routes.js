@@ -73,4 +73,4 @@ module.exports = (app) => {
 
   // Setup Routes
   app.use('/games', gameHandler.router);
-}
+};
