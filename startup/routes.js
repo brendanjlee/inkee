@@ -67,7 +67,7 @@ const corsOptions = {
 
 module.exports = (app) => {
   app.use(express.json());
-  app.use(validateFirebaseIdToken);
+  //app.use(validateFirebaseIdToken);
   app.use(cookieParser());
   app.use(cors(corsOptions));
 

@@ -6,7 +6,7 @@ class Invite {
    * @param {string} gameId the game ID that the user is associated with.
    */
   constructor() {
-    this.inviteCode = generateInvite(5);
+    this.inviteCode = this.generateInvite(5);
   }
 
   /**
@@ -15,7 +15,7 @@ class Invite {
    * @param {number} length the length of the invite code.
    * @return {string} the generated invite code.
    */
-  static generateInvite(length) {
+  generateInvite(length) {
     let invite = '';
     for (let i = 0; i < length; i++) {
         const numOrLetter = parseInt(Math.random() * 2, 10);
