@@ -11,10 +11,10 @@ function CreateLobby() {
       <CreateHeader />
       <div className='content'>
         <h2>Lobby</h2>
-        <form className='lobby-creation-div'>
+        <form className='lobby-creation-div' action='http://localhost:3000/games' method='POST'>
           <div className="form-group">
-              <label for="roundNum">Rounds:</label>
-              <select id="roundNum" name="roundNum">
+              <label for="numRounds">Rounds:</label>
+              <select id="numRounds" name="numRounds">
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
@@ -47,6 +47,7 @@ function CreateLobby() {
           <Link to='/prestartLobby'>
               <Button variant='primary'>Start Game</Button>{' '}
             </Link>
+            <button>send</button>
         </form>
       </div>
     </div>
