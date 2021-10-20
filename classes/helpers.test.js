@@ -1,10 +1,10 @@
-const helpers = require('./helpers');
+import { getScore } from "./helpers";
 
 test('getScore', () => {
     const now = Date.now() / 1000;
     const later = (Date.now() + 10000) / 1000;
     const roundTime = roundTime / 1000;
-    expect(helpers.getScore(now, roundTime)).toBe(Math.floor(((roundTime - elapsedTime) / roundTime) * 500))
+    expect(getScore(now, roundTime)).toBe(Math.floor(((roundTime - elapsedTime) / roundTime) * 500))
 });
 
 test('populateDisplayTime', () => {
@@ -15,6 +15,6 @@ test('populateDisplayTime', () => {
 });
 
 test('get3Words', () => {
-    expect(helpers.get3Words(10)).length.toBe(0);
-    expect(helpers.get3Words(5)).length.toBe(3);
+    expect(get3Words(10)).length.toBe(0);
+    expect(get3Words(5)).length.toBe(3);
 });
