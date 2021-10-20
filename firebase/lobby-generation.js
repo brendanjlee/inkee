@@ -1,3 +1,4 @@
+const { User } = require('../classes/user');
 const admin = require('./firebase');
 
 /**
@@ -13,7 +14,6 @@ async function createGameInstance(gameConfiguration, inviteCode) {
   const updates = {};
   updates[inviteCode] = {
     inProgress: false,
-    admin: 'temp',
     messages: [],
     settings: gameConfiguration
   };
@@ -36,7 +36,7 @@ async function makeAdmin(userInfo, inviteCode) {
   gameRefId.once('value', (snapshot) => {
     if (snapshot.exists()) {
       const updates = {};
-      updates['admin'] = userInfo.uid;
+      updates[`${inviteCode}/admin`] = userInfo.uid;
       gameRef.update(updates);
     } 
   });
@@ -50,18 +50,22 @@ async function makeAdmin(userInfo, inviteCode) {
  * @param {Object} res the response object that sends the status of request.
  * @return {boolean} false if user cannot.
  */
-async function addNewUser(userData, inviteCode, res) {
+async function addNewUser(userData, inviteCode, res = null) {
   const db = admin.database();
   const usersRef = db.ref(`games/${inviteCode}/users`);
 
   const usersRefId = usersRef.orderByKey().equalTo(userData.uid);
+
   usersRefId.once('value', (snapshot) => {
     if (!snapshot.exists()) {
       const updates = {};
       updates[userData.uid] = userData;
       usersRef.update(updates);
-      res.status(200).send(`${userData.uid} added successfully.`);
-    } else {
+      
+      if (res !== null) {
+        res.status(200).send(`${userData.uid} added successfully.`);
+      }
+    } else if (res !== null) {
       res.status(500).send(`${userData.uid} already exists!`);
     }
   });
