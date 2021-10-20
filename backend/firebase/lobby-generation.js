@@ -66,7 +66,7 @@ async function addNewUser(userData, inviteCode, res = null) {
         res.status(200).send(`${userData.uid} added successfully.`);
       }
     } else if (res !== null) {
-      res.status(500).send(`${userData.uid} already exists!`);
+      res.status(400).send(`${userData.uid} already exists!`);
     }
   });
 }
