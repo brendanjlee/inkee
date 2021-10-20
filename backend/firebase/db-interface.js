@@ -1,5 +1,4 @@
 const admin = require('./firebase');
-const Invite = require('../classes/invite');
 
 /**
  * Creates a game object in the backend and returns the game_id/invite code.
@@ -7,21 +6,19 @@ const Invite = require('../classes/invite');
  * @param {Object} gameConfiguration the object containing game configuration.
  * @return {string} the game ID of the new game instance, throws error if error occurs.
  */
-function createGameInstance(gameConfiguration, inviteCode, userData) {
+async function createGameInstance(gameConfiguration, inviteCode) {
   const db = admin.database();
   const gameRef = db.ref('games');
 
   const updates = {};
   updates[inviteCode] = {
     inProgress: false,
+    admin: 'temp',
     messages: [],
     settings: gameConfiguration
   };
 
-  gameRef.update(updates)
-    .catch((error) => {
-      throw `Error occurred while creating game instance ${error}`;
-    });
+  await gameRef.update(updates);
 }
 
 /**
@@ -31,23 +28,14 @@ function createGameInstance(gameConfiguration, inviteCode, userData) {
  * @param {string} gameId the game id.
  * @return {boolean} true if update is successful.
  */
-function makeAdmin(userInfo, gameId) {
+async function makeAdmin(userInfo, gameId) {
   const db = admin.database();
-  const gameRef = db.ref('games');
-  
-  const updates = {};
-  updates[gameId] = {
-    admin: userInfo.uid,
-  }
+  const gameRef = db.ref(`games/${gameId}`);
 
-  gameRef.update(updates)
-    .then((value) => {
-      console.log(`User ${userInfo.uid} added as admin successfully to game ${gameId}: ${value}`);
-      return true;
-    }).catch((error) => {
-      console.log(`Error adding user ${userInfo.uid} as admin to game ${gameId}: ${error}`);
-      throw `Error adding user ${userInfo.uid} as admin to game ${gameId}: ${error}`;
-    });
+  const updates = {};
+  updates['admin'] = userInfo.uid;
+
+  await gameRef.update(updates);
 }
 
 /**
@@ -60,18 +48,11 @@ function makeAdmin(userInfo, gameId) {
 async function addNewUser(gameId, userInfo) {
   const db = admin.database();
   const usersRef = db.ref(`games/${gameId}/users`);
-  const newUserId = usersRef.push().key;
 
   const updates = {};
-  updates[newUserId] = userInfo;
-  await usersRef.update(updates)
-    .then(() => {
-      console.log('User added successfully');
-      return [gameId, newUserId];
-    }).catch((error) => {
-      console.log(`Error adding user: ${error}`);
-      throw `Error adding user: ${error}`;
-    });
+  updates[userInfo.uid] = userInfo;
+
+  await usersRef.update(updates);
 }
 
 /**
@@ -81,19 +62,15 @@ async function addNewUser(gameId, userInfo) {
  * @param {Object} userInfo the new user info.
  * @return {Array} game ID and userId, throws error if error occurs.
  */
-function handleInvite(inviteCode, userInfo) {
+async function handleInvite(inviteCode, userInfo) {
   const db = admin.database();
   const gameRef = db.ref('games');
-  get(child(gameRef, inviteCode)).then((snapshot) => {
-    if (snapshot.exists()){
-      const userId = addNewUser(snapshot.key, userInfo);
-      return [snapshot.key, userId]
-    }
-    throw `Error locating game using invite code ${inviteCode}`;
-  }).catch((error) => {
-    console.log(`Error occurred while finding game: ${error}`);
-    throw `Error occurred while finding game: ${error}`
-  });
+  
+  const snapshot = await get(child(gameRef, inviteCode));
+  if (snapshot.exists()){
+    const userId = addNewUser(snapshot.key, userInfo);
+    return [snapshot.key, userId]
+  }
 }
 
 /**
@@ -104,28 +81,17 @@ function handleInvite(inviteCode, userInfo) {
  * @param {Object} newValue the new value of the user param.
  * @return {boolean} if success, throws error if error occurs
  */
-function updateUser(userId, param, newValue) {
+async function updateUser(userId, param, newValue) {
   const db = admin.database();
   const gameRef = db.ref('games/users');
-  get(child(gameRef, userId)).then((snapshot) => {
-    if (snapshot.exists()){
-      const updates = {};
-      updates[`${userId}/${param}`] = newValue;
 
-      gameRef.update(updates)
-      .then((value) => {
-        console.log(`User updated successfully: ${value}`);
-        return true;
-      }).catch((error) => {
-        console.log(`Error updating user: ${error}`);
-        throw `Error adding user: ${error}`;
-      });;
-    }
-    throw `Error locating user using userId ${userId}`;
-  }).catch((error) => {
-    console.log(`Error occurred while finding user: ${error}`);
-    throw `Error occurred while finding user: ${error}`
-  });
+  const snapshot = get(child(gameRef, userId));
+  if (snapshot.exists()){
+    const updates = {};
+    updates[`${userId}/${param}`] = newValue;
+
+    await gameRef.update(updates);
+  }
 }
 
 module.exports = {
