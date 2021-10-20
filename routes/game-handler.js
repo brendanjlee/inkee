@@ -8,7 +8,7 @@ const GameConfiguration = require('../classes/game-configuration');
 const Serializer = require('../classes/serializer');
 
 // Database Interfacing Functions.
-const functions = require('../firebase/db-interface');
+const functions = require('../firebase/lobby-generation');
 
 // Initialize Serializer.
 const serializer = new Serializer.Serializer([User, Invite, GameConfiguration]);
@@ -22,7 +22,7 @@ router.post('/', (req, res) => {
 
   functions.createGameInstance(gameConfiguration, inviteCode)
     .then(() => {
-      functions.addNewUser(inviteCode, userData)
+      functions.addNewUser(userData, inviteCode)
         .then(() => {
           functions.makeAdmin(userData, inviteCode);
         })
@@ -33,23 +33,12 @@ router.post('/', (req, res) => {
 });
 
 /* Add user to game in Firebase Realtime Database */
-router.post('/:gameId/users', (req, res) => {
-  const gameId = req.params.gameId;
-  const newUser = serializer.deserialize(req.body);
-  let result = null;
+router.post('/:inviteCode/users', (req, res) => {
+  console.log(req.body);
+  const inviteCode = req.params.inviteCode;
+  const userData = req.body.userData;
 
-  try {
-    result = functions.addNewUser(gameId, newUser)
-  } catch (error) {
-    console.log(error);
-  }
-
-  switch (result) {
-    case null:
-      res.status(500).send("Error adding user to the game.");
-    default:
-      res.status(200).send(JSON.stringify([gameId, result]));
-  }
+  functions.addNewUser(userData, inviteCode, res);
 });
 
 module.exports = {
