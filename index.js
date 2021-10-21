@@ -11,7 +11,7 @@ const io = require('socket.io')(server);
 require('./helpers/ws-handler')(io);
 
 // App Initialization.
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 app.get('/', function(req, res) {
   res.sendFile(__dirname + '/index.html');
 });
