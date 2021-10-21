@@ -7,6 +7,8 @@ class Room {
   joinRoom(data) {
     this.socket.to(socket.roomID).emit('newPlayer', data);
   }
+
+  
 }
 
 module.exports = Room;
