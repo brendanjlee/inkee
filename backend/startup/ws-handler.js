@@ -1,6 +1,7 @@
 const socket_io = require('socket.io');
 
 const { Canvas } = require('../controllers/canvas');
+const { Message } = require('../controllers/message');
 
 module.exports.init = (server) => {
   const io = socket_io(server);
