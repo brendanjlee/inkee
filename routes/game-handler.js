@@ -6,10 +6,11 @@ const { User } = require('../classes/user');
 const { Invite } = require('../classes/invite');
 
 // Database Interfacing Functions.
-const functions = require('../firebase/lobby-generation');
+const functions = require('../helpers/lobby-generation');
 
 /* Create game in Firebase Realtime Database */
 router.post('/', (req, res) => {
+  console.log(req.body);
   const gameConfiguration = req.body.gameConfiguration;
   const reqUserData = req.body.userData;
   
