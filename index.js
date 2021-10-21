@@ -5,10 +5,7 @@ require('./startup/routes')(app);
 
 // Set up server for Socket IO.
 const server = require('http').createServer(app);
-const io = require('socket.io')(server);
-
-// Initalize Socket IO.
-require('./helpers/ws-handler')(io);
+const sockets = require('./startup/ws-handler');
 
 // App Initialization.
 const port = process.env.PORT || 3001;
@@ -17,4 +14,4 @@ app.get('/', function(req, res) {
 });
 
 server.listen(port, () => console.log(`Listening on port ${port}...`));
-
+sockets.init(server);
