@@ -6,7 +6,7 @@ const { User } = require('../classes/user');
 const { Invite } = require('../classes/invite');
 
 // Database Interfacing Functions.
-const functions = require('../helpers/lobby-generation');
+const functions = require('../firebase/lobby-generation');
 
 /* Create game in Firebase Realtime Database */
 router.post('/', (req, res) => {
@@ -22,11 +22,8 @@ router.post('/', (req, res) => {
       functions.addNewUser(userData, inviteCode)
         .then(() => {
           functions.makeAdmin(userData, inviteCode);
-        })
+        });
     });
-
-  const result = inviteCode;
-  res.status(200).send(JSON.stringify(result));
 });
 
 /* Add user to game in Firebase Realtime Database */

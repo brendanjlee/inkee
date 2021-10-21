@@ -1,4 +1,4 @@
-const admin = require('./firebase-admin');
+const admin = require('../firebase/firebase-admin');
 
 /**
  * Creates a game object in the backend and returns the game_id/invite code.
@@ -61,7 +61,7 @@ async function addNewUser(userData, inviteCode, res = null) {
       usersRef.update(updates);
       
       if (res !== null) {
-        res.status(200).send(`${userData.uid} added successfully.`);
+        res.status(200).send(inviteCode);
       }
     } else if (res !== null) {
       res.status(400).send(`${userData.uid} already exists!`);
