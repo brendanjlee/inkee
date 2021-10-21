@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { Button } from "react-bootstrap";
 // Components
 import CreateHeader from "../header/header";
@@ -9,6 +9,9 @@ import { api_url } from "../../config";
 function CreateLobby() {
   const [numRounds, setNumRounds] = useState(1);
   const [roundLength, setRoundLength] = useState(30);
+  const [inviteCode, setInviteCode] = useState('');
+
+  const history = useHistory();
 
   const handleNumRoundChange = (event) => {
     setNumRounds(event.target.value);
@@ -24,7 +27,8 @@ function CreateLobby() {
 
     xhr.onreadystatechange = function() {
       if (this.readyState === 4 && this.status === 200) {
-        console.log(this.responseText);
+        setInviteCode(this.responseText);
+        history.push('/prestartLobby?inviteCode=' + inviteCode);
       }
     };
 
@@ -93,10 +97,8 @@ function CreateLobby() {
           <div className='wordlist-container'>
             <h2>Word List Placeholder</h2>
           </div> 
-          <Link to='/prestartLobby'>
-              <Button variant='primary'>Start Game</Button>{' '}
-            </Link>
-            <button>send</button>
+          <Button variant='primary'>Start Game</Button>
+          <button>send</button>
         </form>
       </div>
     </div>
