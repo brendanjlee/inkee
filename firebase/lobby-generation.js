@@ -1,4 +1,4 @@
-const admin = require('../firebase/firebase-admin');
+const admin = require('./firebase-admin');
 
 /**
  * Creates a game object in the backend and returns the game_id/invite code.
