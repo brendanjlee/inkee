@@ -17,10 +17,11 @@ const Canvas = class extends React.Component {
         ref={this.canvas}
         width="24em" height="15rem" strokeWidth={4} strokeColor="black" style={{
         border: ".5rem solid black",}}/>
+        <br/>
         <button className="btn2"
           onClick={() => {
-            this.canvas.current
-              .clearCanvas()
+            this.canvas.current.clearCanvas();
+            console.log('Canvas.js: canvas cleared');
           }}hub
         >
           Clear
