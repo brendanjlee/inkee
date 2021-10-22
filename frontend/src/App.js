@@ -1,5 +1,6 @@
 import './App.css';
 import React, { useEffect, useState } from 'react'
+import { useHistory } from 'react-router';
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom'
 import Home from './pages/home/home';
 import CreateLobby from './pages/createLobby/createLobby';
@@ -11,13 +12,23 @@ import GameDrawer from './pages/game/gameDrawer';
 import GameGuesser from './pages/game/gameGuesser';
 import testPage from './reactTesting/testPage';
 import io from 'socket.io-client';
+import Sound from 'react-sound';
+import VanilleFraise from './assets/vanille-fraise.mp3';
 
 function App() {
   const [socket, setSocket] = useState(null);
+  const history = useHistory();
 
   useEffect(() => {
-    // When App mounts, initialize Socket connection.
-    const newSocket = io(`http://${window.location.hostname}:3001`);
+    // Initialize Socket connection.
+    const newSocket = io(`http://${window.location.hostname}:3001`, {
+      transports: ['websocket', 'polling'],
+      upgrade: true,
+    });
+    
+    newSocket.on("connect_error", () => {
+      newSocket.io.opts.transports = ["polling", "websocket"];
+    });
     setSocket(newSocket);
 
     // Clean-up routine for socket.
@@ -27,13 +38,14 @@ function App() {
   return (
     <Router>
       <div className="App">
+        <Sound url={VanilleFraise} playStatus={Sound.status.PLAYING} loop={true} />
         <Switch>
-          <Route path='/' exact socket={socket} component={Home}/>
-          <Route path='/createLobby' socket={socket} component={CreateLobby}/>
-          <Route path='/joinLobby' socket={socket} component={JoinLobby}/>
-          <Route path='/prestartLobby' socket={socket} component={PrestartLobby}/>
-          <Route path='/setupProfile' socket={socket} component={SetupProfile}/>
-          <Route path='/game' socket={socket} component={Game}/>
+          <Route path='/' exact render={(props) => (<Home socket={socket} history={history} {...props} />)}/>
+          <Route path='/createLobby' render={(props) => (<CreateLobby socket={socket} history={history} {...props} />)}/>
+          <Route path='/joinLobby' render={(props) => (<JoinLobby socket={socket} history={history} {...props} />)}/>
+          <Route path='/prestartLobby' render={(props) => (<PrestartLobby socket={socket} history={history} {...props} />)}/>
+          <Route path='/setupProfile' render={(props) => (<SetupProfile socket={socket} history={history} {...props} />)}/>
+          <Route path='/game' render={(props) => (<Game socket={socket} history={history} {...props} />)}/>
           <Route path='/game/gameDrawer' component={GameDrawer}/>
           <Route path='/game/gameGuesser' component={GameGuesser}/>
           <Route path='/testPage' component={testPage} />

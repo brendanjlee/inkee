@@ -5,7 +5,7 @@ import CreateHeader from "../../components/header/header";
 import LobbyForm from '../../components/LobbyForm';
 import './joinLobby.css'
 
-function JoinLobby({socket}) {
+function JoinLobby({socket, history}) {
   return (
     <div className='root'>
       <div className='greenSplat'>

@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React from "react";
 import { ReactSketchCanvas } from "react-sketch-canvas";
 import { Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
@@ -21,7 +21,7 @@ const Canvas = class extends React.Component {
           onClick={() => {
             this.canvas.current
               .clearCanvas()
-          }}hub
+          }}
         >
           Clear
         </button>
@@ -36,7 +36,7 @@ const Canvas = class extends React.Component {
               .catch(e => {
                 console.log(e);
               });
-          }}hub className='btn' variant="secondary" size='lg'>join game</Button>{' '}
+          }} className='btn' variant="secondary" size='lg'>join game</Button>{' '}
             </Link>
           </div>
           <div>
@@ -50,7 +50,7 @@ const Canvas = class extends React.Component {
               .catch(e => {
                 console.log(e);
               });
-          }}hub className='btn' variant="outline-primary" size='lg'>create game</Button>{' '}
+          }} className='btn' variant="outline-primary" size='lg'>create game</Button>{' '}
             </Link>
           </div>
       </div>
