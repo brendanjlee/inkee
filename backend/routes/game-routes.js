@@ -10,6 +10,7 @@ const functions = require('../firebase/lobby-generation');
 
 /* Create game in Firebase Realtime Database */
 router.post('/', (req, res) => {
+  console.log(req.body);
   const gameConfiguration = req.body.gameConfiguration;
   const reqUserData = req.body.userData;
   
@@ -21,11 +22,8 @@ router.post('/', (req, res) => {
       functions.addNewUser(userData, inviteCode)
         .then(() => {
           functions.makeAdmin(userData, inviteCode);
-        })
+        });
     });
-
-  const result = inviteCode;
-  res.status(200).send(JSON.stringify(result));
 });
 
 /* Add user to game in Firebase Realtime Database */
