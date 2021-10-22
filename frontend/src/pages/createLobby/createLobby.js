@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import { Button} from "react-bootstrap";
+import { Button, InputGroup, FormControl, Form} from "react-bootstrap";
 // Components
 import CreateHeader from "../header/header";
 import './createLobby.css'
 import { api_url } from "../../config";
+import BoostrapTextarea from '../../components/BootstrapTextarea';
 
 function CreateLobby() {
   const [numRounds, setNumRounds] = useState(2);
@@ -78,7 +79,7 @@ function CreateLobby() {
               </select>
           </div> 
           <div className="setting-form-group">
-            <label for="roundLength">Drawing Time:</label>
+            <label for="roundLength">Drawing Time (seconds):</label>
             <select
               id="roundLength"
               name="roundLength"
@@ -103,6 +104,9 @@ function CreateLobby() {
               <option value="180">180</option>
             </select>
           </div>
+
+          <BoostrapTextarea> </BoostrapTextarea>
+
 
           <Button variant='primary' onClick>Start Game</Button>
           <button>send</button>
