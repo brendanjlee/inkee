@@ -7,10 +7,12 @@ module.exports.init = (server) => {
   const io = socket_io(server);
 
   io.on('connection', (socket) => {
+    console.log("CONNECTION!!!!");
     /* Socket Lifecycle Listeners */
     /* User disconnects from server */
     socket.on('disconnect', () => {
-      new Disconnect(io, socket).onDisconnect()
+      //new Disconnect(io, socket).onDisconnect()
+      console.log("DISCONNECT");
     });
 
     /* Game Change Listeners */
