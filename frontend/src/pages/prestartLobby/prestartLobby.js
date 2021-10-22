@@ -12,7 +12,7 @@ function PrestartLobby({socket, history}) {
 
   // User routines.
   useEffect(() => {
-    console.log(history.location.state);
+    console.log(history.location.state.inviteCode);
     const userListener = (userToAdd) => {
       setUsers((prevUsers) => {
         const newUsers = [...prevUsers];
