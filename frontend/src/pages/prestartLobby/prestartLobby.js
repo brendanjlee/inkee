@@ -14,7 +14,7 @@ function PrestartLobby() {
       document.querySelector('#gameLink').select();
       document.execCommand('copy');
     });
-  },[])
+  }, []);
   
   return (
     <div className='root'>
