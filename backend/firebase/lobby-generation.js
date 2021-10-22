@@ -4,6 +4,7 @@ const admin = require('../firebase/firebase-admin');
  * Creates a game object in the backend and returns the game_id/invite code.
  * 
  * @param {Object} gameConfiguration the object containing game configuration.
+ * @param {string} inviteCode the inviteCode to create the game.
  * @return {string} the game ID of the new game instance, throws error if error occurs.
  */
 async function createGameInstance(gameConfiguration, inviteCode) {

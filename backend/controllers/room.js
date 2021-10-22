@@ -8,7 +8,9 @@ class Room {
     this.socket.to(socket.roomID).emit('newPlayer', data);
   }
 
-  
+  updateSettings(data) {
+    this.socket.to(socket.roomID).emit('settingsUpdate', data);
+  }
 }
 
 module.exports = Room;
