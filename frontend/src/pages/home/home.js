@@ -7,7 +7,8 @@ import Canvas from '../../components/Canvas';
 
 
 
-function Home() {
+function Home({socket}) {
+  
   return (
     <div className='root'>
       <iframe width="0" height="0" src="https://www.youtuberepeater.com/watch?v=hQ5PFlYU9sk#gsc.tab=0" frameborder="0" allowfullscreen></iframe>
