@@ -1,6 +1,6 @@
 import React from "react";
 
-function SetupProfile() {
+function SetupProfile({socket}) {
   <div>
     <div className='setupProfile'>
       <div classname='usernameContainer'>

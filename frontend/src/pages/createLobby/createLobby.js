@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Button } from "react-bootstrap";
 // Components
-import CreateHeader from "../header/header";
+import CreateHeader from "../../components/header/header";
 import './createLobby.css'
 import { api_url } from "../../config";
 
-function CreateLobby() {
+function CreateLobby({socket}) {
   const [numRounds, setNumRounds] = useState(1);
   const [roundLength, setRoundLength] = useState(30);
   const [inviteCode, setInviteCode] = useState('');
@@ -22,31 +22,36 @@ function CreateLobby() {
   };
   
   const handleSubmit = (event) => {
-    event.preventDefault();
-    const xhr = new XMLHttpRequest();
+    // TODO: Use sockets instead.
+    // event.preventDefault();
+    // const xhr = new XMLHttpRequest();
 
-    xhr.onreadystatechange = function() {
-      if (this.readyState === 4 && this.status === 200) {
-        setInviteCode(this.responseText);
-        history.push('/prestartLobby?inviteCode=' + inviteCode);
-      }
-    };
+    // xhr.onreadystatechange = function() {
+    //   if (this.readyState === 4 && this.status === 200) {
+    //     setInviteCode(this.responseText);
+    //     history.push('/prestartLobby?inviteCode=' + inviteCode);
+    //   } else if (this.status === 400) {
+    //     alert("This username has already been taken!");
+    //   } else {
+    //     alert("An error occurred, please try again later.");
+    //   }
+    // };
 
-    xhr.open("POST", api_url + '/games', true);
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.send(JSON.stringify(
-      {
-        gameConfiguration: {
-          num_rounds: numRounds,
-          round_length: roundLength
-        },
-        userData: {
-          uid: 'TEST',
-          username: 'TEST',
-          avatar: 'TEST'
-        }
-      }
-    ));
+    // xhr.open("POST", api_url + '/games', true);
+    // xhr.setRequestHeader('Content-Type', 'application/json');
+    // xhr.send(JSON.stringify(
+    //   {
+    //     gameConfiguration: {
+    //       num_rounds: numRounds,
+    //       round_length: roundLength
+    //     },
+    //     userData: {
+    //       uid: 'TEST',
+    //       username: 'TEST',
+    //       avatar: 'TEST'
+    //     }
+    //   }
+    // ));
   };
 
   return (
