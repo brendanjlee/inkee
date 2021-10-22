@@ -1,10 +1,10 @@
-const { User } = require('../classes/user');
-const admin = require('./firebase');
+const admin = require('../firebase/firebase-admin');
 
 /**
  * Creates a game object in the backend and returns the game_id/invite code.
  * 
  * @param {Object} gameConfiguration the object containing game configuration.
+ * @param {string} inviteCode the inviteCode to create the game.
  * @return {string} the game ID of the new game instance, throws error if error occurs.
  */
 async function createGameInstance(gameConfiguration, inviteCode) {
@@ -24,11 +24,11 @@ async function createGameInstance(gameConfiguration, inviteCode) {
 /**
  * Sets the specified user as the admin of the specified gameId.
  * 
- * @param {Object} userInfo the object containing user info.
+ * @param {Object} userData the object containing user info.
  * @param {string} inviteCode the game id.
  * @return {boolean} true if update is successful.
  */
-async function makeAdmin(userInfo, inviteCode) {
+async function makeAdmin(userData, inviteCode) {
   const db = admin.database();
   const gameRef = db.ref('games');
 
@@ -36,7 +36,7 @@ async function makeAdmin(userInfo, inviteCode) {
   gameRefId.once('value', (snapshot) => {
     if (snapshot.exists()) {
       const updates = {};
-      updates[`${inviteCode}/admin`] = userInfo.uid;
+      updates[`${inviteCode}/admin`] = userData.uid;
       gameRef.update(updates);
     } 
   });
@@ -53,7 +53,6 @@ async function makeAdmin(userInfo, inviteCode) {
 async function addNewUser(userData, inviteCode, res = null) {
   const db = admin.database();
   const usersRef = db.ref(`games/${inviteCode}/users`);
-
   const usersRefId = usersRef.orderByKey().equalTo(userData.uid);
 
   usersRefId.once('value', (snapshot) => {
@@ -63,7 +62,7 @@ async function addNewUser(userData, inviteCode, res = null) {
       usersRef.update(updates);
       
       if (res !== null) {
-        res.status(200).send(`${userData.uid} added successfully.`);
+        res.status(200).send(inviteCode);
       }
     } else if (res !== null) {
       res.status(400).send(`${userData.uid} already exists!`);
