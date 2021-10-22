@@ -1,24 +1,27 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import { Button } from "react-bootstrap";
+import { Button} from "react-bootstrap";
 // Components
 import CreateHeader from "../header/header";
 import './createLobby.css'
 import { api_url } from "../../config";
 
 function CreateLobby() {
-  const [numRounds, setNumRounds] = useState(1);
+  const [numRounds, setNumRounds] = useState(2);
   const [roundLength, setRoundLength] = useState(30);
   const [inviteCode, setInviteCode] = useState('');
+  
 
   const history = useHistory();
 
   const handleNumRoundChange = (event) => {
     setNumRounds(event.target.value);
+    console.log(`CreateLobby: Num Rounds set - ${event.target.value} rounds.`);
   };
 
   const handleRoundLengthChange = (event) => {
     setRoundLength(event.target.value);
+    console.log(`CreateLobby: Round Length Set - ${event.target.value}`);
   };
   
   const handleSubmit = (event) => {
@@ -53,9 +56,9 @@ function CreateLobby() {
     <div className='root'>
       <CreateHeader />
       <div className='content'>
-        <h2>Lobby</h2>
+        <h2 id='title'>Lobby</h2>
         <form className='lobby-creation-div' onSubmit={handleSubmit}>
-          <div className="form-group">
+          <div className="setting-form-group">
               <label for="numRounds">Rounds:</label>
               <select
                 id="numRounds"
@@ -63,7 +66,6 @@ function CreateLobby() {
                 onChange={handleNumRoundChange}
                 value={numRounds}
               >
-                <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
                 <option value="4">4</option>
@@ -75,7 +77,7 @@ function CreateLobby() {
                 <option value="10">10</option>
               </select>
           </div> 
-          <div className="form-group">
+          <div className="setting-form-group">
             <label for="roundLength">Drawing Time:</label>
             <select
               id="roundLength"
@@ -90,14 +92,19 @@ function CreateLobby() {
               <option value="70">70</option>
               <option value="80">80</option>
               <option value="90">90</option>
+              <option value="100">100</option>
+              <option value="110">110</option>
               <option value="120">120</option>
+              <option value="130">130</option>
+              <option value="140">140</option>
+              <option value="150">150</option>
+              <option value="160">160</option>
+              <option value="170">170</option>
               <option value="180">180</option>
             </select>
           </div>
-          <div className='wordlist-container'>
-            <h2>Word List Placeholder</h2>
-          </div> 
-          <Button variant='primary'>Start Game</Button>
+
+          <Button variant='primary' onClick>Start Game</Button>
           <button>send</button>
         </form>
       </div>
