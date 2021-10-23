@@ -9,6 +9,4 @@ class Message {
   }
 }
 
-module.exports = {
-  Message,
-}
+module.exports = Message;
