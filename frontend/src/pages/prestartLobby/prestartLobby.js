@@ -6,7 +6,6 @@ import GameLink from "../../components/GameLink";
 import './prestartLobby.css'
 
 function PrestartLobby({socket, history}) {
-
   const [inviteCode, setInviteCode] = useState('');
   const [users, setUsers] = useState([]);
   const [settings, setSettings] = useState({});
