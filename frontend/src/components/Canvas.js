@@ -13,8 +13,10 @@ function Canvas(props) {
         ref={canvas}
         width="24em" height="15rem" strokeWidth={4} strokeColor="black" style={{
         border: ".5rem solid black",}} 
-        onUpdate={() => {
-          setNumDrawingEvents(numDrawingEvents + 1);
+        onUpdate={(update) => {
+          if (update.length !== 0) {
+            setNumDrawingEvents(numDrawingEvents + 1);
+          }
         }}
       />
       <button
