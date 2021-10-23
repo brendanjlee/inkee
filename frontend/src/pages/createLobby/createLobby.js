@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { Button } from "react-bootstrap";
-
+// Components
 import CreateHeader from "../../components/header/header";
 import './createLobby.css'
 
