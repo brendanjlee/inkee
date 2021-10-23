@@ -7,12 +7,12 @@ import './prestartLobby.css'
 
 function PrestartLobby({socket, history}) {
 
+  const [inviteCode, setInviteCode] = useState('');
   const [users, setUsers] = useState([]);
   const [settings, setSettings] = useState({});
 
   // User routines.
   useEffect(() => {
-    console.log(history.location.state.inviteCode);
     const userListener = (userToAdd) => {
       setUsers((prevUsers) => {
         const newUsers = [...prevUsers];
@@ -24,7 +24,6 @@ function PrestartLobby({socket, history}) {
     const deleteUserListener = (userToRemove) => {
       setUsers((prevUsers) => {
         const newUsers = [...prevUsers];
-
         const idx = newUsers.findIndex(user => user.id === userToRemove.id);
         return newUsers.splice(idx);
       });
@@ -66,12 +65,16 @@ function PrestartLobby({socket, history}) {
     }
   }, [socket]);
 
+  useEffect(() => {
+    setInviteCode(history.location.state.inviteCode);
+  }, [history]);
+
   return (
     <div className='root'>
       <CreateHeader/>
       <div className='content'>
         <div className='game-id'>
-          <p>Game ID: 12390283A</p>
+          <p>Game ID: {inviteCode}</p>
         </div>
         <div className='game-link'>
           <GameLink game_url='www.google.com'/>
