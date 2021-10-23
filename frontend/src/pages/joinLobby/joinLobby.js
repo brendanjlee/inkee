@@ -11,9 +11,9 @@ function JoinLobby({socket, history}) {
       <div className='greenSplat'>
         <div className='orangesplat'>
         <CreateHeader/>
-          <LobbyForm/>
+        <LobbyForm/>
         <Link to='../prestartLobby/prestartLobby.js'>
-            <Button variant='primary'>join random game</Button>
+          <Button variant='primary'>join random game</Button>
         </Link>
         </div>
         </div>
