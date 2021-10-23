@@ -11,14 +11,17 @@ function JoinLobby() {
       <div className='greenSplat'>
         <div className='orangesplat'>
         <CreateHeader/>
-          <LobbyForm/>
-        <Link to='../prestartLobby/prestartLobby.js'>
-            <Button variant='primary'>join random game</Button>
-        </Link>
-        <Link to='../game/game.js'>
-            <Button variant='primary'>temp</Button>
-        </Link>
-        </div>
+          <form className='form-group'>
+              <input className='username' type="text" placeholder="enter game ID..."/><br />
+              <Button>join with ID</Button>
+          </form>
+          <Link to='../prestartLobby/prestartLobby.js'>
+              <Button variant='primary'>join random game</Button>
+          </Link>
+          <Link to='../game/game.js'>
+              <Button variant='primary'>temp</Button>
+          </Link>
+          </div>
         </div>
     </div>
   );
