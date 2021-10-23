@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import CreateHeader from "../../components/header/header";
+import CreateHeader from "../header/header";
+import { useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import './prestartLobby.css'
 
 function PrestartLobby({socket, history}) {
@@ -20,16 +22,6 @@ function PrestartLobby({socket, history}) {
     });
   }, []);
 
-  
-  // User routines.
-  useEffect(() => {
-    const userListener = (userToAdd) => {
-      setUsers((prevUsers) => {
-        const newUsers = [...prevUsers];
-        newUsers.push(userToAdd);
-        return newUsers;
-      });
-    };
   
     const deleteUserListener = (userToRemove) => {
       setUsers((prevUsers) => {
