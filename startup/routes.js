@@ -2,7 +2,6 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const gameRouter = require('../routes/game-routes');
-const imageRouter = require('../routes/image-uploader');
 
 /**
  * Validates Firebase ID Tokens of users that send requests to /v1
@@ -61,7 +60,7 @@ const validateFirebaseIdToken = async (req, res, next) => {
 
 // TODO: WHEN DEPLOYED, SUBSTITUDE ORIGIN WITH DOMAIN OF PROJECT.
 const corsOptions = {
-  origin: '*',
+  origin: 'http://localhost:3001',
   optionsSuccessStatus: 200,
   methods: 'GET, POST'
 }
@@ -71,7 +70,6 @@ module.exports = (app) => {
   //app.use(validateFirebaseIdToken);
   app.use(cookieParser());
   app.use(cors(corsOptions));
-  app.use('/avatar', imageRouter.router);
 
   // Setup Routes
   app.use('/games', gameRouter.router);
