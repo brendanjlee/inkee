@@ -92,7 +92,9 @@ function CreateLobby({socket, history}) {
           <div className='wordlist-container'>
             <h2>Word List Placeholder</h2>
           </div> 
+          <Link to='/prestartLobby'>
           <Button variant='primary'>Start Game</Button>
+          </Link>
           <button>send</button>
         </form>
       </div>
