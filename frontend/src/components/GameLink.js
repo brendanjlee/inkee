@@ -6,7 +6,7 @@ function GameLink(props) {
       <div className='title'>Share the Invite Link!</div>
       <div className='invite-input'>
         <div id='link'>
-          {this.props.game_url}
+          {props.game_url}
         </div>
       </div>
     </div>

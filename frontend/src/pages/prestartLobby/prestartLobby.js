@@ -2,11 +2,10 @@ import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import CreateHeader from "../../components/header/header";
-import GameLink from "../../components/Gameinfo";
+import GameLink from "../../components/GameLink";
 import './prestartLobby.css'
 
 function PrestartLobby({socket, history}) {
-
   const [inviteCode, setInviteCode] = useState('');
   const [users, setUsers] = useState([]);
   const [settings, setSettings] = useState({});
