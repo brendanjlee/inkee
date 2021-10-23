@@ -1,11 +1,9 @@
 import React, { useRef, useState } from "react";
 import { ReactSketchCanvas } from "react-sketch-canvas";
-import { Button } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
 
 function Canvas(props) {
   const [numDrawingEvents, setNumDrawingEvents] = useState(0);
-  const canvas = useRef();
+  const canvas = props.canvas;
 
   return (
     <div>
@@ -13,8 +11,10 @@ function Canvas(props) {
         ref={canvas}
         width="24em" height="15rem" strokeWidth={4} strokeColor="black" style={{
         border: ".5rem solid black",}} 
-        onUpdate={() => {
-          setNumDrawingEvents(numDrawingEvents + 1);
+        onUpdate={(update) => {
+          if (update.length !== 0) {
+            setNumDrawingEvents(numDrawingEvents + 1);
+          }
         }}
       />
       <button
@@ -26,33 +26,6 @@ function Canvas(props) {
       >
         Clear
       </button>
-      <div>
-        <Link to='../joinLobby/joinLobby.js'>
-          <Button onClick={() => {
-            canvas.current.exportImage("png")
-              .then(data => {
-                console.log(data);
-              })
-              .catch(e => {
-                console.log(e);
-              });
-          }} className='btn' variant="secondary" size='lg'>join game</Button>{' '}
-        </Link>
-      </div>
-      <div>
-        <Link to='../createLobby/createLobby.js'>
-          <Button onClick={() => {
-            canvas.current
-              .exportImage("png")
-              .then(data => {
-                console.log(data);
-              })
-              .catch(e => {
-                console.log(e);
-              });
-          }} className='btn' variant="outline-primary" size='lg'>create game</Button>{' '}
-        </Link>
-      </div>
     </div>
   );
 };
