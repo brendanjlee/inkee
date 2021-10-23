@@ -1,11 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "react-bootstrap";
-import CreateHeader from "../header/header";
+import CreateHeader from "../../components/header/header";
 import LobbyForm from '../../components/LobbyForm';
 import './joinLobby.css'
 
-function JoinLobby() {
+function JoinLobby({socket, history}) {
   return (
     <div className='root'>
       <div className='greenSplat'>
@@ -14,6 +14,9 @@ function JoinLobby() {
           <LobbyForm/>
         <Link to='../prestartLobby/prestartLobby.js'>
             <Button variant='primary'>join random game</Button>
+        </Link>
+        <Link to='../game/game.js'>
+            <Button variant='primary'>temp</Button>
         </Link>
         </div>
         </div>
