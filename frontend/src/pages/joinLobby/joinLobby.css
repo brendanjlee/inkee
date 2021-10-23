@@ -8,7 +8,7 @@
   opacity: .6; /* Firefox */
 }
 
-.orangeSplatLobby {
+.orangeSplatTwo {
   background-image: url(../../assets/orange-splat.png);
   background-position: right bottom;
   background-repeat: no-repeat;
@@ -17,7 +17,7 @@
   height: 95%;
 }
 
-.greenSplatLobby {
+.greenSplat {
   background-image: url(../../assets/green-splat.png);
   background-position: middle;
   vertical-align: middle;
