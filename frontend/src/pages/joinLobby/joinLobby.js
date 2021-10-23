@@ -7,8 +7,8 @@ import './joinLobby.css'
 function JoinLobby({socket, history}) {
   return (
     <div className='root'>
-      <div className='greenSplatLobby'>
-        <div className='orangeSplatLobby'>
+      <div className='greenSplat'>
+        <div className='orangeSplatTwo'>
         <CreateHeader/>
           <form className='form-group'>
               <input className='username' type="text" placeholder="enter game ID..."/><br />
