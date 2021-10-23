@@ -16,12 +16,12 @@ class Serializer{
   }
 
   deserialize(jstring) {
-      let array = JSON.parse(jstring);
-      let object = new this.types[array[0]]();
-      array[1].map(e => {
-        object[e[0]] = e[1];
-      });
-      return object;
+    let array = JSON.parse(jstring);
+    let object = new this.types[array[0]]();
+    array[1].map(e => {
+      object[e[0]] = e[1];
+    });
+    return object;
   }
 }
 
