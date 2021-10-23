@@ -36,7 +36,7 @@ function CreateLobby({socket, history}) {
       socket.emit('joinRoom', inviteCode);
 
       history.push({
-        pathname: '/prestartLobby',
+        pathname: '/prestart',
         state: {
           inviteCode: inviteCode,
         }

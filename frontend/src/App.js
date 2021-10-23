@@ -43,10 +43,10 @@ function App() {
       <div className="App">
         <Switch>
           <Route path='/' exact render={(props) => (<Home socket={socket} history={history} {...props} />)}/>
-          <Route path='/createLobby' render={(props) => (<CreateLobby socket={socket} history={history} {...props} />)}/>
-          <Route path='/joinLobby' render={(props) => (<JoinLobby socket={socket} history={history} {...props} />)}/>
-          <Route path='/prestartLobby' render={(props) => (<PrestartLobby socket={socket} history={history} {...props} />)}/>
-          <Route path='/setupProfile' render={(props) => (<SetupProfile socket={socket} history={history} {...props} />)}/>
+          <Route path='/create' render={(props) => (<CreateLobby socket={socket} history={history} {...props} />)}/>
+          <Route path='/join' render={(props) => (<JoinLobby socket={socket} history={history} {...props} />)}/>
+          <Route path='/prestart' render={(props) => (<PrestartLobby socket={socket} history={history} {...props} />)}/>
+          <Route path='/setup' render={(props) => (<SetupProfile socket={socket} history={history} {...props} />)}/>
           <Route path='/game' render={(props) => (<Game socket={socket} history={history} {...props} />)}/>
           <Route path='/game/gameDrawer' component={GameDrawer}/>
           <Route path='/game/gameGuesser' component={GameGuesser}/>
