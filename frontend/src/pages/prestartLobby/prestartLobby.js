@@ -10,7 +10,18 @@ function PrestartLobby({socket, history}) {
   const [inviteCode, setInviteCode] = useState('');
   const [users, setUsers] = useState([]);
   const [settings, setSettings] = useState({});
+  
+  // Copy button setup.
+  useEffect(() => {
+    const copyBtn = document.querySelector('#copy.copyBtn');
 
+    copyBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      document.querySelector('#gameLink').select();
+      document.execCommand('copy');
+    });
+  }, []);
+  
   // User routines.
   useEffect(() => {
     const userListener = (userToAdd) => {
@@ -76,8 +87,14 @@ function PrestartLobby({socket, history}) {
         <div className='game-id'>
           <p>Game ID: {inviteCode}</p>
         </div>
-        <div className='game-link'>
-          <GameLink game_url='www.google.com'/>
+         <div class="mt-5">
+        <h1 class="text-white text-center">Invite your friends!</h1>
+        <div class="input-group mb-3">
+            <input type="text" id="gameLink" class="form-control text-center fw-bold bg-white"
+                value="http://localhost:3000/" readonly>
+            </input>
+            <button class="copyBtn" type="button" id="copy">Copy Link</button>
+          </div>
         </div>
         <div className='lobby-players'>
           <ul>
