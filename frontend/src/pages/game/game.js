@@ -10,7 +10,7 @@ function Game() {
             <div className='inkeeLogo'>
                 <div className='limeSplat'>
                     <div className='purpleSplatTwo'>
-                        <div className="top-container" >
+                        <div className="topContainer" >
                             <div>Your mom</div>
                             <p> 3:19 </p>
                         </div>
