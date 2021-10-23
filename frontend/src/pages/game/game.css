@@ -1,4 +1,4 @@
-.background {
+.gameRoot {
   background-color: #00ACD5;
   height: 100vh;
   background-position: center;
@@ -8,65 +8,105 @@
   flex-direction: column;
   margin-left: auto;
   margin-right: auto;
-  min-height: 115vh;
+  max-height: 115vh;
 }
 
 .inkeeLogo {
   background-image: url(../../assets/inkee-logo.png);
   background-position: left top;
   background-repeat: no-repeat;
-  background-size: 25rem 7.5rem;
+  background-size: 20rem 6rem;
   width: 100%;
   height: 100%;
-  margin-left: 1rem;
-  margin-top: 1rem;
 }
 
 .topContainer {
-  border-style: dotted;
-  margin-left: 1rem;
   margin-top: 1rem;
+  margin-left: 1rem;
   margin-right: 1rem;
   margin-bottom: 1rem;
   flex-direction: row;
 }
 
-.topContainer div {
-  border-style: dotted;
-  float:left;
+.word {
+  display:inline-block;
   font-size: 4rem;
   font-family: 'Montserrat', sans-serif;
   font-weight: bold;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
   text-align: center;
+  max-width: fit-content;
+  margin-right: -17%;
 }
 
-.topContainer p {
-  border-style: dotted;
+.time {
   float:right;
   font-size: 4rem;
   font-family: 'Montserrat', sans-serif;
   font-weight: bold;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
   background-color: white;
   border: .45rem solid #000000;
   box-sizing: border-box;
+  max-width: fit-content;
+  margin-right: 7%;
 }
 
 .middleContainer {
-  border-style: dotted;
   margin-top: 1rem;
   margin-left: 1rem;
   margin-right: 1rem;
+  margin-bottom: 1rem;
   flex-direction: row;
+  max-height: 30rem;
 }
 
+.profiles {
+  margin-top: 1rem;
+  float:left;
+  border: .5rem solid black;
+  width: 10rem;
+  height: 30rem;
+  background-color: white;
+  margin-left: 12%;
+}
+
+.chat {
+  margin-top: 1rem;
+  float:left;
+  border: .5rem solid black;
+  width: 10rem;
+  height: 30rem;
+  background-color: white;
+}
 
 .middleContainer img {
   width: 20%;
   float:left; 
+}
+
+.drawArea {
+  margin-top: 1rem;
+  float:left;
+  cursor: crosshair;
+  border: .5rem solid black;
+  width: 40rem;
+  height: 30rem;
+  background-color: white;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  margin-bottom: 1rem;
+}
+
+.path {
+  fill: none;
+  stroke-width: 4px;
+  stroke: black;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.drawing {
+  width: 100%;
+  height: 100%;
 }
 
 .bottomContainer {
@@ -85,7 +125,7 @@
   width: 40rem;
   height: 3rem;
   border: .45rem solid #000000;
-  margin: 0rem 1rem 1rem 1rem;
+  margin: 0rem 1rem 0rem 1rem;
   outline: none;
 }
 
@@ -93,8 +133,9 @@
   background-image: url(../../assets/lime-splat.png);
   background-position: right bottom;
   background-repeat: no-repeat;
-  background-size: 21rem 20rem;
+  background-size: 20rem 19rem;
   margin: 1rem 1rem 1rem 1rem;
+  max-width: 100%;
 }
 
 .purpleSplatTwo {
