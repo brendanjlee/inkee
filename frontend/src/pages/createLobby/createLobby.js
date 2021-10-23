@@ -1,24 +1,31 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Button } from "react-bootstrap";
+import { Button, Form, FormGroup, FormSelect } from "react-bootstrap";
 
 import CreateHeader from "../../components/header/header";
 import './createLobby.css'
 
 function CreateLobby({socket, history}) {
-  const [numRounds, setNumRounds] = useState(1);
+  const [numRounds, setNumRounds] = useState(2);
   const [roundLength, setRoundLength] = useState(30);
+  const [customWords, setCustomWords] = useState('');
 
   const handleNumRoundChange = (event) => {
+    console.log(`Num Rounds: ${event.target.value}`);
     setNumRounds(event.target.value);
   };
 
   const handleRoundLengthChange = (event) => {
+    console.log(`Round Length: ${event.target.value}`);
     setRoundLength(event.target.value);
   };
   
   const handleSubmit = (event) => {
     event.preventDefault();
+    console.log('Form Submit');
+    console.log(`Submit: numRounds: ${numRounds}`);
+    console.log(`Submit: roundLength: ${roundLength}`);
+    console.log(`Submit: customWords: ${customWords}`)
 
     socket.emit('createGame', {
       gameConfiguration: {
@@ -48,17 +55,16 @@ function CreateLobby({socket, history}) {
     <div className='root'>
       <CreateHeader />
       <div className='content'>
-        <h2>Lobby</h2>
+        <h2>Select Game Settings</h2>
         <form className='lobby-creation-div' onSubmit={handleSubmit}>
           <div className="form-group">
-              <label htmlFor="numRounds">Rounds:</label>
+              <label htmlFor="numRounds">Rounds: </label>
               <select
                 id="numRounds"
                 name="numRounds"
                 onChange={handleNumRoundChange}
                 value={numRounds}
               >
-                <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
                 <option value="4">4</option>
@@ -71,7 +77,7 @@ function CreateLobby({socket, history}) {
               </select>
           </div> 
           <div className="form-group">
-            <label htmlFor="roundLength">Drawing Time:</label>
+            <label htmlFor="roundLength">Drawing Time (seconds): </label>
             <select
               id="roundLength"
               name="roundLength"
@@ -85,15 +91,28 @@ function CreateLobby({socket, history}) {
               <option value="70">70</option>
               <option value="80">80</option>
               <option value="90">90</option>
+              <option value="100">100</option>
+              <option value="110">110</option>
               <option value="120">120</option>
+              <option value="130">130</option>
+              <option value="140">140</option>
+              <option value="150">150</option>
+              <option value="160">160</option>
+              <option value="170">170</option>
               <option value="180">180</option>
             </select>
           </div>
           <div className='wordlist-container'>
-            <h2>Word List Placeholder</h2>
+            <label>Custom Words:</label>
+            <textarea
+              placeholder='Enter Custom Words...'
+              value={customWords}
+              onChange={e => setCustomWords(e.target.value)}
+              >
+            </textarea>
           </div> 
           <Link to='/prestartLobby'>
-          <Button variant='primary'>Start Game</Button>
+            <Button variant='primary'>Start Game</Button>
           </Link>
           <button>send</button>
         </form>
