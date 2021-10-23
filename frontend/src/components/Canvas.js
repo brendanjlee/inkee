@@ -4,14 +4,8 @@ import { Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 const Canvas = (props) => {
-  const [drawingEvents, setDrawingEvents] = useState([]);
+  const [numDrawingEvents, setNumDrawingEvents] = useState(0);
   const canvas = useRef();
-
-  const updateDrawingEvents = (update) => {
-    const tempDrawingEvents = [...drawingEvents];
-    tempDrawingEvents.push(update);
-    setDrawingEvents(tempDrawingEvents);
-  };
 
   return (
     <div>
@@ -19,15 +13,15 @@ const Canvas = (props) => {
         ref={canvas}
         width="24em" height="15rem" strokeWidth={4} strokeColor="black" style={{
         border: ".5rem solid black",}} 
-        onUpdate={(update) => {
-          updateDrawingEvents(update);
+        onUpdate={() => {
+          setNumDrawingEvents(numDrawingEvents + 1);
         }}
       />
       <button
         className="btn2"
         onClick={() => {
           canvas.current.clearCanvas();
-          setDrawingEvents([]);
+          setNumDrawingEvents(0);
         }}
       >
         Clear
