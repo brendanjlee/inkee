@@ -16,4 +16,6 @@ class Disconnect {
   }
 }
 
-module.exports = Disconnect;
+module.exports = {
+  Disconnect,
+}

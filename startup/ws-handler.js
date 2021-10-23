@@ -1,7 +1,10 @@
 const socket_io = require('socket.io');
+const { default: Game } = require('../../frontend/src/pages/game/game');
 
+const { Game } = require('../controllers/game');
 const { Canvas } = require('../controllers/canvas');
 const { Message } = require('../controllers/message');
+const { Room } = require('../controllers/room');
 
 module.exports.init = (server) => {
   const io = socket_io(server);
@@ -16,9 +19,14 @@ module.exports.init = (server) => {
     });
 
     /* Game Change Listeners */
+    /* Create Game */
+    socket.on('createGame', (gameConfiguration, userData) => {
+      new Room(io, socket).createRoom(gameConfiguration, userData);
+    });
+
     /* User join event */
-    socket.on('joinRoom', async (data) => {
-      await new Room(io, socket).joinRoom(data);
+    socket.on('joinRoom', (userData, inviteCode) => {
+      new Room(io, socket).joinRoom(userData, inviteCode);
     });
     
     /* Settings change event */
