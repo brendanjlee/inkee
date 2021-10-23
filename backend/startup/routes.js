@@ -2,6 +2,7 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const gameRouter = require('../routes/game-routes');
+const imageRouter = require('../routes/image-uploader');
 
 /**
  * Validates Firebase ID Tokens of users that send requests to /v1
@@ -70,6 +71,7 @@ module.exports = (app) => {
   //app.use(validateFirebaseIdToken);
   app.use(cookieParser());
   app.use(cors(corsOptions));
+  app.use('/avatar', imageRouter.router);
 
   // Setup Routes
   app.use('/games', gameRouter.router);
