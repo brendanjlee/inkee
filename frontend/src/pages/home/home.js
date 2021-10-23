@@ -19,6 +19,8 @@ function Home({socket, history}) {
         avatar: 'temp_avatar',
       }
     });
+
+    
     canvas.current.exportImage("png")
       .then(data => {
         console.log(data);
