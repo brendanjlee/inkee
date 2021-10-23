@@ -12,8 +12,6 @@ import GameDrawer from './pages/game/gameDrawer';
 import GameGuesser from './pages/game/gameGuesser';
 import testPage from './reactTesting/testPage';
 import io from 'socket.io-client';
-import Sound from 'react-sound';
-import VanilleFraise from './assets/vanille-fraise.mp3';
 
 function App() {
   const [socket, setSocket] = useState(null);
@@ -26,19 +24,23 @@ function App() {
       upgrade: true,
     });
     
-    newSocket.on("connect_error", () => {
+    const reconnect = () => {
       newSocket.io.opts.transports = ["polling", "websocket"];
-    });
+    };
+
+    newSocket.on("connect_error", reconnect);
     setSocket(newSocket);
 
     // Clean-up routine for socket.
-    return () => newSocket.close();
+    return () => {
+      newSocket.close();
+      newSocket.off("connect_error", reconnect);
+    }
   }, [setSocket]);
 
   return (
     <Router>
       <div className="App">
-        <Sound url={VanilleFraise} playStatus={Sound.status.PLAYING} loop={true} />
         <Switch>
           <Route path='/' exact render={(props) => (<Home socket={socket} history={history} {...props} />)}/>
           <Route path='/createLobby' render={(props) => (<CreateLobby socket={socket} history={history} {...props} />)}/>
