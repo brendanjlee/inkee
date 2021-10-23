@@ -12,6 +12,7 @@ const imageRouter = require('../routes/image-uploader');
  * @param {Function} next Callback argument to the middleware function,
  * called if successful validation is made.
  */
+/* eslint-disable */
 const validateFirebaseIdToken = async (req, res, next) => {
   console.log('Check if request is authorized with Firebase ID token');
 
