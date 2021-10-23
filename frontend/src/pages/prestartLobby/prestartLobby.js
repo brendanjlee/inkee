@@ -3,6 +3,7 @@ import { Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import CreateHeader from "../header/header";
 import { useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import './prestartLobby.css'
 
 function PrestartLobby() {
@@ -15,6 +16,7 @@ function PrestartLobby() {
       document.execCommand('copy');
     });
   }, []);
+
   
   return (
     <div className='root'>
