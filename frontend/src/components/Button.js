@@ -1,7 +1,7 @@
 import { useHistory } from 'react-router-dom';
 import { React } from 'react';
 
-const MyButton = () => {
+function MyButton() {
   const history = useHistory();
 
   return (

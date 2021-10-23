@@ -60,7 +60,7 @@ const validateFirebaseIdToken = async (req, res, next) => {
 
 // TODO: WHEN DEPLOYED, SUBSTITUDE ORIGIN WITH DOMAIN OF PROJECT.
 const corsOptions = {
-  origin: 'http://localhost:3001',
+  origin: '*',
   optionsSuccessStatus: 200,
   methods: 'GET, POST'
 }
