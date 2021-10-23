@@ -1,5 +1,7 @@
 const firebase = require('../firebase/firebase-admin');
 const express = require('express');
+
+/* eslint-disable */
 const router = express.Router();
 const multer = require('multer');
 const config = require('../config');
