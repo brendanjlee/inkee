@@ -2,14 +2,14 @@
   background-color: #00ACD5;
   height: 100vh;
   background-position: center;
-  background-repeat: no-repeat;
+  background-repeat: repeat;
   background-size: cover;
-  align-items: center;
   font-size: 1.25rem;
   display: flex;
   flex-direction: column;
   margin-left: auto;
   margin-right: auto;
+  min-height: 115vh;
 }
 
 .header {
@@ -29,10 +29,6 @@
   border: .45rem solid #000000;
   margin-bottom: .5rem;
   outline: none;
-}
-
-img {
-  width: 55rem;
 }
 
 .avatar-img {
@@ -85,19 +81,6 @@ img {
 
 .logo {
   width: 54rem;
-}
-
-::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
-  color: black;
-  opacity: .6; /* Firefox */
-}
-
-:-ms-input-placeholder { /* Internet Explorer 10-11 */
-  color: black;
-}
-
-::-ms-input-placeholder { /* Microsoft Edge */
-  color: black;
 }
 
 .purpleSplat {
