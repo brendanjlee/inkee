@@ -11,11 +11,13 @@ function Game() {
         <div className='limeSplat'>
           <div className='inkeeLogo'>
             <div className="topContainer" >
-              <div className="word" >Random</div>
+              <div className="word" >word</div>
               <div className="time" > 3:19 </div>
             </div>
             <div className="middleContainer">
+              <div className="profiles">profile</div>
               <DrawArea></DrawArea>
+              <div className="chat">chat</div>
             </div>
             <div className="bottomContainer">
               <input type='text' placeholder="enter guess..."/>

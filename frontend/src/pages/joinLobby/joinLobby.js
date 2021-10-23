@@ -12,13 +12,12 @@ function JoinLobby({socket, history}) {
         <CreateHeader/>
           <form className='form-group'>
               <input className='username' type="text" placeholder="enter game ID..."/><br />
-              <Button>join with ID</Button>
+              <Link to='../game/game.js'>
+                <Button variant='primary'>join with ID</Button>
+              </Link>
           </form>
           <Link to='../prestartLobby/prestartLobby.js'>
               <Button variant='primary'>join random game</Button>
-          </Link>
-          <Link to='../game/game.js'>
-              <Button variant='primary'>temp</Button>
           </Link>
           </div>
         </div>
