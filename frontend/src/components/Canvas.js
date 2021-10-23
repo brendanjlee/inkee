@@ -1,11 +1,9 @@
 import React, { useRef, useState } from "react";
 import { ReactSketchCanvas } from "react-sketch-canvas";
-import { Button } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
 
 function Canvas(props) {
   const [numDrawingEvents, setNumDrawingEvents] = useState(0);
-  const canvas = useRef();
+  const canvas = props.canvas;
 
   return (
     <div>
@@ -28,33 +26,6 @@ function Canvas(props) {
       >
         Clear
       </button>
-      <div>
-        <Link to='../joinLobby/joinLobby.js'>
-          <Button onClick={() => {
-            canvas.current.exportImage("png")
-              .then(data => {
-                console.log(data);
-              })
-              .catch(e => {
-                console.log(e);
-              });
-          }} className='btn' variant="secondary" size='lg'>join game</Button>{' '}
-        </Link>
-      </div>
-      <div>
-        <Link to='../createLobby/createLobby.js'>
-          <Button onClick={() => {
-            canvas.current
-              .exportImage("png")
-              .then(data => {
-                console.log(data);
-              })
-              .catch(e => {
-                console.log(e);
-              });
-          }} className='btn' variant="outline-primary" size='lg'>create game</Button>{' '}
-        </Link>
-      </div>
     </div>
   );
 };
