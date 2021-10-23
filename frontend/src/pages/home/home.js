@@ -5,10 +5,7 @@ import './home.css'
 import Logo from '../../assets/inkee-logo.png'
 import Canvas from '../../components/Canvas';
 
-
-
 function Home({socket, history}) {
-  
   return (
     <div className='root'>
       <div className='purpleSplat'>
