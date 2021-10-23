@@ -19,6 +19,7 @@ function CreateLobby({socket, history}) {
   
   const handleSubmit = (event) => {
     event.preventDefault();
+
     socket.emit('createGame', {
       gameConfiguration: {
         num_rounds: numRounds,

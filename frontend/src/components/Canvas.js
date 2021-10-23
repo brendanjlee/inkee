@@ -3,7 +3,7 @@ import { ReactSketchCanvas } from "react-sketch-canvas";
 import { Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
-const Canvas = (props) => {
+function Canvas(props) {
   const [numDrawingEvents, setNumDrawingEvents] = useState(0);
   const canvas = useRef();
 
