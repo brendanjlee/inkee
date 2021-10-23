@@ -17,6 +17,7 @@ function Canvas(props) {
           }
         }}
       />
+      <br/>
       <button
         className="btn2"
         onClick={() => {
