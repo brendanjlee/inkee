@@ -24,42 +24,36 @@
 
 .topContainer {
   border-style: dotted;
-  margin-left: 1rem;
   margin-top: 1rem;
+  margin-left: 1rem;
   margin-right: 1rem;
   margin-bottom: 1rem;
   flex-direction: row;
 }
 
-.topContainer div {
+.word {
   border-style: dotted;
-  float:left;
+  float:center;
   font-size: 4rem;
   font-family: 'Montserrat', sans-serif;
   font-weight: bold;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
   text-align: center;
+  max-width: fit-content;
 }
 
-.topContainer p {
-  border-style: dotted;
-  float:right;
+.time {
+  float:center;
   font-size: 4rem;
   font-family: 'Montserrat', sans-serif;
   font-weight: bold;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
   background-color: white;
   border: .45rem solid #000000;
   box-sizing: border-box;
+  max-width: fit-content;
 }
 
 .middleContainer {
   border-style: dotted;
-  margin-top: 1rem;
-  margin-left: 1rem;
-  margin-right: 1rem;
   flex-direction: row;
 }
 

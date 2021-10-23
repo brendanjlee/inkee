@@ -11,15 +11,15 @@ function Game() {
                 <div className='limeSplat'>
                     <div className='purpleSplatTwo'>
                         <div className="topContainer" >
-                            <div>Your mom</div>
-                            <p> 3:19 </p>
+                            <div className="word" >Your mom</div>
+                            <div className="time" > 3:19 </div>
                         </div>
                         <div className="middleContainer">
                             <GameCanvas/>
                         </div>
                         <div className="bottomContainer">
-                        <input type='text' placeholder="enter guess..."/>
-                    </div>
+                            <input type='text' placeholder="enter guess..."/>
+                        </div>
                     </div>
                 </div>
             </div>
