@@ -11,14 +11,18 @@ function CreateLobby({socket, history}) {
   const [customWords, setCustomWords] = useState('');
 
   const handleNumRoundChange = (event) => {
-    console.log(`Num Rounds: ${event.target.value}`);
+    //console.log(`Num Rounds: ${event.target.value}`);
     setNumRounds(event.target.value);
   };
 
   const handleRoundLengthChange = (event) => {
-    console.log(`Round Length: ${event.target.value}`);
+    //console.log(`Round Length: ${event.target.value}`);
     setRoundLength(event.target.value);
   };
+
+  const handleCustomWordChange = (event) => {
+    setCustomWords(event.target.value);
+  }
   
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -56,9 +60,10 @@ function CreateLobby({socket, history}) {
       <CreateHeader />
       <div className='content'>
         <h2>Select Game Settings</h2>
-        <form className='lobby-creation-div' onSubmit={handleSubmit}>
+        <form className='lobby-creation-form' onSubmit={handleSubmit}>
           <div className="form-group">
               <label htmlFor="numRounds">Rounds: </label>
+              <br/>
               <select
                 id="numRounds"
                 name="numRounds"
@@ -78,6 +83,7 @@ function CreateLobby({socket, history}) {
           </div> 
           <div className="form-group">
             <label htmlFor="roundLength">Drawing Time (seconds): </label>
+            <br/>
             <select
               id="roundLength"
               name="roundLength"
@@ -104,10 +110,11 @@ function CreateLobby({socket, history}) {
           </div>
           <div className='wordlist-container'>
             <label>Custom Words:</label>
+            <br/>
             <textarea
               placeholder='Enter Custom Words...'
               value={customWords}
-              onChange={e => setCustomWords(e.target.value)}
+              onChange={handleCustomWordChange}
               >
             </textarea>
           </div> 
