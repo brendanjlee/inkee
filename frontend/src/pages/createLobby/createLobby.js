@@ -93,7 +93,7 @@ function CreateLobby({socket, history}) {
             <h2>Word List Placeholder</h2>
           </div> 
           <Link to='/prestartLobby'>
-          <Button variant='primary'>Start Game</Button>
+            <Button variant='primary'>Start Game</Button>
           </Link>
           <button>send</button>
         </form>
