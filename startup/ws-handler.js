@@ -1,5 +1,4 @@
 const socket_io = require('socket.io');
-const { default: Game } = require('../../frontend/src/pages/game/game');
 
 const { Game } = require('../controllers/game');
 const { Canvas } = require('../controllers/canvas');
