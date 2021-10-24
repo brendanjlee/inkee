@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import CreateHeader from "../header/header";
-import { useHistory } from "react-router-dom";
-import GameLink from "../../components/Gameinfo";
+import CreateHeader from "../../components/header/header";
 import './prestartLobby.css'
 
 function PrestartLobby({socket, history}) {
