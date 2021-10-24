@@ -1,7 +1,6 @@
-import { Link } from 'react-router-dom';
-import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import React, { useState } from "react";
 import { Button } from "react-bootstrap";
+import { Link } from "react-router-dom";
 // Components
 import CreateHeader from "../../components/header/header";
 import './createLobby.css';
