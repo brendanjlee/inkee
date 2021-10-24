@@ -7,11 +7,11 @@ const {Room} = require('../controllers/room');
 
 module.exports.init = (server) => {
   const io = socketIO(server);
-  const {token} = socket.handshake.query;
-  console.log(token);
 
   io.on('connection', (socket) => {
     console.log('CONNECTION!!!!');
+    const {token} = socket.handshake.query;
+    console.log(token);
 
     // Authenticate users before allowing access to socket.
     // socket.use((packet, next) => {

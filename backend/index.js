@@ -5,7 +5,7 @@ require('./startup/routes')(app);
 
 // Set up server for Socket IO.
 const server = require('http').createServer(app);
-const sockets = require('./startup/ws-handler');
+const sockets = require('./startup/socket-handler');
 
 // App Initialization.
 const port = process.env.PORT || 3001;
