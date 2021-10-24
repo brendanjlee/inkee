@@ -25,6 +25,23 @@ function CreateLobby({socket, history}) {
     let customWordString = event.target.value;
     setCustomWords(customWordString);
   }
+
+  const handleCustomWords = (customWordBox) => {
+    let customWordsList = [];
+    // Parse Custom Words if present
+    if (customWordBox.length > 0) {
+      let lines = customWordBox.split(/\r\n|\r|\n/);
+      for (let i = 0; i < lines.length; i++) {
+        // prase if each lime has more than one word
+        let line = lines[i].split(/[ ,]+/).filter(Boolean);
+        for (let j = 0; j < line.length; j++) {
+          const word = line[j].toLowerCase();
+          if (customWordsList.includes(word) === false) customWordsList.push(word);
+        }
+      }
+    } 
+    return customWordsList;
+  }
   
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -32,32 +49,22 @@ function CreateLobby({socket, history}) {
     console.log(`Submit: numRounds: ${numRounds}`);
     console.log(`Submit: roundLength: ${roundLength}`);
 
-    let customWordsList = [];
-    // Parse Custom Words if present
-    if (customWordBox.length > 0) {
-      let lines = customWordBox.split(/\r\n|\r|\n/);
-      for (var i = 0; i < lines.length; i++) {
-        // prase if each lime has more than one word
-        var line = lines[i].split(/[ ,]+/).filter(Boolean);
-        for (var j = 0; j < line.length; j++) {
-          const word = line[j].toLowerCase();
-          if (customWordsList.includes(word) === false) customWordsList.push(word);
-        }
-      }
-    }
+    let customWordsList = handleCustomWords(customWordBox);
+
     console.log(`Custom words: ${customWordsList}`);
     
     // Game configuration setup
-    var gameConfiguration = {
+    let gameConfiguration = {
       num_rounds: numRounds,
       round_length: roundLength,
       custom_words: '',
     }
+    // add custom words if possible
     if (customWordsList.length > 0) {
       gameConfiguration['custom_words'] = customWordsList;
     }
-
     
+    // send
     socket.emit('createGame', {
       gameConfiguration,
       userData: {
@@ -77,7 +84,6 @@ function CreateLobby({socket, history}) {
         }
       });
     });
-
   };
 
   return (
