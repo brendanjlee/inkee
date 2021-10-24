@@ -13,7 +13,7 @@ test('getScore', () => {
 test('populateDisplayTime', () => {
   const roundTime = roundTime / 1000;
   const start = Math.floor(roundTime / 2);
-  const hints = Math.floor(start / 3)
+  const hints = Math.floor(start / 3);
   expect(hints).toBe(Math.floor(start / 3));
 });
 
