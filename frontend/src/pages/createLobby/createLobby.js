@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, history } from "react-router-dom";
 import { Button } from "react-bootstrap";
 // Components
 import CreateHeader from "../../components/header/header";
@@ -44,6 +44,7 @@ function CreateLobby({socket, history}) {
   }
   
   const handleSubmit = (event) => {
+    console.log('submit')
     event.preventDefault();
     console.log('Form Submit');
     console.log(`Submit: numRounds: ${numRounds}`);
@@ -150,10 +151,7 @@ function CreateLobby({socket, history}) {
             </textarea>
             <CSVReader2/>
           </div> 
-          <Link to='/prestartLobby'>
-            <Button variant='primary'>Start Game</Button>
-          </Link>
-          <button>send</button>
+          <Button onClick={handleSubmit}>Create Game</Button>
         </form>
       </div>
     </div>
