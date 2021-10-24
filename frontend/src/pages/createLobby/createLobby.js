@@ -3,12 +3,13 @@ import { Link } from "react-router-dom";
 import { Button, Form, FormGroup, FormSelect } from "react-bootstrap";
 
 import CreateHeader from "../../components/header/header";
+import CSVReader2 from "../../components/CSVReader2";
 import './createLobby.css'
 
 function CreateLobby({socket, history}) {
   const [numRounds, setNumRounds] = useState(2);
   const [roundLength, setRoundLength] = useState(30);
-  const [customWords, setCustomWords] = useState('');
+  const [customWordBox, setCustomWords] = useState('');
 
   const handleNumRoundChange = (event) => {
     //console.log(`Num Rounds: ${event.target.value}`);
@@ -21,7 +22,8 @@ function CreateLobby({socket, history}) {
   };
 
   const handleCustomWordChange = (event) => {
-    setCustomWords(event.target.value);
+    let customWordString = event.target.value;
+    setCustomWords(customWordString);
   }
   
   const handleSubmit = (event) => {
@@ -29,13 +31,35 @@ function CreateLobby({socket, history}) {
     console.log('Form Submit');
     console.log(`Submit: numRounds: ${numRounds}`);
     console.log(`Submit: roundLength: ${roundLength}`);
-    console.log(`Submit: customWords: ${customWords}`)
 
+    let customWordsList = [];
+    // Parse Custom Words if present
+    if (customWordBox.length > 0) {
+      let lines = customWordBox.split(/\r\n|\r|\n/);
+      for (var i = 0; i < lines.length; i++) {
+        // prase if each lime has more than one word
+        var line = lines[i].split(/[ ,]+/).filter(Boolean);
+        for (var j = 0; j < line.length; j++) {
+          const word = line[j].toLowerCase();
+          if (customWordsList.includes(word) === false) customWordsList.push(word);
+        }
+      }
+    }
+    console.log(`Custom words: ${customWordsList}`);
+    
+    // Game configuration setup
+    var gameConfiguration = {
+      num_rounds: numRounds,
+      round_length: roundLength,
+      custom_words: '',
+    }
+    if (customWordsList.length > 0) {
+      gameConfiguration['custom_words'] = customWordsList;
+    }
+
+    
     socket.emit('createGame', {
-      gameConfiguration: {
-        num_rounds: numRounds,
-        round_length: roundLength,
-      },
+      gameConfiguration,
       userData: {
         username: history.location.state.username,
         avatar: history.location.state.avatar,
@@ -53,6 +77,7 @@ function CreateLobby({socket, history}) {
         }
       });
     });
+
   };
 
   return (
@@ -113,10 +138,11 @@ function CreateLobby({socket, history}) {
             <br/>
             <textarea
               placeholder='Enter Custom Words...'
-              value={customWords}
+              value={customWordBox}
               onChange={handleCustomWordChange}
               >
             </textarea>
+            <CSVReader2/>
           </div> 
           <Link to='/prestartLobby'>
             <Button variant='primary'>Start Game</Button>
