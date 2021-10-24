@@ -1,9 +1,24 @@
+/**
+ * Handles storing messages for the game.
+ */
 class Message {
+  /**
+   * Constructs a new Message handler using the io and socket objects.
+   *
+   * @param {object} io The io object used to initialize socket io.
+   * @param {object} socket the socket object that triggered the game logic.
+   */
   constructor(io, socket) {
     this.io = io;
     this.socket = socket;
   }
 
+  /**
+   * Sends the provided message data to all the connected clients
+   * and to the firebase database.
+   *
+   * @param {object} data The message data object sent to the game.
+   */
   onMessage(data) {
     this.socket.to(socket.roomID).emit('message', data);
   }
@@ -11,4 +26,4 @@ class Message {
 
 module.exports = {
   Message,
-}
+};

@@ -51,6 +51,6 @@ function Home({socket, history}) {
         </div>
       </div>
     </div>
-    );
-  }
-  export default Home;
+  );
+}
+export default Home;
