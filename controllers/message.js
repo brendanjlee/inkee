@@ -17,10 +17,11 @@ class Message {
    * Sends the provided message data to all the connected clients
    * and to the firebase database.
    *
-   * @param {object} data The message data object sent to the game.
+   * @param {string} userId The userId that sent the message to the game.
+   * @param {object} messageData the content of the message.
    */
-  onMessage(data) {
-    this.socket.to(socket.roomID).emit('message', data);
+  onMessage(userId, messageData) {
+    this.socket.to(socket.roomID).emit('message', userId, messageData);
   }
 }
 
