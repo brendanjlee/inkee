@@ -24,6 +24,14 @@ evtSource.addEventListener('put', (e) => {
   }
 });
 
+evtSource.addEventListener('cancel', (e) => {
+  console.log('Cannot read change.');
+});
+
+evtSource.addEventListener('auth_revoked', (e) => {
+  console.log('Lost connection to Realtime Database');
+});
+
 module.exports = {
   evtSource,
 };
