@@ -45,14 +45,14 @@ module.exports.init = (server) => {
     });
 
     /* Settings change event */
-    socket.on('settingsUpdate', (data) => {
-      new Room(io, socket).updateSettings(data);
+    socket.on('settingsUpdate', (settingUpdate) => {
+      new Room(io, socket).updateSettings(settingUpdate);
     });
 
     /* Canvas related events */
     /* Drawing event */
-    socket.on('drawingEvent', (data) => {
-      new Canvas(io, socket).emitDrawing(data);
+    socket.on('drawingEvent', (drawingData) => {
+      new Canvas(io, socket).emitDrawing(drawingData);
     });
 
     /* Clear canvas event */
@@ -67,8 +67,8 @@ module.exports.init = (server) => {
     });
 
     /* User chat message event */
-    socket.on('message', (data) => {
-      new Message(io, socket).onMessage(data);
+    socket.on('message', (userId, messageData) => {
+      new Message(io, socket).onMessage(userId, messageData);
     });
   });
 };
