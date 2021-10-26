@@ -19,7 +19,8 @@
     "uuid": "^8.3.2"
   },
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "nodemon index.js",
+    "test": "jest"
   },
   "devDependencies": {
     "eslint": "^8.1.0",
