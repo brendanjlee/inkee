@@ -9,10 +9,12 @@ on:
       - master 
 
 jobs:
+  
   build:
-
     runs-on: ubuntu-latest
-    
+    env:
+      backend-working-directory: ./backend
+      frontend-working-directory: ./frontend
     strategy:
       matrix:
         node-version: [10.x, 8.x]
@@ -26,22 +28,29 @@ jobs:
     
     - name: npm install
       run: |
+        working-directory: ${{env.backend-working-directory}}
         npm install
+    
     - name: npm test
       run: |
+        working-directory: ${{env.backend-working-directory}}
         npm test 
-        working-directory: backend
       env:
         CI: true
       
     - name: npm build
       run: |
+        working-directory: ${{env.frontend-working-directory}}
         npm run build --if-present
+    
     - name: Run ESLint
       run: eslint . --ext .js,.jsx,.ts,.tsx
+    
     - name: Add remote origin
       run: |
         git remote add heroku https://heroku:${{ secrets.HEROKU_API_KEY }}@git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git
+    
     - name: Deploy to Heroku
       run: |
+        working-directory: ${{env.backend-working-directory}}
         git push heroku HEAD:master -f
