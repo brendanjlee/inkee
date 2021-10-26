@@ -13,8 +13,8 @@ function Home({socket, history}) {
       <div className='purpleSplat'>
         <div className='orangeSplat'>
           <div className='header'>
-        <img className='logo' src={Logo} alt='inkee-logo'/>
-        </div>
+          <img className='logo' src={Logo} alt='inkee-logo'/>
+          </div>
           <form>
             <input className='username' type='text' placeholder="enter username..."/>
           </form>
