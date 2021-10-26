@@ -16,8 +16,6 @@ evtSource.addEventListener('patch', (e) => {
   console.log(e.data);
 });
 
-console.log('hello world');
-
 evtSource.addEventListener('put', (e) => {
   if (handshakeSent) {
     console.log(e.data);
