@@ -2,7 +2,7 @@
 class Message {
   /**
    * Constructs a new class object of Message.
-   * 
+   *
    * @param {string} uid the userId associated with the message.
    * @param {string} username the username associated with the message.
    * @param {string} messageId the ID associated with the new message.
@@ -18,25 +18,31 @@ class Message {
     this.timestamp = getCurrentTime();
   }
 
+  /**
+   * Returns the current time
+   * @return {object} current date in the format YYYY-MM-DD/hh:mm:ss
+   */
   static getCurrentTime() {
     const today = new Date();
-    const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-    const date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-'
-      + today.getDate();
+    const time = today.getHours() + ':' + today.getMinutes() + ':' +
+      today.getSeconds();
+    const date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' +
+      today.getDate();
     return date + '/' + time;
   }
 
   /**
    * Constructs a Message object from deserialized JSON object.
-   * 
+   *
    * @param {Object} obj deserialized object that has been parsed from JSON.
    * @return {Object} a Message object.
    */
-   deserialize(obj) {
-    return new Message(obj.uid, obj.username, obj.messageId, obj.gameId, obj.message);
+  deserialize(obj) {
+    return new Message(obj.uid, obj.username, obj.messageId, obj.gameId,
+        obj.message);
   }
 }
 
 module.exports = {
   Message,
-}
+};
