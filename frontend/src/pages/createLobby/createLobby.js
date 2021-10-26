@@ -1,9 +1,10 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 import { Button } from "react-bootstrap";
 // Components
 import CreateHeader from "../../components/header/header";
-import './createLobby.css'
+import './createLobby.css';
 
 function CreateLobby({socket, history}) {
   const [numRounds, setNumRounds] = useState(1);
@@ -93,7 +94,7 @@ function CreateLobby({socket, history}) {
             <h2>Word List Placeholder</h2>
           </div> 
           <Link to='/prestartLobby'>
-          <Button variant='primary'>Start Game</Button>
+            <Button variant='primary'>Start Game</Button>
           </Link>
           <button>send</button>
         </form>
