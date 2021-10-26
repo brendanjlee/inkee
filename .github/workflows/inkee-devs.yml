@@ -1,0 +1,47 @@
+# This workflow will do a clean install of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Inkee General CI
+
+on: 
+  push:
+    branches:    
+      - '**-dev' 
+
+jobs:
+  
+  build:
+    runs-on: ubuntu-latest
+    env:
+      backend-working-directory: ./backend
+      frontend-working-directory: ./frontend
+    strategy:
+      matrix:
+        node-version: [10.x, 8.x]
+    
+    steps:
+    - uses: actions/checkout@v1
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    
+    - name: npm install
+      run: |
+        npm install
+      working-directory: ${{env.frontend-working-directory}}
+    
+    - name: npm test
+      run: |
+        npm test 
+      env:
+        CI: true
+      working-directory: ${{env.frontend-working-directory}}
+      
+    - name: npm build
+      run: |
+        npm run build --if-present
+      working-directory: ${{env.frontend-working-directory}}
+    
+    - name: Run ESLint
+      run: eslint . --ext .js,.jsx,.ts,.tsx
