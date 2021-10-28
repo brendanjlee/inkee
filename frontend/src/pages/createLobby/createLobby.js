@@ -69,8 +69,10 @@ function CreateLobby({socket, history}) {
     socket.emit('createGame', {
       gameConfiguration,
       userData: {
-        username: history.location.state.username,
-        avatar: history.location.state.avatar,
+        username: "Zapsus",
+        //username: history.location.state.username,
+        avatar: "",
+        //avatar: history.location.state.avatar,
       },
     });
 
