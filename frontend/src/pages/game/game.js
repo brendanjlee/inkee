@@ -4,6 +4,7 @@ import './game.css'
 // Assets
 import GameCanvas from '../../components/GameCanvas';
 import { CanvasProvider } from "../../components/CanvasContext";
+import { ClearCanvasButton } from "../../components/ClearCanvasButton";
 
 function Game() {
   return (
@@ -19,6 +20,7 @@ function Game() {
               <div className="profiles">profile</div>
                 <CanvasProvider>
                   <GameCanvas/>
+                  <ClearCanvasButton/>
                 </CanvasProvider>
               <div className="chat">chat</div>
             </div>
