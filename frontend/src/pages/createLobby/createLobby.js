@@ -76,8 +76,10 @@ function CreateLobby({socket, history}) {
     socket.emit('createGame', {
       gameConfiguration,
       userData: {
-        uid: localStorage.getItem('username'),
-        avatar: 'tempavatar', //localStorage.getItem('avatar'),
+        username: "Zapsus",
+        //username: history.location.state.username,
+        avatar: "",
+        //avatar: history.location.state.avatar,
       },
     });
 
