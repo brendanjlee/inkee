@@ -37,7 +37,6 @@ module.exports.init = (server) => {
     /* Create Game */
     socket.on('createGame', (gameConfiguration, userData) => {
       new Room(io, socket).createRoom(gameConfiguration, userData);
-      console.log('new room created')
     });
 
     /* User join event */
