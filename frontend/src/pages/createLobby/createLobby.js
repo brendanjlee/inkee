@@ -5,6 +5,7 @@ import { Button } from "react-bootstrap";
 import CreateHeader from "../../components/header/header";
 import CSVReader2 from "../../components/CSVReader2";
 import './createLobby.css'
+import { CSVReader } from "react-papaparse";
 
 function CreateLobby({socket, history}) {
   const [numRounds, setNumRounds] = useState(2);
@@ -26,7 +27,7 @@ function CreateLobby({socket, history}) {
     setCustomWords(customWordString);
   }
 
-  const handleCustomWords = (customWordBox) => {
+  const parseCustomWords = (customWordBox) => {
     let customWordsList = [];
     // Parse Custom Words if present
     if (customWordBox.length > 0) {
@@ -36,11 +37,15 @@ function CreateLobby({socket, history}) {
         let line = lines[i].split(/[ ,]+/).filter(Boolean);
         for (let j = 0; j < line.length; j++) {
           const word = line[j].toLowerCase();
-          if (customWordsList.includes(word) === false) customWordsList.push(word);
+          if (!customWordsList.includes(word)) customWordsList.push(word);
         }
       }
     } 
     return customWordsList;
+  }
+
+  const parseCSV = (rawfile) => {
+    return
   }
   
   const handleSubmit = (event) => {
@@ -50,7 +55,7 @@ function CreateLobby({socket, history}) {
     console.log(`Submit: numRounds: ${numRounds}`);
     console.log(`Submit: roundLength: ${roundLength}`);
 
-    let customWordsList = handleCustomWords(customWordBox);
+    let customWordsList = parseCustomWords(customWordBox);
 
     console.log(`Custom words: ${customWordsList}`);
     
@@ -71,7 +76,6 @@ function CreateLobby({socket, history}) {
       avatar: history.location.state.avatar,
     }
     
-    // send
     socket.emit('createGame', {
       gameConfiguration,
       userData,
@@ -88,6 +92,7 @@ function CreateLobby({socket, history}) {
         }
       });
     });
+    console.log('socket emit invite code')
   };
 
   return (
