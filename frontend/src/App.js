@@ -48,6 +48,8 @@ function App() {
           <Route path='/prestartLobby' render={(props) => (<PrestartLobby socket={socket} history={history} {...props} />)}/>
           <Route path='/setupProfile' render={(props) => (<SetupProfile socket={socket} history={history} {...props} />)}/>
           <Route path='/game' render={(props) => (<Game socket={socket} history={history} {...props} />)}/>
+          <Route path='/game/gameDrawer' component={GameDrawer}/>
+          <Route path='/game/gameGuesser' component={GameGuesser}/>
           <Route path='/testPage' component={testPage} />
         </Switch>
       </div>
