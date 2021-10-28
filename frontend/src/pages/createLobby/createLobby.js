@@ -54,7 +54,7 @@ function CreateLobby({socket, history}) {
 
     console.log(`Custom words: ${customWordsList}`);
     
-    // Game configuration setup
+    // create gameConfiguration
     let gameConfiguration = {
       num_rounds: numRounds,
       round_length: roundLength,
@@ -64,14 +64,17 @@ function CreateLobby({socket, history}) {
     if (customWordsList.length > 0) {
       gameConfiguration['custom_words'] = customWordsList;
     }
+
+    // create userData
+    let userData = {
+      username: history.location.state.username,
+      avatar: history.location.state.avatar,
+    }
     
     // send
     socket.emit('createGame', {
       gameConfiguration,
-      userData: {
-        username: history.location.state.username,
-        avatar: history.location.state.avatar,
-      },
+      userData,
     });
 
     socket.on('inviteCode', (inviteCode) => {
