@@ -2,7 +2,8 @@ import React from 'react'
 //Style
 import './game.css'
 // Assets
-import DrawArea from '../../components/DrawArea';
+import GameCanvas from '../../components/GameCanvas';
+import { CanvasProvider } from "../../components/CanvasContext";
 
 function Game() {
   return (
@@ -16,7 +17,9 @@ function Game() {
             </div>
             <div className="middleContainer">
               <div className="profiles">profile</div>
-              <DrawArea></DrawArea>
+                <CanvasProvider>
+                  <GameCanvas/>
+                </CanvasProvider>
               <div className="chat">chat</div>
             </div>
             <div className="bottomContainer">
