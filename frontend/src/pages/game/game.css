@@ -104,6 +104,14 @@
   stroke-linecap: round;
 }
 
+.pathRed {
+  fill: none;
+  stroke-width: 4px;
+  stroke: red;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
 .drawing {
   width: 100%;
   height: 100%;
