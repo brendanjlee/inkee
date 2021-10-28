@@ -75,13 +75,20 @@
   margin-left: 12%;
 }
 
+/* Chat Features */
 .chat {
+  overflow-y: auto;
+  scroll-behavior: smooth;
   margin-top: 1rem;
   float:left;
   border: .5rem solid black;
-  width: 10rem;
+  width: 15rem;
   height: 30rem;
   background-color: white;
+}
+
+.chat p:nth-of-type(2n) {
+  background-color: rgba(207, 204, 204, 0.973);
 }
 
 .middleContainer img {
@@ -123,14 +130,14 @@
   height: 100%;
 }
 
-.bottomContainer {
+.sendMessage {
   margin-top: 1rem;
   margin-bottom: 1rem;
   margin-left: 1rem;
   margin-right: 1rem;
 }
 
-.bottomContainer input {
+.sendMessage input {
   background-color: white;
   font-size:2rem;
   font-family: 'Montserrat', sans-serif;
