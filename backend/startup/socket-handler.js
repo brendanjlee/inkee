@@ -68,8 +68,9 @@ module.exports.init = (server) => {
     });
 
     /* User chat message event */
-    socket.on('message', (userId, messageData) => {
+    socket.on('message', (messageData) => {
       new Message(io, socket).onMessage(userId, messageData);
+      console.log(messageData);
     });
   });
 };
