@@ -22,18 +22,21 @@ function Game({socket, history}) {
 
 function Game({socket, history}) {
 
-  // useEffect(() => {
-  //   const sendMessage = document.querySelector('#sendMessage');
+  useEffect(() => {
+    const sendMessage = document.querySelector('#sendMessage');
     
-  //   sendMessage.addEventListener('submit', function (e) {
-  //     e.preventDefault();
-  //     const message = this.firstElementChild.value;
-  //     this.firstElementChild.value = '';
-  //     socket.emit('message', { message });
-  //   });
-  // }, []);
-
-  socket.on('message', writeMessage);
+    sendMessage.addEventListener('keypress', function (e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        const message = this.firstElementChild.value;
+        this.firstElementChild.value = '';
+        socket.emit('message', { message });
+      }
+    });
+    
+    socket.on('message', writeMessage);
+  }, []);
+ 
   return (
     <div className='gameRoot'>
       <div className='purpleSplatTwo'>
@@ -48,7 +51,7 @@ function Game({socket, history}) {
               <DrawArea></DrawArea>
               <div className="chat">chat</div>
             </div>
-            <div className="sendMessage">
+            <div className="sendMessage" id="sendMessage">
               <input type='text' placeholder="enter guess..."/>
             </div>
           </div>
