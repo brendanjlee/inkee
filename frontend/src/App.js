@@ -8,8 +8,6 @@ import JoinLobby from './pages/joinLobby/joinLobby';
 import PrestartLobby from './pages/prestartLobby/prestartLobby';
 import SetupProfile from './pages/setupProfile/setupProfile'
 import Game from './pages/game/game';
-import GameDrawer from './pages/game/gameDrawer';
-import GameGuesser from './pages/game/gameGuesser';
 import testPage from './reactTesting/testPage';
 import io from 'socket.io-client';
 
@@ -48,8 +46,6 @@ function App() {
           <Route path='/prestartLobby' render={(props) => (<PrestartLobby socket={socket} history={history} {...props} />)}/>
           <Route path='/setupProfile' render={(props) => (<SetupProfile socket={socket} history={history} {...props} />)}/>
           <Route path='/game' render={(props) => (<Game socket={socket} history={history} {...props} />)}/>
-          <Route path='/game/gameDrawer' component={GameDrawer}/>
-          <Route path='/game/gameGuesser' component={GameGuesser}/>
           <Route path='/testPage' component={testPage} />
         </Switch>
       </div>
