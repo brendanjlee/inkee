@@ -21,7 +21,9 @@ function Game() {
             </div>
             <div className="middleContainer">
               <UserProfile/>
-              <GameCanvas/>
+              <div className="drawArea">
+                <GameCanvas/>
+              </div>
               <div className="chat">chat</div>
             </div>
             <div className="bottomContainer">
