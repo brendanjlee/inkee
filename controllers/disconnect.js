@@ -1,3 +1,5 @@
+const {removePlayerFromGame} = require('../firebase/game-handler');
+
 /**
  * Handles user disconnect logic for the game.
  */
@@ -17,16 +19,13 @@ class Disconnect {
    * Handles user socket disconnect.
    */
   onDisconnect() {
-    // eslint-disable-next-line
-    const {io, socket} = this;
-    // eslint-disable-next-line
-    const {roomID} = socket;
-    if (socket.player) {
-      socket.player.id = socket.id;
-      socket.to(socket.roomID).emit('disconnection', socket.player);
-    }
+    const {socket} = this;
+    const {roomID, player} = socket;
 
-    // Handle socket clean up.
+    removePlayerFromGame(roomID, player).then(() => {
+      socket.to(roomID).emit('disconnect', player.uid);
+      socket.disconnect();
+    });
   }
 }
 
