@@ -18,6 +18,10 @@ function Home({socket, history}) {
       return;
     }
 
+    history.push({
+
+    });
+
     if (!canvasEmpty) {
       // canvasRef.current.exportImage("png")
       //   .then(data => {

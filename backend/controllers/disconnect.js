@@ -20,11 +20,15 @@ class Disconnect {
    */
   onDisconnect() {
     const {socket} = this;
-    const {roomID, player} = socket;
+    const {roomId, player} = socket;
 
-    removePlayerFromGame(roomID, player).then(() => {
-      socket.to(roomID).emit('disconnect', player.uid);
+    removePlayerFromGame(roomId, player).then(() => {
+      socket.to(roomId).emit('disconnect', player.uid);
       socket.disconnect();
+
+      if (io.sockets.adapter.rooms.get(roomId).size) {
+        socket.to(roomId).emit('endgame');
+      }
     });
   }
 }
