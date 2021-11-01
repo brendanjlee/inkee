@@ -44,6 +44,7 @@ module.exports.init = (server) => {
     /* Canvas related events */
     /* Drawing event */
     socket.on('drawingEvent', (drawingData) => {
+      console.log(drawingData);
       new Canvas(io, socket).emitDrawing(drawingData);
     });
 
