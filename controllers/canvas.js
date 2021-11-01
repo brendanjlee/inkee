@@ -20,11 +20,11 @@ class Canvas {
    */
   emitDrawing(data) {
     const {socket} = this;
-    if (this.socket.player.isDrawing) {
-      this.socket.broadcast.to(socket.roomId).emit('drawingEvent', data);
-    } else {
-      this.socket.broadcast.emit('ERROR', 'Not authorized to draw!');
-    }
+    this.socket.broadcast.to(socket.roomId).emit('drawingEvent', data);
+    // if (this.socket.player.isDrawing) {
+    //   } else {
+    //   this.socket.broadcast.emit('ERROR', 'Not authorized to draw!');
+    // }
   }
 
   /**
@@ -32,9 +32,10 @@ class Canvas {
    */
   clearCanvas() {
     const {socket} = this;
-    if (this.socket.player.is_drawing) {
-      this.socket.broadcast.to(socket.roomId).emit('clearCanvas');
-    }
+    this.socket.broadcast.to(socket.roomId).emit('clearCanvas');
+    // if (this.socket.player.is_drawing) {
+      
+    // }
   }
 }
 
