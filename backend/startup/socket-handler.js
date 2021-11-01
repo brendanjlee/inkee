@@ -29,8 +29,7 @@ module.exports.init = (server) => {
     /* Socket Lifecycle Listeners */
     /* User disconnects from server */
     socket.on('disconnect', () => {
-      // new Disconnect(io, socket).onDisconnect()
-      console.log('DISCONNECT');
+      new Disconnect(io, socket).onDisconnect();
     });
 
     /* Game Change Listeners */
@@ -67,8 +66,8 @@ module.exports.init = (server) => {
     });
 
     /* User chat message event */
-    socket.on('message', (userId, messageData) => {
-      new Message(io, socket).onMessage(userId, messageData);
+    socket.on('message', (messageData) => {
+      new Message(io, socket).onMessage(messageData);
     });
   });
 };

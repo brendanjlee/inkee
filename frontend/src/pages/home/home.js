@@ -1,12 +1,35 @@
 import './home.css'
-import React, { useRef } from 'react'
+import React, { useState, useRef } from 'react'
 import Logo from '../../assets/inkee-logo.png'
 import Canvas from '../../components/Canvas';
 import { Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 function Home({socket, history}) {
-  const canvas = useRef();
+  const canvasRef = useRef();
+  const [canvasEmpty, setCanvasEmpty] = useState(true);
+
+  const handleHomeSubmit = (path) => {
+    const userNameInput = document.getElementById('username_input');
+    if (userNameInput.value !== '') {
+      localStorage.setItem('username', userNameInput.value);
+    } else {
+      alert('Username cannot be empty!');
+      return;
+    }
+
+    if (!canvasEmpty) {
+      // canvasRef.current.exportImage("png")
+      //   .then(data => {
+      //     console.log(data);
+      //   })
+      //   .catch(e => {
+      //     console.log(e);
+      //   }); 
+    } else {
+      alert('Avatar canvas is empty!');
+    }
+  };
 
   return (
     <div className='root'>
@@ -16,36 +39,17 @@ function Home({socket, history}) {
           <img className='logo' src={Logo} alt='inkee-logo'/>
           </div>
           <form>
-            <input className='username' type='text' placeholder="enter username..."/>
+            <input className='username' id='username_input' type='text' placeholder="enter username..."/>
           </form>
           <div align="center">
-            <Canvas canvas={canvas}></Canvas>
+            <Canvas canvas={canvasRef} canvasEmpty={canvasEmpty} setCanvasEmpty={setCanvasEmpty}></Canvas>
             <div>
-              <Link to='../joinLobby/joinLobby.js'>
-                <Button onClick={() => {
-                  canvas.current.exportImage("png")
-                    .then(data => {
-                      console.log(data);
-                    })
-                    .catch(e => {
-                      console.log(e);
-                    });
-                }} className='btn' variant="secondary" size='lg'>join game</Button>{' '}
-              </Link>
+              <Button onClick={() => {
+                handleHomeSubmit('../joinLobby/joinLobby.js'); 
+              }} className='btn' variant="secondary" size='lg'>join game</Button>{' '}
             </div>
             <div>
-              <Link to='../createLobby/createLobby.js'>
-                <Button onClick={() => {
-                  canvas.current
-                    .exportImage("png")
-                    .then(data => {
-                      console.log(data);
-                    })
-                    .catch(e => {
-                      console.log(e);
-                    });
-                }} className='btn' variant="outline-primary" size='lg'>create game</Button>{' '}
-              </Link>
+              <Button onClick={() => handleHomeSubmit('../createLobby/createLobby.js')} className='btn' variant="outline-primary" size='lg'>create game</Button>{' '}
             </div>
           </div>
         </div>
