@@ -6,6 +6,7 @@ export const CanvasProvider = ({ children }) => {
   const [isDrawing, setIsDrawing] = useState(false)
   const canvasRef = useRef(null);
   const contextRef = useRef(null);
+  const [canvasEmpty, setCanvasEmpty] = useState(true);
 
   const prepareCanvas = () => {
     const canvas = canvasRef.current
@@ -27,6 +28,7 @@ export const CanvasProvider = ({ children }) => {
     contextRef.current.beginPath();
     contextRef.current.moveTo(offsetX, offsetY);
     setIsDrawing(true);
+    setCanvasEmpty(false);
   };
 
   const finishDrawing = () => {
@@ -48,6 +50,25 @@ export const CanvasProvider = ({ children }) => {
     const context = canvas.getContext("2d")
     context.fillStyle = "white"
     context.fillRect(0, 0, canvas.width, canvas.height)
+    setCanvasEmpty(true);
+  }
+
+  const changeColor = color => () => {
+    const canvas = canvasRef.current;
+    const context = canvas.getContext("2d");
+    const lineColor = color;
+    context.strokeStyle = lineColor;
+  }
+
+  const exportImage = () => {
+    const canvas = canvasRef.current;
+    const context = canvas.getContext("2d");
+    const uri = canvas.toDataURL("image/png");
+    
+    if (canvasEmpty) {
+      throw 'Canvas is empty!';
+    }
+    console.log(uri);
   }
 
   return (
@@ -59,6 +80,8 @@ export const CanvasProvider = ({ children }) => {
         startDrawing,
         finishDrawing,
         clearCanvas,
+        changeColor,
+        exportImage,
         draw,
       }}
     >
