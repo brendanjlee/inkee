@@ -1,4 +1,7 @@
-const {addNewUser} = require('../firebase/lobby-generation');
+// eslint-disable-next-line
+const {addNewUser, createGameInstance, makeAdmin} = require('../firebase/lobby-generation');
+const {Invite} = require('../classes/invite');
+const {User} = require('../classes/user');
 
 /**
  * Handles game room creation/handling.
@@ -34,7 +37,7 @@ class Room {
               .then(() => {
                 makeAdmin(newUser, inviteCode)
                     .then(() => {
-                      socket.emit('inviteCode', inviteCode);
+                      this.socket.emit('inviteCode', inviteCode);
                     });
               });
         });
