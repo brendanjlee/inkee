@@ -23,21 +23,21 @@ function Home({socket, history}) {
             <div>
               <Link to='../joinLobby/joinLobby.js'>
                 <Button onClick={() => {
-                  canvas.current.exportImage("png")
-                    .then(data => {
-                      console.log(data);
-                    })
-                    .catch(e => {
-                      console.log(e);
-                    });
+                  canvas.current
+                  .exportImage("svg")
+                  .then(data => {
+                    console.log(data);
+                  })
+                  .catch(e => {
+                    console.log(e);
+                  });
                 }} className='btn' variant="secondary" size='lg'>join game</Button>{' '}
               </Link>
             </div>
             <div>
               <Link to='../createLobby/createLobby.js'>
                 <Button onClick={() => {
-                  canvas.current
-                    .exportImage("png")
+                  canvas.current.exportImage("svg")
                     .then(data => {
                       console.log(data);
                     })
