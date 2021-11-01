@@ -32,6 +32,10 @@ module.exports.init = (server) => {
       new Room(io, socket).joinRoom(joinData.userData, joinData.inviteCode);
     });
 
+    socket.on('getSettings', () => {
+      new Room(io, socket).sendSettings();
+    });
+
     /* Settings change event */
     socket.on('settingsUpdate', (settingData) => {
       new Room(io, socket).updateSettings(settingData.settingUpdate);
