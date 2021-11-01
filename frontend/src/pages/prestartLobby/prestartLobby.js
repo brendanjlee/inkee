@@ -61,8 +61,8 @@ function PrestartLobby({socket, history}) {
       });
     };
 
-    const populateSettings = (payload) => {
-      setSettings(payload);
+    const populateSettings = (settingsData) => {
+      setSettings(settingsData.settings);
     }
 
     socket.on('settingUpdate', settingListener);

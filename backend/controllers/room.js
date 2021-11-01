@@ -37,6 +37,7 @@ class Room {
               .then(() => {
                 makeAdmin(newUser, inviteCode)
                     .then(() => {
+                      this.socket.join(inviteCode);
                       this.socket.emit('inviteCode', inviteCode);
                     });
               });
@@ -54,18 +55,25 @@ class Room {
     this.socket.player = newUser;
     this.socket.roomID = inviteCode;
 
-    const rooms = this.io.sockets.adapter.rooms;
-    for (room in rooms) {
-      if (room.roomID === inviteCode) {
+    const rooms = this.socket.rooms;
+    for (const room in rooms) {
+      if (room[1] === inviteCode) {
         addNewUser(userData, inviteCode)
             .then(() => {
               this.socket.broadcast.to(socket.roomID).emit('newPlayer',
                   newUser);
               this.socket.emit('inviteCode', inviteCode);
-              return;
             });
       }
     }
+  }
+
+  /**
+   * Send settings to the connected user.
+   *
+   */
+  sendSettings() {
+
   }
 
   /**
