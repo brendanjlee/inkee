@@ -13,26 +13,15 @@ function Home({socket, history}) {
     const userNameInput = document.getElementById('username_input');
     if (userNameInput.value !== '') {
       localStorage.setItem('username', userNameInput.value);
+      console.log(userNameInput.value);
     } else {
       alert('Username cannot be empty!');
       return;
     }
 
     history.push({
-
+      pathname: path,
     });
-
-    if (!canvasEmpty) {
-      // canvasRef.current.exportImage("png")
-      //   .then(data => {
-      //     console.log(data);
-      //   })
-      //   .catch(e => {
-      //     console.log(e);
-      //   }); 
-    } else {
-      alert('Avatar canvas is empty!');
-    }
   };
 
   return (
@@ -49,11 +38,13 @@ function Home({socket, history}) {
             <Canvas canvas={canvasRef} canvasEmpty={canvasEmpty} setCanvasEmpty={setCanvasEmpty}></Canvas>
             <div>
               <Button onClick={() => {
-                handleHomeSubmit('../joinLobby/joinLobby.js'); 
+                handleHomeSubmit('/joinLobby'); 
               }} className='btn' variant="secondary" size='lg'>join game</Button>{' '}
             </div>
             <div>
-              <Button onClick={() => handleHomeSubmit('../createLobby/createLobby.js')} className='btn' variant="outline-primary" size='lg'>create game</Button>{' '}
+              <Button onClick={() => {
+                handleHomeSubmit('/createLobby')
+              }} className='btn' variant="outline-primary" size='lg'>create game</Button>{' '}
             </div>
           </div>
         </div>
