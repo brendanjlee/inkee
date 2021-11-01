@@ -6,6 +6,7 @@ import GameCanvas from '../../components/GameCanvas';
 import { CanvasProvider } from "../../components/CanvasContext";
 import { ClearCanvasButton } from "../../components/ClearCanvasButton";
 import { ColorPalette } from "../../components/ColorPalette";
+import { UserProfile } from "../../components/UserProfile";
 
 function Game() {
   return (
@@ -19,8 +20,8 @@ function Game() {
               <div className="time" > 3:19 </div>
             </div>
             <div className="middleContainer">
-              <div className="profiles">profile</div>
-                  <GameCanvas/>
+              <UserProfile/>
+              <GameCanvas/>
               <div className="chat">chat</div>
             </div>
             <div className="bottomContainer">
