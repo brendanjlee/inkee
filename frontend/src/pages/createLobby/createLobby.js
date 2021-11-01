@@ -9,6 +9,11 @@ import './createLobby.css';
 function CreateLobby({socket, history}) {
   const [numRounds, setNumRounds] = useState(1);
   const [roundLength, setRoundLength] = useState(30);
+  // if (localStorage.getItem('username') === null || localStorage.getItem('avatar') === null) {
+  //   history.push({
+  //     pathname: '/'
+  //   });
+  // }
 
   const handleNumRoundChange = (event) => {
     setNumRounds(event.target.value);
@@ -37,11 +42,9 @@ function CreateLobby({socket, history}) {
       socket.emit('joinRoom', inviteCode);
 
       history.push({
-        pathname: '/prestartLobby',
-        state: {
-          inviteCode: inviteCode,
-        }
+        pathname: '/prestartLobby'
       });
+      localStorage.setItem('inviteCode', inviteCode);
     });
   };
 
