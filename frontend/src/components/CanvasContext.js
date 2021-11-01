@@ -6,7 +6,6 @@ export const CanvasProvider = ({ children }) => {
   const [isDrawing, setIsDrawing] = useState(false)
   const canvasRef = useRef(null);
   const contextRef = useRef(null);
-  const color = null;
 
   const prepareCanvas = () => {
     const canvas = canvasRef.current
@@ -58,6 +57,13 @@ export const CanvasProvider = ({ children }) => {
     context.strokeStyle = lineColor;
   }
 
+  const exportImage = () => {
+    const canvas = canvasRef.current;
+    const context = canvas.getContext("2d");
+    const uri = canvas.toDataURL("image/png");
+    console.log(uri);
+  }
+
   return (
     <CanvasContext.Provider
       value={{
@@ -68,6 +74,7 @@ export const CanvasProvider = ({ children }) => {
         finishDrawing,
         clearCanvas,
         changeColor,
+        exportImage,
         draw,
       }}
     >
