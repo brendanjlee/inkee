@@ -17,7 +17,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/:gameId', (req, res) => {
-  res.redirect('/?gameId=' + req.params.inviteCode);
+  res.redirect('/?gameId=' + req.params.gameId);
 });
 
 server.listen(port, () => console.log(`Listening on port ${port}...`));

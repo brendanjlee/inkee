@@ -16,6 +16,8 @@ function App() {
   const history = useHistory();
 
   useEffect(() => {
+    localStorage.clear();
+
     return () => {
       localStorage.clear();
     }
@@ -46,13 +48,13 @@ function App() {
     <Router>
       <div className="App">
         <Switch>
+          <Route path='/' exact render={(props) => (<Home socket={socket} history={history} {...props} />)}/>
           <Route path='/createLobby' render={(props) => (<CreateLobby socket={socket} history={history} {...props} />)}/>
           <Route path='/joinLobby' render={(props) => (<JoinLobby socket={socket} history={history} {...props} />)}/>
           <Route path='/prestartLobby' render={(props) => (<PrestartLobby socket={socket} history={history} {...props} />)}/>
           <Route path='/setupProfile' render={(props) => (<SetupProfile socket={socket} history={history} {...props} />)}/>
           <Route path='/game' render={(props) => (<Game socket={socket} history={history} {...props} />)}/>
           <Route path='/testPage' component={testPage} />
-          <Route path='/:inviteCode?' exact render={(props) => (<Home socket={socket} history={history} inviteCode={props.match.params.inviteCode} {...props} />)}/>
         </Switch>
       </div>
     </Router>
