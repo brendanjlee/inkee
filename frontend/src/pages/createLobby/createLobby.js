@@ -128,9 +128,8 @@ function CreateLobby({socket, history}) {
       gameConfiguration['custom_words'] = customWords;
     }
 
-    console.log(gameConfiguration)
+    //console.log(gameConfiguration)
 
-    return
     // create userData
     let userData = {
       username: history.location.state.username,
