@@ -32,29 +32,46 @@ function Game({socket, history}) {
     
     socket.on('message', writeMessage);
   }, []);
- 
+  
+  // const p = document.createElement('p');
+  // const chatBox = document.createTextNode(`Test Message`);
+  // const messages = document.querySelector('.chat');
+  
+  // const span = document.createElement('span');
+  // span.textContent = `TESTUSER: `;
+  // span.classList.add('fw-bold');
+  // p.append(span);
+  
+  // p.classList.add('p-2', 'mb-0');
+  // p.append(chatBox);
+  // messages.appendChild(p);
+  // messages.scrollTop = messages.scrollHeight;
+  
   return (
     <div className='gameRoot'>
       <CanvasProvider socket={socket}>
-      <div className='purpleSplatTwo'>
-        <div className='limeSplat'>
-          <div className='inkeeLogo'>
-            <div className="topContainer" >
-              <div className="word" >word</div>
-              <div className="time" > 3:19 </div>
-            </div>
-            <div className="middleContainer">
-              <div className="profiles">profile</div>
-              <GameCanvas/>
-              <div className="chat">chat</div>
-            </div>
-            <div className="sendMessage" id="sendMessage">
-              <input type='text' placeholder="enter guess..."/>
-              <ClearCanvasButton/>
-              <ColorPalette/>
+        <div className='purpleSplatTwo'>
+          <div className='limeSplat'>
+            <div className='inkeeLogo'>
+              <div className="topContainer" >
+                <div className="word" >word</div>
+                <div className="time" > 3:19 </div>
+              </div>
+              <div className="middleContainer">
+                <UserProfile/>
+                <div className="drawArea">
+                  <GameCanvas/>
+                </div>
+                <div className="chat">chat</div>
+              </div>
+              <div className="sendMessage" id="sendMessage">
+                <input type='text' placeholder="enter guess..."/>
+                <ClearCanvasButton/>
+                <ColorPalette/>
+              </div>
             </div>
           </div>
-        </div>
+        
         </div>
       </CanvasProvider>
     </div>
