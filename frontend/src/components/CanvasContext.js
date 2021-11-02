@@ -29,13 +29,17 @@ export const CanvasProvider = ({ children, socket = null }) => {
     contextRef.current.moveTo(offsetX, offsetY);
     setIsDrawing(true);
     setCanvasEmpty(false);
-    socket.emit('startDrawing');
+    if (socket != null) {
+      socket.emit('startDrawing');
+    }
   };
 
   const finishDrawing = () => {
     contextRef.current.closePath();
     setIsDrawing(false);
-    socket.emit('finishDrawing');
+    if (socket != null) {
+      socket.emit('finishDrawing');
+    }
   };
 
   const draw = ({ nativeEvent }) => {
