@@ -23,8 +23,8 @@ class Message {
    */
   onMessage(messageData) {
     const userId = this.socket.player.uid;
-    writeMessage(userId, socket.roomId, messageData).then(() => {
-      this.socket.broadcast.to(socket.roomId).emit('message',
+    writeMessage(userId, this.socket.roomId, messageData).then(() => {
+      this.socket.broadcast.to(this.socket.roomId).emit('message',
           userId, messageData);
     });
   }
