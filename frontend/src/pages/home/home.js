@@ -5,11 +5,12 @@ import Canvas from '../../components/Canvas';
 import { Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
-function Home({socket, history}) {
+function Home({socket, history, inviteCode}) {
   const canvasRef = useRef();
   const [canvasEmpty, setCanvasEmpty] = useState(true);
+  localStorage.setItem('inviteCode', inviteCode);
 
-  const handleHomeSubmit = (path) => {
+  const handleHomeSubmit = (path, inviteCode = null) => {
     const userNameInput = document.getElementById('username_input');
     if (userNameInput.value !== '') {
       localStorage.setItem('username', userNameInput.value);
@@ -19,9 +20,18 @@ function Home({socket, history}) {
       return;
     }
 
-    history.push({
-      pathname: path,
-    });
+    if (inviteCode) {
+      socket.emit('joinGame', inviteCode);
+      socket.on('inviteCode', (inviteCode) => {
+        history.push({
+          pathname: '/prestartLobby',
+        });
+      });
+    } else {
+      history.push({
+        pathname: path,
+      });
+    }
   };
 
   return (
@@ -38,13 +48,16 @@ function Home({socket, history}) {
             <Canvas canvas={canvasRef} canvasEmpty={canvasEmpty} setCanvasEmpty={setCanvasEmpty}></Canvas>
             <div>
               <Button onClick={() => {
-                handleHomeSubmit('/joinLobby'); 
+                handleHomeSubmit('/joinLobby', localStorage.getItem('inviteCode')); 
               }} className='btn' variant="secondary" size='lg'>join game</Button>{' '}
             </div>
             <div>
-              <Button onClick={() => {
-                handleHomeSubmit('/createLobby')
-              }} className='btn' variant="outline-primary" size='lg'>create game</Button>{' '}
+              {
+                !localStorage.getItem('inviteCode') &&
+                <Button onClick={() => {
+                  handleHomeSubmit('/createLobby')
+                }} className='btn' variant="outline-primary" size='lg'>create game</Button>
+              }
             </div>
           </div>
         </div>
