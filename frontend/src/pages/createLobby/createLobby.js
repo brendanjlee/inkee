@@ -1,75 +1,144 @@
-import React, { useState } from "react";
+import {React, useState} from "react";
 import { Link, history } from "react-router-dom";
 import { Button } from "react-bootstrap";
-// Components
 import CreateHeader from "../../components/header/header";
-import CSVReader2 from "../../components/CSVReader2";
-import './createLobby.css'
 import { CSVReader } from "react-papaparse";
+import './createLobby.css'
 
 function CreateLobby({socket, history}) {
+  // Game Settings
   const [numRounds, setNumRounds] = useState(2);
   const [roundLength, setRoundLength] = useState(30);
-  const [customWordBox, setCustomWords] = useState('');
+  // Custom Words 
+  const [textAreaContent, setTextAreaContent] = useState('');
+  const [csvContent, setCsvContent] = useState(null);
+  const [customWordList, setCustomWordList] = useState([]);
+  const [submit, setSubmit] = useState(false);
 
+
+  /**
+   * User sets round numbers
+   * @param {onChange} event 
+   */
   const handleNumRoundChange = (event) => {
     //console.log(`Num Rounds: ${event.target.value}`);
     setNumRounds(event.target.value);
   };
 
+  /**
+   * User sets round lenght
+   * @param {onChange} event 
+   */
   const handleRoundLengthChange = (event) => {
     //console.log(`Round Length: ${event.target.value}`);
     setRoundLength(event.target.value);
   };
 
-  const handleCustomWordChange = (event) => {
-    let customWordString = event.target.value;
-    setCustomWords(customWordString);
+  /**
+   * User enters custom words in textArea
+   * @param {onChange} event 
+   */
+  const handleTextAreaChange = (event) => {
+    setTextAreaContent(event.target.value);
+    //console.log(`textArea: ${textAreaContent}`);
   }
 
-  const parseCustomWords = (customWordBox) => {
-    let customWordsList = [];
-    // Parse Custom Words if present
-    if (customWordBox.length > 0) {
-      let lines = customWordBox.split(/\r\n|\r|\n/);
-      for (let i = 0; i < lines.length; i++) {
-        // prase if each lime has more than one word
+  /**
+   *  User drops csv file into CSVReader
+   * @param {onDrop} event 
+   */
+  const handleOnDrop = (event) => {
+    let words = [];
+    for (let i=0; i<event.length; i++) {
+      let word = event[i].data;
+      if (!words.includes(word[0])) words.push(word[0]);
+    }
+
+    setCsvContent(words);
+  }
+
+  /**
+   * User removes csv file from CSVReader
+   * @param {onRemoveFile} event 
+   */
+  const handleOnRemoveFile = (event) => {
+    setCsvContent(null);
+  }
+
+  /**
+   * Error
+   */
+  const handleOnError = (err, file, inputElem, reason) => {
+    console.log(err);
+  }
+
+  /**
+   *  Parses through text area content and csv content and adds them to the
+   * custom word list.
+   * @param {String} textAreaContent 
+   * @param {List} csvContent 
+   */
+  const parseCustomWords = (textAreaContent, csvContent) => {
+    console.log('Parse Custom Words')
+    let customWords = [];
+    if (textAreaContent.length > 0) {
+      let lines = textAreaContent.split(/\r\n|\r|\n/);
+      for (let i=0; i<lines.length; i++) {
         let line = lines[i].split(/[ ,]+/).filter(Boolean);
         for (let j = 0; j < line.length; j++) {
           const word = line[j].toLowerCase();
-          if (!customWordsList.includes(word)) customWordsList.push(word);
+          if (!customWords.includes(word)) {
+            customWords.push(word);
+          }
         }
       }
-    } 
-    return customWordsList;
+      console.log('textAreaContent Created');
+    }
+
+    if (csvContent != null) {
+      for (let i=0; i < csvContent.length; i++) {
+        let word = csvContent[i].data;
+        word = word[0].toLowerCase();
+        if (!customWords.includes(word)) {
+          customWords.push(word);
+        }
+      }
+      console.log('csvContent Created');
+    }
+
+    setCustomWordList(customWords);
   }
 
-  const parseCSV = (rawfile) => {
-    return
-  }
-  
+  /**
+   * Submit game configeration to backend
+   * @param {onClick} event 
+   */
   const handleSubmit = (event) => {
-    console.log('submit')
     event.preventDefault();
+  
+    // Populate customWordList
+    parseCustomWords(textAreaContent, csvContent);
+
+    // Debug
     console.log('Form Submit');
     console.log(`Submit: numRounds: ${numRounds}`);
     console.log(`Submit: roundLength: ${roundLength}`);
+    console.log(`Submit: customWordList: ${customWordList} `);
 
-    let customWordsList = parseCustomWords(customWordBox);
-
-    console.log(`Custom words: ${customWordsList}`);
-    
     // create gameConfiguration
     let gameConfiguration = {
       num_rounds: numRounds,
       round_length: roundLength,
-      custom_words: '',
+      custom_words: [],
     }
     // add custom words if possible
-    if (customWordsList.length > 0) {
-      gameConfiguration['custom_words'] = customWordsList;
+    if (customWordList.length > 0) {
+      gameConfiguration['custom_words'] = customWordList;
     }
 
+    console.log('---------------------------------------');
+
+    return;
     // create userData
     let userData = {
       username: history.location.state.username,
@@ -93,7 +162,7 @@ function CreateLobby({socket, history}) {
       });
     });
     console.log('socket emit invite code')
-  };
+  }
 
   return (
     <div className='root'>
@@ -153,11 +222,21 @@ function CreateLobby({socket, history}) {
             <br/>
             <textarea
               placeholder='Enter Custom Words...'
-              value={customWordBox}
-              onChange={handleCustomWordChange}
+              value={textAreaContent}
+              onChange={handleTextAreaChange}
               >
             </textarea>
-            <CSVReader2/>
+            <div className='csvReader'>
+              <h5>Or Upload a CSV File</h5>
+              <CSVReader
+                onDrop={handleOnDrop}
+                onError={handleOnError}
+                addRemoveButton
+                onRemoveFile={handleOnRemoveFile}
+              >
+                <span>Drop CSV file here or click to upload.</span>
+              </CSVReader>
+            </div>
           </div> 
           <Button onClick={handleSubmit}>Create Game</Button>
         </form>
@@ -166,4 +245,4 @@ function CreateLobby({socket, history}) {
   );
 }
 
-export default CreateLobby
+export default CreateLobby;
