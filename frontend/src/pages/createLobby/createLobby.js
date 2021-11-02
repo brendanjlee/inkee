@@ -1,4 +1,4 @@
-import {React, useState} from "react";
+import {React, useState, useEffect, useRef} from "react";
 import { Link, history } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import CreateHeader from "../../components/header/header";
@@ -12,16 +12,12 @@ function CreateLobby({socket, history}) {
   // Custom Words 
   const [textAreaContent, setTextAreaContent] = useState('');
   const [csvContent, setCsvContent] = useState(null);
-  const [customWordList, setCustomWordList] = useState([]);
-  const [submit, setSubmit] = useState(false);
-
 
   /**
    * User sets round numbers
    * @param {onChange} event 
    */
   const handleNumRoundChange = (event) => {
-    //console.log(`Num Rounds: ${event.target.value}`);
     setNumRounds(event.target.value);
   };
 
@@ -30,7 +26,6 @@ function CreateLobby({socket, history}) {
    * @param {onChange} event 
    */
   const handleRoundLengthChange = (event) => {
-    //console.log(`Round Length: ${event.target.value}`);
     setRoundLength(event.target.value);
   };
 
@@ -39,8 +34,8 @@ function CreateLobby({socket, history}) {
    * @param {onChange} event 
    */
   const handleTextAreaChange = (event) => {
-    setTextAreaContent(event.target.value);
-    //console.log(`textArea: ${textAreaContent}`);
+    let text = event.target.value
+    setTextAreaContent(text); 
   }
 
   /**
@@ -53,6 +48,8 @@ function CreateLobby({socket, history}) {
       let word = event[i].data;
       if (!words.includes(word[0])) words.push(word[0]);
     }
+
+
 
     setCsvContent(words);
   }
@@ -97,8 +94,8 @@ function CreateLobby({socket, history}) {
 
     if (csvContent != null) {
       for (let i=0; i < csvContent.length; i++) {
-        let word = csvContent[i].data;
-        word = word[0].toLowerCase();
+        let word = csvContent[i];
+        word = word.toLowerCase();
         if (!customWords.includes(word)) {
           customWords.push(word);
         }
@@ -106,7 +103,7 @@ function CreateLobby({socket, history}) {
       console.log('csvContent Created');
     }
 
-    setCustomWordList(customWords);
+    return customWords
   }
 
   /**
@@ -115,15 +112,9 @@ function CreateLobby({socket, history}) {
    */
   const handleSubmit = (event) => {
     event.preventDefault();
-  
-    // Populate customWordList
-    parseCustomWords(textAreaContent, csvContent);
 
-    // Debug
-    console.log('Form Submit');
-    console.log(`Submit: numRounds: ${numRounds}`);
-    console.log(`Submit: roundLength: ${roundLength}`);
-    console.log(`Submit: customWordList: ${customWordList} `);
+    // Populate customWordList
+    let customWords = parseCustomWords(textAreaContent, csvContent);
 
     // create gameConfiguration
     let gameConfiguration = {
@@ -132,13 +123,12 @@ function CreateLobby({socket, history}) {
       custom_words: [],
     }
     // add custom words if possible
-    if (customWordList.length > 0) {
-      gameConfiguration['custom_words'] = customWordList;
+    if (customWords.length > 0) {
+      gameConfiguration['custom_words'] = customWords;
     }
 
-    console.log('---------------------------------------');
+    console.log(gameConfiguration)
 
-    return;
     // create userData
     let userData = {
       username: history.location.state.username,
