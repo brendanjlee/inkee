@@ -53,9 +53,6 @@
   font-weight: bold;
   text-align: center;
 }
-.root {
-  display: flex;
-}
 
 .customdiv {
   border-style: dotted;
