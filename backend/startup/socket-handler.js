@@ -7,11 +7,11 @@ const {Room} = require('../controllers/room');
 
 module.exports.init = (server) => {
   const io = socketIO(server);
-  const {token} = socket.handshake.query;
-  console.log(token);
 
   io.on('connection', (socket) => {
     console.log('CONNECTION!!!!');
+    const {token} = socket.handshake.query;
+    console.log(token);
 
     // Authenticate users before allowing access to socket.
     // socket.use((packet, next) => {
@@ -37,6 +37,7 @@ module.exports.init = (server) => {
     /* Create Game */
     socket.on('createGame', (gameConfiguration, userData) => {
       new Room(io, socket).createRoom(gameConfiguration, userData);
+      console.log('new room created')
     });
 
     /* User join event */
@@ -45,14 +46,14 @@ module.exports.init = (server) => {
     });
 
     /* Settings change event */
-    socket.on('settingsUpdate', (data) => {
-      new Room(io, socket).updateSettings(data);
+    socket.on('settingsUpdate', (settingUpdate) => {
+      new Room(io, socket).updateSettings(settingUpdate);
     });
 
     /* Canvas related events */
     /* Drawing event */
-    socket.on('drawingEvent', (data) => {
-      new Canvas(io, socket).emitDrawing(data);
+    socket.on('drawingEvent', (drawingData) => {
+      new Canvas(io, socket).emitDrawing(drawingData);
     });
 
     /* Clear canvas event */
@@ -67,8 +68,8 @@ module.exports.init = (server) => {
     });
 
     /* User chat message event */
-    socket.on('message', (data) => {
-      new Message(io, socket).onMessage(data);
+    socket.on('message', (userId, messageData) => {
+      new Message(io, socket).onMessage(userId, messageData);
     });
   });
 };
