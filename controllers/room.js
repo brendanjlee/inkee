@@ -1,4 +1,7 @@
-const {addNewUser} = require('../firebase/lobby-generation');
+// eslint-disable-next-line
+const {addNewUser, createGameInstance, makeAdmin} = require('../firebase/lobby-generation');
+const {Invite} = require('../classes/invite');
+const {User} = require('../classes/user');
 
 /**
  * Handles game room creation/handling.
@@ -24,9 +27,9 @@ class Room {
    */
   createRoom(gameConfiguration, userData) {
     const inviteCode = new Invite().inviteCode;
-    const newUser = new User(userData.uid, userData.avatar, 0);
+    const newUser = new User(userData.uid, userData.avatar, 0, false, false);
     this.socket.player = newUser;
-    this.socket.roomID = inviteCode;
+    this.socket.roomId = inviteCode;
 
     createGameInstance(gameConfiguration, inviteCode)
         .then(() => {
@@ -34,7 +37,8 @@ class Room {
               .then(() => {
                 makeAdmin(newUser, inviteCode)
                     .then(() => {
-                      socket.emit('inviteCode', inviteCode);
+                      this.socket.join(inviteCode);
+                      this.socket.emit('inviteCode', inviteCode);
                     });
               });
         });
@@ -47,15 +51,29 @@ class Room {
    * @param {string} inviteCode
    */
   joinRoom(userData, inviteCode) {
-    this.socket.roomID = inviteCode;
-    const newUser = new User(userData.uid, userData.avatar, 0);
+    console.log(userData + ' ' + inviteCode);
+    const newUser = new User(userData.uid, userData.avatar, 0, false, false);
     this.socket.player = newUser;
+    this.socket.roomID = inviteCode;
 
-    addNewUser(userData, inviteCode)
-        .then(() => {
-          this.socket.to(socket.roomID).emit('newPlayer', newUser);
-          this.socket.emit('inviteCode', inviteCode);
-        });
+    if (this.io.sockets.adapter.rooms.get(inviteCode)) {
+      addNewUser(userData, inviteCode)
+          .then(() => {
+            this.socket.broadcast.to(this.socket.roomID).emit('newPlayer',
+                newUser);
+            this.socket.emit('inviteCode', inviteCode);
+          });
+    } else {
+      this.socket.emit('ERROR', 'Room does not exist!');
+    }
+  }
+
+  /**
+   * Send settings to the connected user.
+   *
+   */
+  sendSettings() {
+
   }
 
   /**
@@ -64,7 +82,11 @@ class Room {
    * @param {object} data the settings data that has been updated.
    */
   updateSettings(data) {
-    this.socket.to(socket.roomID).emit('settingsUpdate', data);
+    if (this.socket.player.isAdmin) {
+      this.socket.broadcast.to(socket.roomID).emit('settingsUpdate', data);
+    } else {
+      this.socket.emit('ERROR', 'Not authorized to update settings!');
+    }
   }
 }
 
