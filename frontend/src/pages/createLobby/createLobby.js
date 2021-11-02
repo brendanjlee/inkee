@@ -222,4 +222,4 @@ function CreateLobby({socket, history}) {
   );
 }
 
-export default CreateLobby
+export default CreateLobby;
