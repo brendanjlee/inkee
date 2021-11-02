@@ -55,8 +55,29 @@ async function updateGameStatus(inviteCode, inProgress) {
   await progressRef.update(updates);
 };
 
+/**
+ * Removes the player from the firebase game.
+ *
+ * @param {string} inviteCode the room code where the user is being removed.
+ * @param {object} userData the user object that is being removed.
+ * @return {boolean} indiciating if the game is empty or not.
+ */
+async function removePlayerFromGame(inviteCode, userData) {
+  const db = admin.database();
+  const gameRef = db.ref(`games/${inviteCode}`);
+
+  gameRef.child('players').on('value', async (snapshot) => {
+    if (snapshot.numChildren() === 1) {
+      await db.ref(`games/${inviteCode}`).remove();
+    } else {
+      await db.ref(`games/${inviteCode}/players/${userData.uid}`).remove();
+    }
+  });
+}
+
 module.exports = {
   writeMessage,
   updateSettings,
   updateGameStatus,
+  removePlayerFromGame,
 };
