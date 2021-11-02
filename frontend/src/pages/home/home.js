@@ -3,7 +3,6 @@ import React, { useState, useRef } from 'react'
 import Logo from '../../assets/inkee-logo.png'
 import Canvas from '../../components/Canvas';
 import { Button } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
 
 function Home({socket, history, inviteCode}) {
   const canvasRef = useRef();
@@ -21,8 +20,15 @@ function Home({socket, history, inviteCode}) {
     }
 
     if (inviteCode) {
-      socket.emit('joinGame', inviteCode);
-      socket.on('inviteCode', (inviteCode) => {
+      socket.emit('joinGame', {
+        userData: {
+          uid: localStorage.getItem('username'),
+          avatar: 'tempAvatar',
+        },
+        inviteCode: localStorage.getItem('inviteCode'),
+      });
+
+      socket.on('inviteCode', () => {
         history.push({
           pathname: '/prestartLobby',
         });
