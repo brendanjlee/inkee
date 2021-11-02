@@ -6,7 +6,7 @@ export const CanvasProvider = ({ children, socket = null }) => {
   const [isDrawing, setIsDrawing] = useState(false)
   const canvasRef = useRef(null);
   const contextRef = useRef(null);
-  const color = null;
+  const [canvasEmpty, setCanvasEmpty] = useState(true);
 
   const prepareCanvas = () => {
     const canvas = canvasRef.current
@@ -28,6 +28,7 @@ export const CanvasProvider = ({ children, socket = null }) => {
     contextRef.current.beginPath();
     contextRef.current.moveTo(offsetX, offsetY);
     setIsDrawing(true);
+    setCanvasEmpty(false);
     socket.emit('startDrawing');
   };
 
@@ -64,6 +65,7 @@ export const CanvasProvider = ({ children, socket = null }) => {
     const context = canvas.getContext("2d")
     context.fillStyle = "white"
     context.fillRect(0, 0, canvas.width, canvas.height)
+    setCanvasEmpty(true);
     if (socket) {
       socket.emit('clearCanvas');
     }
@@ -76,6 +78,17 @@ export const CanvasProvider = ({ children, socket = null }) => {
     context.strokeStyle = lineColor;
   }
 
+  const exportImage = () => {
+    const canvas = canvasRef.current;
+    const context = canvas.getContext("2d");
+    const uri = canvas.toDataURL("image/png");
+    
+    if (canvasEmpty) {
+      throw 'Canvas is empty!';
+    }
+    console.log(uri);
+  }
+
   return (
     <CanvasContext.Provider
       value={{
@@ -86,6 +99,7 @@ export const CanvasProvider = ({ children, socket = null }) => {
         finishDrawing,
         clearCanvas,
         changeColor,
+        exportImage,
         draw,
       }}
     >
