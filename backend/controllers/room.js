@@ -39,6 +39,12 @@ class Room {
                     .then(() => {
                       this.socket.join(inviteCode);
                       this.socket.emit('inviteCode', inviteCode);
+                      rooms[inviteCode] = {
+                        in_progress: false,
+                        users: {},
+                      };
+                      rooms[inviteCode].users[newUser.uid] = newUser;
+                      console.log(rooms[inviteCode]);
                     });
               });
         });
@@ -51,21 +57,42 @@ class Room {
    * @param {string} inviteCode
    */
   joinRoom(userData, inviteCode) {
-    console.log(userData + ' ' + inviteCode);
     const newUser = new User(userData.uid, userData.avatar, 0, false, false);
     this.socket.player = newUser;
     this.socket.roomID = inviteCode;
 
-    if (this.io.sockets.adapter.rooms.get(inviteCode)) {
-      addNewUser(userData, inviteCode)
-          .then(() => {
-            this.socket.broadcast.to(this.socket.roomID).emit('newPlayer',
-                newUser);
-            this.socket.emit('inviteCode', inviteCode);
-          });
+    if (rooms[inviteCode] !== undefined) {
+      if (rooms[inviteCode].users[newUser.uid] === undefined) {
+        addNewUser(userData, inviteCode)
+            .then(() => {
+              this.socket.broadcast.to(this.socket.roomID).emit('newPlayer',
+                  newUser);
+              this.socket.emit('inviteCode', inviteCode);
+              rooms[inviteCode].users[newUser.uid] = newUser;
+            });
+      } else {
+        this.socket.emit('ERROR', 'Another player has this name already!');
+      }
     } else {
       this.socket.emit('ERROR', 'Room does not exist!');
     }
+  }
+
+  /**
+   * Adds user to random room.
+   *
+   * @param {object} userData
+   */
+  joinRandomRoom(userData) {
+    const gameCodes = Object.keys(rooms);
+    if (gameCodes.length === 0) {
+      this.socket.emit('ERROR', 'There are no ongoing games right now, ' +
+        'try creating one!');
+      return;
+    }
+
+    const randIdx = Math.trunc(Math.random() * gameCodes.length);
+    this.joinRoom(userData, gameCodes[randIdx]);
   }
 
   /**
@@ -83,7 +110,7 @@ class Room {
    */
   updateSettings(data) {
     if (this.socket.player.isAdmin) {
-      this.socket.broadcast.to(socket.roomID).emit('settingsUpdate', data);
+      this.socket.broadcast.to(this.socket.roomID).emit('settingsUpdate', data);
     } else {
       this.socket.emit('ERROR', 'Not authorized to update settings!');
     }
