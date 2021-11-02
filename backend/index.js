@@ -1,16 +1,19 @@
 // Initalize express and application routes.
 const express = require('express');
+const path = require('path');
 const app = express();
 require('./startup/routes')(app);
+require('./startup/firebase-stream');
 
 // Set up server for Socket IO.
 const server = require('http').createServer(app);
-const sockets = require('./startup/ws-handler');
+const sockets = require('./startup/socket-handler');
 
 // App Initialization.
 const port = process.env.PORT || 3001;
-app.get('/', function(req, res) {
-  res.sendFile(__dirname + '/index.html');
+app.use(express.static(path.join(__dirname, 'build')));
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
 server.listen(port, () => console.log(`Listening on port ${port}...`));
