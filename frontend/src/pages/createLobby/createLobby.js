@@ -130,7 +130,6 @@ function CreateLobby({socket, history}) {
 
     console.log(gameConfiguration)
 
-    return
     // create userData
     let userData = {
       username: history.location.state.username,
@@ -154,7 +153,7 @@ function CreateLobby({socket, history}) {
   }
 
   return (
-    <div className='root'>
+    <div className='lobbyRoot'>
       <CreateHeader />
       <div className='content'>
         <h2>Select Game Settings</h2>
@@ -168,7 +167,6 @@ function CreateLobby({socket, history}) {
                 onChange={handleNumRoundChange}
                 value={numRounds}
               >
-                <option hidden="true">choose rounds</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
                 <option value="4">4</option>
