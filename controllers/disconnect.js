@@ -19,15 +19,14 @@ class Disconnect {
    * Handles user socket disconnect.
    */
   onDisconnect() {
-    const {socket} = this;
-    const {roomId, player} = socket;
+    const {roomId, player} = this.socket;
 
     removePlayerFromGame(roomId, player).then(() => {
-      socket.to(roomId).emit('disconnection', player.uid);
-      socket.disconnect();
+      this.socket.to(roomId).emit('disconnection', player.uid);
+      this.socket.disconnect();
 
-      if (io.sockets.adapter.rooms.get(roomId).size === 0) {
-        socket.to(roomId).emit('endgame');
+      if (this.io.sockets.adapter.rooms.get(roomId).size === 0) {
+        this.socket.to(roomId).emit('endgame');
       }
     });
   }
