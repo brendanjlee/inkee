@@ -1,4 +1,4 @@
-import {React, useState, useEffect, useRef} from "react";
+import {React, useState} from "react";
 import { Link, history } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import CreateHeader from "../../components/header/header";
@@ -130,6 +130,7 @@ function CreateLobby({socket, history}) {
 
     console.log(gameConfiguration)
 
+    return
     // create userData
     let userData = {
       username: history.location.state.username,
@@ -167,6 +168,7 @@ function CreateLobby({socket, history}) {
                 onChange={handleNumRoundChange}
                 value={numRounds}
               >
+                <option hidden="true">choose rounds</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
                 <option value="4">4</option>
