@@ -1,5 +1,5 @@
 import './home.css'
-import React, { useRef } from 'react'
+import React, { useState, useRef } from 'react'
 import Logo from '../../assets/inkee-logo.png'
 import { Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
@@ -33,6 +33,7 @@ function Home({socket, history}) {
               <div>
                 <CreateButton/>
               </div>
+
             </div>
           </div>
         </div>

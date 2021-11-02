@@ -2,7 +2,7 @@ import React, { useContext, useRef, useState } from "react";
 
 const CanvasContext = React.createContext();
 
-export const CanvasProvider = ({ children }) => {
+export const CanvasProvider = ({ children, socket = null }) => {
   const [isDrawing, setIsDrawing] = useState(false)
   const canvasRef = useRef(null);
   const contextRef = useRef(null);
@@ -29,11 +29,13 @@ export const CanvasProvider = ({ children }) => {
     contextRef.current.moveTo(offsetX, offsetY);
     setIsDrawing(true);
     setCanvasEmpty(false);
+    socket.emit('startDrawing');
   };
 
   const finishDrawing = () => {
     contextRef.current.closePath();
     setIsDrawing(false);
+    socket.emit('finishDrawing');
   };
 
   const draw = ({ nativeEvent }) => {
@@ -42,6 +44,19 @@ export const CanvasProvider = ({ children }) => {
     }
     const { offsetX, offsetY } = nativeEvent;
     contextRef.current.lineTo(offsetX, offsetY);
+
+    const canvas = canvasRef.current;
+    const context = canvas.getContext("2d");
+
+    if (socket) {
+      socket.emit('drawingEvent', ({
+        x: offsetX,
+        y: offsetY,
+        color: context.strokeStyle,
+        thickness: context.lineWidth,
+        drawEvent: nativeEvent,
+      }));
+    }
     contextRef.current.stroke();
   };
 
@@ -51,6 +66,9 @@ export const CanvasProvider = ({ children }) => {
     context.fillStyle = "white"
     context.fillRect(0, 0, canvas.width, canvas.height)
     setCanvasEmpty(true);
+    if (socket) {
+      socket.emit('clearCanvas');
+    }
   }
 
   const changeColor = color => () => {
