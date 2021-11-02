@@ -78,6 +78,12 @@ export const CanvasProvider = ({ children, socket = null }) => {
     context.strokeStyle = lineColor;
   }
 
+  const changeLineWidth = (lineWidthValue) => {
+    const canvas = canvasRef.current;
+    const context = canvas.getContext('2d');
+    context.lineWidth = lineWidthValue;
+  }
+
   const exportImage = () => {
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
@@ -99,6 +105,7 @@ export const CanvasProvider = ({ children, socket = null }) => {
         finishDrawing,
         clearCanvas,
         changeColor,
+        changeLineWidth,
         exportImage,
         draw,
       }}

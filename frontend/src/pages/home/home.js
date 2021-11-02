@@ -8,6 +8,7 @@ import { CanvasProvider } from "../../components/CanvasContext";
 import { ClearCanvasButton } from "../../components/ClearCanvasButton";
 import { JoinButton } from "../../components/JoinButton";
 import { CreateButton } from "../../components/CreateButton";
+import { StrokeThickness } from '../../components/strokeThickness';
 
 function Home({socket, history}) {
 
@@ -32,6 +33,7 @@ function Home({socket, history}) {
               </div>
               <div>
                 <CreateButton/>
+                <StrokeThickness/>
               </div>
 
             </div>
