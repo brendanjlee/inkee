@@ -1,9 +1,10 @@
 const express = require('express');
+// eslint-disable-next-line
 const router = express.Router();
 
 // Classes required.
-const { User } = require('../classes/user');
-const { Invite } = require('../classes/invite');
+const {User} = require('../classes/user');
+const {Invite} = require('../classes/invite');
 
 // Database Interfacing Functions.
 const functions = require('../firebase/lobby-generation');
@@ -13,17 +14,16 @@ router.post('/', (req, res) => {
   console.log(req.body);
   const gameConfiguration = req.body.gameConfiguration;
   const reqUserData = req.body.userData;
-  
   const inviteCode = new Invite().inviteCode;
   const userData = new User(reqUserData.uid, reqUserData.avatar, 0);
 
   functions.createGameInstance(gameConfiguration, inviteCode)
-    .then(() => {
-      functions.addNewUser(userData, inviteCode)
-        .then(() => {
-          functions.makeAdmin(userData, inviteCode);
-        });
-    });
+      .then(() => {
+        functions.addNewUser(userData, inviteCode)
+            .then(() => {
+              functions.makeAdmin(userData, inviteCode);
+            });
+      });
 });
 
 /* Add user to game in Firebase Realtime Database */
@@ -38,4 +38,4 @@ router.post('/:inviteCode/users', (req, res) => {
 
 module.exports = {
   router,
-}
+};

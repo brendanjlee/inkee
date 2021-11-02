@@ -31,14 +31,9 @@ async function makeAdmin(userData, inviteCode) {
   const db = admin.database();
   const gameRef = db.ref('games');
 
-  const gameRefId = gameRef.orderByKey().equalTo(inviteCode);
-  await gameRefId.once('value', (snapshot) => {
-    if (snapshot.exists()) {
-      const updates = {};
-      updates[`${inviteCode}/admin`] = userData.uid;
-      gameRef.update(updates);
-    }
-  });
+  const updates = {};
+  updates[`${inviteCode}/admin`] = userData.uid;
+  await gameRef.update(updates);
 }
 
 /**
@@ -46,21 +41,14 @@ async function makeAdmin(userData, inviteCode) {
  *
  * @param {Object} userData the new user info.
  * @param {string} inviteCode the inviteCode that has been generated.
- * @param {object} socket the response socket that sends the new user data.
- * @return {boolean} false if user cannot.
  */
 async function addNewUser(userData, inviteCode) {
   const db = admin.database();
   const usersRef = db.ref(`games/${inviteCode}/users`);
-  const usersRefId = usersRef.orderByKey().equalTo(userData.uid);
 
-  await usersRefId.once('value', (snapshot) => {
-    if (!snapshot.exists()) {
-      const updates = {};
-      updates[userData.uid] = userData;
-      usersRef.update(updates);
-    }
-  });
+  const updates = {};
+  updates[userData.uid] = userData;
+  await usersRef.update(updates);
 }
 
 module.exports = {
