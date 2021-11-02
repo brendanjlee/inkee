@@ -9,21 +9,13 @@ import './createLobby.css'
 function CreateLobby({socket, history}) {
   const [numRounds, setNumRounds] = useState(2);
   const [roundLength, setRoundLength] = useState(30);
-
-  // if (localStorage.getItem('username') === null || localStorage.getItem('avatar') === null) {
-  //   history.push({
-  //     pathname: '/'
-  //   });
-  // }
   const [customWordBox, setCustomWords] = useState('');
 
   const handleNumRoundChange = (event) => {
-    //console.log(`Num Rounds: ${event.target.value}`);
     setNumRounds(event.target.value);
   };
 
   const handleRoundLengthChange = (event) => {
-    //console.log(`Round Length: ${event.target.value}`);
     setRoundLength(event.target.value);
   };
 
