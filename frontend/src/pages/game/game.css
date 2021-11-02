@@ -68,11 +68,19 @@
 .profiles {
   margin-top: 1rem;
   float:left;
-  border: .5rem solid black;
   width: 10rem;
   height: 30rem;
-  background-color: white;
   margin-left: 12%;
+  margin-right: 1rem;
+}
+
+.userProfile {
+  margin-bottom: .5rem;
+  float:left;
+  border: .5rem solid black;
+  width: 10rem;
+  height: 3rem;
+  background-color: white;
 }
 
 /* Chat Features */
