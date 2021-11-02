@@ -6,6 +6,7 @@ import GameCanvas from '../../components/GameCanvas';
 import { CanvasProvider } from "../../components/CanvasContext";
 import { ClearCanvasButton } from "../../components/ClearCanvasButton";
 import { ColorPalette } from "../../components/ColorPalette";
+import { UserProfile } from "../../components/UserProfile";
 
 function Game({socket, history}) {
   // Socket game handlers.
