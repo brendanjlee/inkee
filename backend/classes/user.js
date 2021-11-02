@@ -6,11 +6,15 @@ class User {
    * @param {string} uid the username of the user.
    * @param {string} avatar the URL where the user's avatar is located.
    * @param {number} score the score of the user.
+   * @param {boolean} isDrawing user is drawing.
+   * @param {boolean} isAdmin user is admin of game.
    */
-  constructor(uid, avatar, score = 0) {
+  constructor(uid, avatar, score = 0, isDrawing = false, isAdmin = false) {
     this.uid = uid;
     this.avatar = avatar;
     this.score = score;
+    this.isDrawing = isDrawing;
+    this.isAdmin = isAdmin;
   }
 
   /**
@@ -20,7 +24,7 @@ class User {
    * @return {Object} a User object.
    */
   deserialize(obj) {
-    return new User(obj.uid, obj.avatar, obj.score);
+    return new User(obj.uid, obj.avatar, obj.score, obj.isDrawing, obj.isAdmin);
   }
 }
 

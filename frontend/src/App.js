@@ -16,6 +16,14 @@ function App() {
   const history = useHistory();
 
   useEffect(() => {
+    localStorage.clear();
+
+    return () => {
+      localStorage.clear();
+    }
+  }, []);
+
+  useEffect(() => {
     // Initialize Socket connection.
     const newSocket = io(`http://${window.location.hostname}:3001`, {
       transports: ['websocket', 'polling'],
