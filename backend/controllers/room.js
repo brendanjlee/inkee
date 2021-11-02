@@ -29,7 +29,6 @@ class Room {
     const inviteCode = new Invite().inviteCode;
     const newUser = new User(userData.uid, userData.avatar, 0, false, false);
     this.socket.player = newUser;
-    this.socket.roomId = inviteCode;
 
     createGameInstance(gameConfiguration, inviteCode)
         .then(() => {
@@ -37,6 +36,7 @@ class Room {
               .then(() => {
                 makeAdmin(newUser, inviteCode)
                     .then(() => {
+                      this.socket.roomId = inviteCode;
                       this.socket.join(inviteCode);
                       this.socket.emit('inviteCode', inviteCode);
                       rooms[inviteCode] = {
