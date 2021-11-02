@@ -33,8 +33,8 @@ class Canvas {
   clearCanvas() {
     const {socket} = this;
     this.socket.broadcast.to(socket.roomId).emit('clearCanvas');
-    // if (this.socket.player.is_drawing) {
-      
+    // if (this.socket.player.isDrawing) {
+    //
     // }
   }
 }
