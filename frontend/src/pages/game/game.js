@@ -27,8 +27,10 @@ function Game({socket, history}) {
                 <div className="time" > 3:19 </div>
               </div>
               <div className="middleContainer">
-                <div className="profiles">profile</div>
+                <UserProfile/>
+                <div className="drawArea">
                   <GameCanvas/>
+                </div>
                 <div className="chat">chat</div>
               </div>
               <div className="bottomContainer">
