@@ -1,9 +1,5 @@
-<<<<<<< HEAD
-import React, { useEffect } from 'react'
-=======
 import React, { useEffect } from "react";
 
->>>>>>> Add chat message feature
 //Style
 import './game.css'
 // Assets

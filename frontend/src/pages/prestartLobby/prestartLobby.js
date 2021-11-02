@@ -20,8 +20,6 @@ function PrestartLobby({socket, history}) {
     });
   }, []);
 
-<<<<<<< HEAD
-=======
   
   // User routines.
   useEffect(() => {
@@ -32,7 +30,6 @@ function PrestartLobby({socket, history}) {
         return newUsers;
       });
     };
->>>>>>> f921ce6539e35a9b673c7eb8cbc09d36d83f580d
   
     const deleteUserListener = (userToRemove) => {
       setUsers((prevUsers) => {
