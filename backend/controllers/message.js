@@ -1,3 +1,5 @@
+const {writeMessage} = require('../firebase/game-handler');
+
 /**
  * Handles storing messages for the game.
  */
@@ -17,11 +19,14 @@ class Message {
    * Sends the provided message data to all the connected clients
    * and to the firebase database.
    *
-   * @param {string} userId The userId that sent the message to the game.
    * @param {object} messageData the content of the message.
    */
-  onMessage(userId, messageData) {
-    this.socket.to(socket.roomID).emit('message', userId, messageData);
+  onMessage(messageData) {
+    const userId = this.socket.player.uid;
+    writeMessage(userId, this.socket.roomId, messageData).then(() => {
+      this.socket.broadcast.to(this.socket.roomId).emit('message',
+          userId, messageData);
+    });
   }
 }
 
