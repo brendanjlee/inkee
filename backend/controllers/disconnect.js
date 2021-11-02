@@ -23,11 +23,12 @@ class Disconnect {
 
     removePlayerFromGame(roomId, player).then(() => {
       this.socket.to(roomId).emit('disconnection', player.uid);
-      this.socket.disconnect();
-
-      if (this.io.sockets.adapter.rooms.get(roomId).size === 0) {
+      if (rooms[roomId].users.size === 0) {
         this.socket.to(roomId).emit('endgame');
+        delete rooms[roomId];
       }
+      this.io.socket.removeAllListeners();
+      delete rooms[roomId].users[newUser.uid];
     });
   }
 }
