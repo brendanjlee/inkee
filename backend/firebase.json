@@ -2,15 +2,6 @@
   "database": {
     "rules": "firebase_config/realtime.rules"
   },
-  "firestore": {
-    "rules": "firebase_config/firestore.rules",
-    "indexes": "firebase_config/firestore.indexes.json"
-  },
-  "functions": {
-    "predeploy": [
-      "npm --prefix \"$RESOURCE_DIR\" run lint"
-    ]
-  },
   "hosting": {
     "public": "public",
     "ignore": [
@@ -21,5 +12,22 @@
   },
   "storage": {
     "rules": "firebase_config/storage.rules"
+  },
+  "emulators": {
+    "auth": {
+      "port": null
+    },
+    "database": {
+      "port": 9000
+    },
+    "hosting": {
+      "port": 5000
+    },
+    "storage": {
+      "port": 9199
+    },
+    "ui": {
+      "enabled": true
+    }
   }
 }
