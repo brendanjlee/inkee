@@ -16,5 +16,9 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
+app.get('/:gameId', (req, res) => {
+  res.redirect('/?gameId=' + req.params.inviteCode);
+});
+
 server.listen(port, () => console.log(`Listening on port ${port}...`));
 sockets.init(server);
