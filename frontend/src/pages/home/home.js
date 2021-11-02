@@ -4,10 +4,15 @@ import Logo from '../../assets/inkee-logo.png'
 import Canvas from '../../components/Canvas';
 import { Button } from 'react-bootstrap';
 
-function Home({socket, history, inviteCode}) {
+function Home({socket, history}) {
   const canvasRef = useRef();
   const [canvasEmpty, setCanvasEmpty] = useState(true);
-  localStorage.setItem('inviteCode', inviteCode);
+  const query = new URLSearchParams(window.location.search);
+  const inviteCode = query.get('gameId');
+
+  if (inviteCode !== null) {
+    localStorage.setItem('inviteCode', inviteCode);
+  }
 
   const handleHomeSubmit = (path, inviteCode = null) => {
     const userNameInput = document.getElementById('username_input');
@@ -20,7 +25,7 @@ function Home({socket, history, inviteCode}) {
     }
 
     if (inviteCode) {
-      socket.emit('joinGame', {
+      socket.emit('joinRoom', {
         userData: {
           uid: localStorage.getItem('username'),
           avatar: 'tempAvatar',

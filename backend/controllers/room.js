@@ -51,20 +51,20 @@ class Room {
    * @param {string} inviteCode
    */
   joinRoom(userData, inviteCode) {
+    console.log(userData + ' ' + inviteCode);
     const newUser = new User(userData.uid, userData.avatar, 0, false, false);
     this.socket.player = newUser;
     this.socket.roomID = inviteCode;
 
-    const rooms = this.socket.rooms;
-    for (const room in rooms) {
-      if (room[1] === inviteCode) {
-        addNewUser(userData, inviteCode)
-            .then(() => {
-              this.socket.broadcast.to(socket.roomID).emit('newPlayer',
-                  newUser);
-              this.socket.emit('inviteCode', inviteCode);
-            });
-      }
+    if (this.io.sockets.adapter.rooms.get(inviteCode)) {
+      addNewUser(userData, inviteCode)
+          .then(() => {
+            this.socket.broadcast.to(this.socket.roomID).emit('newPlayer',
+                newUser);
+            this.socket.emit('inviteCode', inviteCode);
+          });
+    } else {
+      this.socket.emit('ERROR', 'Room does not exist!');
     }
   }
 

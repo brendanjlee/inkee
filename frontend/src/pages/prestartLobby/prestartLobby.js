@@ -90,7 +90,7 @@ function PrestartLobby({socket, history}) {
         <h1 class="text-white text-center">Invite your friends!</h1>
         <div class="input-group mb-3">
             <input type="text" id="gameLink" class="form-control text-center fw-bold bg-white"
-              value={window.location.protocol + '//' + window.location.hostname + '/' + inviteCode} readonly>
+              value={window.location.origin + '/' + inviteCode} readonly>
             </input>
             <button class="copyBtn" type="button" id="copy">Copy Link</button>
           </div>
