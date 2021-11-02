@@ -33,7 +33,6 @@ function Home({socket, history}) {
               </div>
               <div>
                 <CreateButton/>
-                <StrokeThickness/>
               </div>
 
             </div>
