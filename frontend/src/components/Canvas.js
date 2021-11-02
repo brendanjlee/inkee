@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { ReactSketchCanvas } from "react-sketch-canvas";
 
 function Canvas(props) {
@@ -19,7 +19,7 @@ function Canvas(props) {
         border: ".5rem solid black",}} 
         onUpdate={(update) => {
           if (update.length !== 0) {
-            setNumDrawingEvents(numDrawingEvents + 1);
+            props.setCanvasEmpty(false);
           }
         }}
       />
@@ -28,7 +28,7 @@ function Canvas(props) {
         className="btn2"
         onClick={() => {
           canvas.current.clearCanvas();
-          setNumDrawingEvents(0);
+          props.setCanvasEmpty(true);
         }}
       >
         Clear

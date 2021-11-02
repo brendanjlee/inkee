@@ -61,8 +61,8 @@ function PrestartLobby({socket, history}) {
       });
     };
 
-    const populateSettings = (payload) => {
-      setSettings(payload);
+    const populateSettings = (settingsData) => {
+      setSettings(settingsData.settings);
     }
 
     socket.on('settingUpdate', settingListener);
@@ -76,7 +76,7 @@ function PrestartLobby({socket, history}) {
   }, [socket]);
 
   useEffect(() => {
-    setInviteCode(history.location.state.inviteCode);
+    setInviteCode(localStorage.getItem('inviteCode'));
   }, [history]);
 
   return (
@@ -90,7 +90,7 @@ function PrestartLobby({socket, history}) {
         <h1 class="text-white text-center">Invite your friends!</h1>
         <div class="input-group mb-3">
             <input type="text" id="gameLink" class="form-control text-center fw-bold bg-white"
-                value="http://localhost:3000/" readonly>
+              value={window.location.origin + '/' + inviteCode} readonly>
             </input>
             <button class="copyBtn" type="button" id="copy">Copy Link</button>
           </div>
