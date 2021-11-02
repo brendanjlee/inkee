@@ -8,14 +8,20 @@ import JoinLobby from './pages/joinLobby/joinLobby';
 import PrestartLobby from './pages/prestartLobby/prestartLobby';
 import SetupProfile from './pages/setupProfile/setupProfile'
 import Game from './pages/game/game';
-import GameDrawer from './pages/game/gameDrawer';
-import GameGuesser from './pages/game/gameGuesser';
 import testPage from './reactTesting/testPage';
 import io from 'socket.io-client';
 
 function App() {
   const [socket, setSocket] = useState(null);
   const history = useHistory();
+
+  useEffect(() => {
+    localStorage.clear();
+
+    return () => {
+      localStorage.clear();
+    }
+  }, []);
 
   useEffect(() => {
     // Initialize Socket connection.

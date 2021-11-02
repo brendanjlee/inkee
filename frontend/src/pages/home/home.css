@@ -10,6 +10,12 @@
   margin-left: auto;
   margin-right: auto;
   min-height: 120vh;
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none;
 }
 
 .header {
@@ -30,6 +36,16 @@
   margin-bottom: .5rem;
   outline: none;
 }
+
+.homeDrawArea {
+  margin-top: .1rem;
+  cursor: crosshair;
+  border: .5rem solid black;
+  width: 30rem;
+  height: 15rem;
+  background-color: white;
+}
+
 
 .avatar-img {
   width: 20rem;
