@@ -43,7 +43,7 @@ function CreateLobby({socket, history}) {
   };
 
   return (
-    <div className='root'>
+    <div className='lobbyRoot'>
       <form onSubmit={handleSubmit} className="form">
         <select
           id="numRounds"
