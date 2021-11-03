@@ -86,6 +86,9 @@ export const CanvasProvider = ({ children, socket = null }) => {
     const canvas = canvasRef.current;
     const context = canvas.getContext('2d');
     context.lineWidth = lineWidthValue;
+    if (socket) {
+      socket.emit('lineWidthChange', lineWidthValue);
+    }
   }
 
   const exportImage = () => {
