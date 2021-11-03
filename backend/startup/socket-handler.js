@@ -67,5 +67,10 @@ module.exports.init = (server) => {
     socket.on('chatMessage', (messageData) => {
       new Message(io, socket).onMessage(messageData.message);
     });
+
+    /* User start game event */
+    socket.on('startGame', () => {
+      new Game(io, socket).startGame();
+    });
   });
 };

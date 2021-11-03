@@ -69,7 +69,11 @@ class Room {
               this.io.to(this.socket.roomId).emit('newPlayer',
                   newUser);
               this.socket.join(inviteCode);
-              this.socket.emit('inviteCode', inviteCode);
+              if (rooms[inviteCode].in_progress) {
+                this.socket.emit('startGame', inviteCode);
+              } else {
+                this.socket.emit('inviteCode', inviteCode);
+              }
               rooms[inviteCode].users[newUser.uid] = newUser;
             });
       } else {
