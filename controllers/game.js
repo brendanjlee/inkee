@@ -1,3 +1,5 @@
+const {updateGameStatus} = require('../firebase/game-handler');
+
 /**
  * Handles game logic for the game.
  */
@@ -11,6 +13,16 @@ class Game {
   constructor(io, socket) {
     this.io = io;
     this.socket = socket;
+  }
+
+  /**
+   * Starts the game and notifies connected clients.
+   */
+  startGame() {
+    updateGameStatus(this.socket.roomId, true).then(() => {
+      rooms[this.socket.roomId].in_progress = true;
+      this.io.to(this.socket.roomId).emit('startGame');
+    });
   }
 };
 
