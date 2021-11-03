@@ -9,9 +9,6 @@ jobs:
   
   build:
     runs-on: ubuntu-latest
-    env:
-      backend-working-directory: ./backend
-      frontend-working-directory: ./frontend
     strategy:
       matrix:
         node-version: [10.x, 8.x]
