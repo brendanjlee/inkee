@@ -128,13 +128,12 @@ function CreateLobby({socket, history}) {
       gameConfiguration['custom_words'] = customWords;
     }
 
-    console.log(gameConfiguration)
+    //console.log(gameConfiguration)
 
-    return
     // create userData
-    let userData = {
-      username: history.location.state.username,
-      avatar: history.location.state.avatar,
+    const userData = {
+      uid: localStorage.getItem('username'),
+      avatar: 'tempAvatar',
     }
     
     socket.emit('createGame', {
@@ -154,63 +153,49 @@ function CreateLobby({socket, history}) {
   }
 
   return (
-    <div className='root'>
-      <CreateHeader />
-      <div className='content'>
-        <h2>Select Game Settings</h2>
-        <form className='lobby-creation-form' onSubmit={handleSubmit}>
-          <div className="form-group">
-              <label htmlFor="numRounds">Rounds: </label>
-              <br/>
-              <select
-                id="numRounds"
-                name="numRounds"
-                onChange={handleNumRoundChange}
-                value={numRounds}
-              >
-                <option hidden="true">choose rounds</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10</option>
-              </select>
-          </div> 
-          <div className="form-group">
-            <label htmlFor="roundLength">Drawing Time (seconds): </label>
-            <br/>
-            <select
-              id="roundLength"
-              name="roundLength"
-              onChange={handleRoundLengthChange}
-              value={roundLength}
-            >
-              <option value="30">30</option>
-              <option value="40">40</option>
-              <option value="50">50</option>
-              <option value="60">60</option>
-              <option value="70">70</option>
-              <option value="80">80</option>
-              <option value="90">90</option>
-              <option value="100">100</option>
-              <option value="110">110</option>
-              <option value="120">120</option>
-              <option value="130">130</option>
-              <option value="140">140</option>
-              <option value="150">150</option>
-              <option value="160">160</option>
-              <option value="170">170</option>
-              <option value="180">180</option>
-            </select>
-          </div>
-          <div className='wordlist-container'>
-            <label>Custom Words:</label>
-            <br/>
-            <textarea
+    <div className='lobbyRoot'>
+      <form onSubmit={handleSubmit} className="form">
+        <select
+          id="numRounds"
+          name="numRounds"
+          onChange={handleNumRoundChange}
+          value={numRounds}
+          className="select"
+        >
+          <option hidden="true">choose rounds</option>
+          <option value="1rounds">1</option>
+          <option value="2rounds">2</option>
+          <option value="3rounds">3</option>
+          <option value="4rounds">4</option>
+          <option value="5rounds">5</option>
+          <option value="6rounds">6</option>
+          <option value="7rounds">7</option>
+          <option value="8rounds">8</option>
+          <option value="9rounds">9</option>
+          <option value="10rounds">10</option>
+        </select>
+        <select
+          id="roundLength"
+          name="roundLength"
+          onChange={handleRoundLengthChange}
+          value={roundLength}
+          className="select"
+        >
+          <option hidden="true">drawing time</option>
+          <option value="30seconds">30</option>
+          <option value="40seconds">40</option>
+          <option value="50seconds">50</option>
+          <option value="60seconds">60</option>
+          <option value="70seconds">70</option>
+          <option value="80seconds">80</option>
+          <option value="90seconds">90</option>
+          <option value="120seconds">120</option>
+          <option value="180seconds">180</option>
+        </select>
+        <div className='wordlist'>
+          <label>Custom Words:</label>
+          <br/>
+          <textarea
               placeholder='Enter Custom Words...'
               value={textAreaContent}
               onChange={handleTextAreaChange}
@@ -227,10 +212,9 @@ function CreateLobby({socket, history}) {
                 <span>Drop CSV file here or click to upload.</span>
               </CSVReader>
             </div>
-          </div> 
-          <Button onClick={handleSubmit}>Create Game</Button>
-        </form>
-      </div>
+        </div> 
+        <Button variant='primary' onClick={handleSubmit}>start game</Button>
+      </form>
     </div>
   );
 }
