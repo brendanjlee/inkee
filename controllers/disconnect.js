@@ -27,8 +27,7 @@ class Disconnect {
         this.socket.to(roomId).emit('endgame');
         delete rooms[roomId];
       }
-      this.io.socket.removeAllListeners();
-      delete rooms[roomId].users[newUser.uid];
+      delete rooms[roomId].users[player.uid];
     });
   }
 }
