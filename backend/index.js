@@ -3,7 +3,7 @@ const express = require('express');
 const path = require('path');
 const app = express();
 require('./startup/routes')(app);
-require('./startup/firebase-stream');
+// require('./startup/firebase-stream');
 
 // Set up server for Socket IO.
 const server = require('http').createServer(app);
