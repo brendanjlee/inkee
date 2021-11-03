@@ -116,11 +116,9 @@ function PrestartLobby({socket, history}) {
             <li>Milk</li>
           </ul>
         </div>
-        <Link to='../game/game.js'>
-          <Button onClick={() => {
-            socket.emit('startGame');
-          }} variant='primary'>Ready</Button>
-        </Link>
+        <Button onClick={() => {
+          socket.emit('startGame');
+        }} variant='primary'>Ready</Button>
       </div>
     </div>
   );
