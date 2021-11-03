@@ -82,17 +82,11 @@ export const CanvasProvider = ({ children, socket = null }) => {
     context.strokeStyle = lineColor;
   }
 
-  const changeLineWidth = (lineWidthValue) => {
-    const canvas = canvasRef.current;
-    const context = canvas.getContext('2d');
-    context.lineWidth = lineWidthValue;
-  }
-
   const exportImage = () => {
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
     const uri = canvas.toDataURL("image/png");
-
+    
     if (canvasEmpty) {
       throw 'Canvas is empty!';
     }
@@ -109,7 +103,6 @@ export const CanvasProvider = ({ children, socket = null }) => {
         finishDrawing,
         clearCanvas,
         changeColor,
-        changeLineWidth,
         exportImage,
         draw,
       }}

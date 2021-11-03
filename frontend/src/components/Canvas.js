@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { ReactSketchCanvas } from "react-sketch-canvas";
 
 function Canvas(props) {
+  const [numDrawingEvents, setNumDrawingEvents] = useState(0);
   const [customStrokeWidth, setStrokeWidth] = useState(8);
   const [customStrokeColor, setStrokeColor] = useState('black');
   const canvas = props.canvas;

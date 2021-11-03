@@ -127,14 +127,18 @@ function CreateLobby({socket, history}) {
     if (customWords.length > 0) {
       gameConfiguration['custom_words'] = customWords;
     }
+
+    console.log(gameConfiguration)
+
+    // create userData
+    let userData = {
+      username: history.location.state.username,
+      avatar: history.location.state.avatar,
+    }
     
-    // send
     socket.emit('createGame', {
       gameConfiguration,
-      userData: {
-        uid: localStorage.getItem('username'),
-        avatar: 'tempavatar', //localStorage.getItem('avatar'),
-      },
+      userData,
     });
 
     socket.on('inviteCode', (inviteCode) => {
@@ -145,7 +149,8 @@ function CreateLobby({socket, history}) {
         pathname: '/prestartLobby'
       });
     });
-  };
+    console.log('socket emit invite code')
+  }
 
   return (
     <div className='lobbyRoot'>
@@ -208,7 +213,9 @@ function CreateLobby({socket, history}) {
               </CSVReader>
             </div>
         </div> 
-        <Button onClick={handleSubmit}>Create Game</Button>
+        <Link to='/prestartLobby'>
+          <Button variant='primary'>start game</Button>
+        </Link>
       </form>
     </div>
   );

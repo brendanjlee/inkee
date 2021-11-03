@@ -60,7 +60,7 @@ function Home({socket, history}) {
             <div>
               <Button onClick={() => {
                 handleHomeSubmit('/joinLobby', localStorage.getItem('inviteCode')); 
-              }} className='btn' variant="secondary" size='lg'>join game</Button>
+              }} className='btn' variant="secondary" size='lg'>join game</Button>{' '}
             </div>
             <div>
               {
