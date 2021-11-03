@@ -9,6 +9,8 @@ require('./startup/firebase-stream');
 const server = require('http').createServer(app);
 const sockets = require('./startup/socket-handler');
 
+rooms = {};
+
 // App Initialization.
 const port = process.env.PORT || 3001;
 app.use(express.static(path.join(__dirname, 'build')));
