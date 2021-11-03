@@ -1,5 +1,4 @@
-// eslint-disable-next-line
-const {removePlayerFromGame, updateGameStatus} = require('../firebase/game-handler');
+const {removePlayerFromGame} = require('../firebase/game-handler');
 
 /**
  * Handles user disconnect logic for the game.
@@ -30,7 +29,6 @@ class Disconnect {
       }
       this.io.socket.removeAllListeners();
       delete rooms[roomId].users[newUser.uid];
-      updateGameStatus(roomId, false);
     });
   }
 }
