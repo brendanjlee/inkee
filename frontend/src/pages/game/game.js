@@ -70,6 +70,7 @@ function Game({socket, history}) {
               </div>
             </div>
           </div>
+        
         </div>
       </CanvasProvider>
     </div>

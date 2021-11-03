@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import CreateHeader from "../../components/header/header";
-import GameLink from "../../components/GameLink";
 import './prestartLobby.css'
 
 function PrestartLobby({socket, history}) {
@@ -20,6 +19,7 @@ function PrestartLobby({socket, history}) {
       document.execCommand('copy');
     });
   }, []);
+
   
   // User routines.
   useEffect(() => {
