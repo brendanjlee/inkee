@@ -11,8 +11,7 @@ module.exports.init = (server) => {
 
   io.on('connection', (socket) => {
     console.log('CONNECTION!!!!');
-    const {token} = socket.handshake.query;
-    console.log(token);
+    // const {token} = socket.handshake.query;
 
     /* Socket Lifecycle Listeners */
     /* User disconnects from server */
