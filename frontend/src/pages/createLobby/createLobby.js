@@ -162,7 +162,7 @@ function CreateLobby({socket, history}) {
           value={numRounds}
           className="select"
         >
-          <option hidden="true">choose rounds</option>
+          <option hidden={true}>choose rounds</option>
           <option value="1rounds">1</option>
           <option value="2rounds">2</option>
           <option value="3rounds">3</option>
@@ -181,7 +181,7 @@ function CreateLobby({socket, history}) {
           value={roundLength}
           className="select"
         >
-          <option hidden="true">drawing time</option>
+          <option hidden={true}>drawing time</option>
           <option value="30seconds">30</option>
           <option value="40seconds">40</option>
           <option value="50seconds">50</option>

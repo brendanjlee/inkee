@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 import React, { useEffect } from "react";
 
+=======
+import React, { useEffect, useState } from 'react'
+>>>>>>> dev
 //Style
 import './game.css'
 // Assets
@@ -10,13 +14,14 @@ import { ColorPalette } from "../../components/ColorPalette";
 import { UserProfile } from "../../components/UserProfile";
 
 function Game({socket, history}) {
+  const [messages, setMessages] = useState([]);
+
   // Socket game handlers.
   useEffect(() => {
     socket.on('drawingEvent', (data) => {
       console.log(data);
     });
   }, [socket]);
-
 
   useEffect(() => {
     const sendMessage = document.querySelector('#sendMessage');
@@ -26,27 +31,24 @@ function Game({socket, history}) {
         e.preventDefault();
         const message = this.firstElementChild.value;
         this.firstElementChild.value = '';
-        socket.emit('message', { message });
+        socket.emit('chatMessage', { message });
       }
     });
-    
-    socket.on('message', writeMessage);
-  }, []);
-  
-  // const p = document.createElement('p');
-  // const chatBox = document.createTextNode(`Test Message`);
-  // const messages = document.querySelector('.chat');
-  
-  // const span = document.createElement('span');
-  // span.textContent = `TESTUSER: `;
-  // span.classList.add('fw-bold');
-  // p.append(span);
-  
-  // p.classList.add('p-2', 'mb-0');
-  // p.append(chatBox);
-  // messages.appendChild(p);
-  // messages.scrollTop = messages.scrollHeight;
-  
+
+    socket.on('chatMessage', (data) => {
+      console.log(data);
+      setMessages([...messages, data]);
+      writeMessage({
+        name: data.uid,
+        message: data.message
+      });
+    });
+
+    socket.on('ERROR', (msg) => {
+      alert(msg);
+    });
+  }, [])
+
   return (
     <div className='gameRoot'>
       <CanvasProvider socket={socket}>
@@ -62,10 +64,12 @@ function Game({socket, history}) {
                 <div className="drawArea">
                   <GameCanvas/>
                 </div>
-                <div className="chat">chat</div>
+                <div className="chat" id='chat'></div>
               </div>
-              <div className="sendMessage" id="sendMessage">
-                <input type='text' placeholder="enter guess..."/>
+              <div className="bottomContainer">
+                <div className="sendMessage" id="sendMessage">
+                  <input type='text' placeholder="enter guess..."/>
+                </div>
                 <ClearCanvasButton/>
                 <ColorPalette/>
               </div>
@@ -78,10 +82,10 @@ function Game({socket, history}) {
   );
 }
 
-function writeMessage({ name = '', message, id }) {
+function writeMessage({ name = '', message}) {
   const p = document.createElement('p');
   const chatBox = document.createTextNode(`${message}`);
-  const messages = document.querySelector('.chat');
+  const messages = document.getElementById('chat');
   if (name !== '') {
     const span = document.createElement('span');
     span.textContent = `${name}: `;
@@ -93,6 +97,5 @@ function writeMessage({ name = '', message, id }) {
   messages.appendChild(p);
   messages.scrollTop = messages.scrollHeight;
 }
-
 
 export default Game
