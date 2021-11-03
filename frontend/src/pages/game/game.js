@@ -1,9 +1,4 @@
-<<<<<<< HEAD
-import React, { useEffect } from "react";
-
-=======
 import React, { useEffect, useState } from 'react'
->>>>>>> dev
 //Style
 import './game.css'
 // Assets
