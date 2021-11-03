@@ -1,4 +1,4 @@
-.root {
+.lobbyRoot {
   background-color: #00ACD5;
   height: 100vh;
   background-position: center;
@@ -24,7 +24,7 @@
   height: 100%;
 }
 
-.lobby-creation-form {
+.form {
   margin: auto;
   display: grid;
   margin-top: 5rem;
@@ -43,7 +43,7 @@
   margin-bottom: .5rem;
 }
 
-.wordlist-container {
+.wordlist {
   margin: auto;
   border: .5rem solid black;
   width: 30rem;
