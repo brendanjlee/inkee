@@ -1,5 +1,3 @@
-const { updateGameStatus } = require("../firebase/game-handler");
-
 /**
  * Handles game logic for the game.
  */
@@ -13,17 +11,6 @@ class Game {
   constructor(io, socket) {
     this.io = io;
     this.socket = socket;
-  }
-
-  /**
-   * Starts Inkee Game.
-   */
-  startGame() {
-    const {roomId} = this.socket;
-    rooms[roomId].inProgress = true;
-    updateGameStatus(roomId, true).then(() => {
-      // TODO: send something.
-    });
   }
 };
 
