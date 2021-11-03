@@ -6,6 +6,7 @@ import GameCanvas from '../../components/GameCanvas';
 import { CanvasProvider } from "../../components/CanvasContext";
 import { ClearCanvasButton } from "../../components/ClearCanvasButton";
 import { ColorPalette } from "../../components/ColorPalette";
+import { UserProfile } from "../../components/UserProfile";
 
 function Game({socket, history}) {
   // Socket game handlers.
@@ -26,8 +27,10 @@ function Game({socket, history}) {
                 <div className="time" > 3:19 </div>
               </div>
               <div className="middleContainer">
-                <div className="profiles">profile</div>
+                <UserProfile/>
+                <div className="drawArea">
                   <GameCanvas/>
+                </div>
                 <div className="chat">chat</div>
               </div>
               <div className="bottomContainer">
