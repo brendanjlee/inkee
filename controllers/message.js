@@ -24,8 +24,11 @@ class Message {
   onMessage(messageData) {
     const userId = this.socket.player.uid;
     writeMessage(userId, this.socket.roomId, messageData).then(() => {
-      this.socket.broadcast.to(this.socket.roomId).emit('message',
-          userId, messageData);
+      this.io.to(this.socket.roomId).emit('chatMessage',
+          {
+            uid: userId,
+            message: messageData,
+          });
     });
   }
 }
