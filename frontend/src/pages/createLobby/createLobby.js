@@ -48,9 +48,6 @@ function CreateLobby({socket, history}) {
       let word = event[i].data;
       if (!words.includes(word[0])) words.push(word[0]);
     }
-
-
-
     setCsvContent(words);
   }
 
@@ -103,6 +100,11 @@ function CreateLobby({socket, history}) {
       console.log('csvContent Created');
     }
 
+    // delete after sprint reivew
+    if (customWords.length < 10 && customWords.length > 0) {
+      alert("Entered less than 10 custom words");
+    }
+
     return customWords
   }
 
@@ -117,6 +119,7 @@ function CreateLobby({socket, history}) {
     let customWords = parseCustomWords(textAreaContent, csvContent);
 
     // create gameConfiguration
+    // Use default word list if custom_words is empty
     let gameConfiguration = {
       num_rounds: numRounds,
       round_length: roundLength,
