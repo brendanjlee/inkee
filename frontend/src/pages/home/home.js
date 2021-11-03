@@ -1,7 +1,6 @@
 import './home.css'
 import React, { useState, useRef } from 'react'
 import Logo from '../../assets/inkee-logo.png'
-
 import GameCanvas from '../../components/GameCanvas';
 import { Button } from 'react-bootstrap';
 import { CanvasProvider } from '../../components/CanvasContext';
@@ -65,7 +64,7 @@ function Home({socket, history}) {
             </div>
             <div>
               <Button onClick={() => {
-                handleHomeSubmit('/joinLobby', localStorage.getItem('inviteCode'));
+                handleHomeSubmit('/joinLobby', localStorage.getItem('inviteCode')); 
               }} className='btn' variant="secondary" size='lg'>join game</Button>
             </div>
             <div>
