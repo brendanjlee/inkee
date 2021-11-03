@@ -27,18 +27,26 @@ function Home({socket, history}) {
     }
 
     if (inviteCode) {
+      socket.on('startGame', (inviteCode) => {
+        localStorage.setItem('inviteCode', inviteCode);
+        history.push({
+          pathname: '/game',
+        });
+      });
+
+      socket.on('inviteCode', () => {
+        localStorage.setItem('inviteCode', inviteCode);
+        history.push({
+          pathname: '/prestartLobby',
+        });
+      });
+
       socket.emit('joinRoom', {
         userData: {
           uid: localStorage.getItem('username'),
           avatar: 'tempAvatar',
         },
         inviteCode: localStorage.getItem('inviteCode'),
-      });
-
-      socket.on('inviteCode', () => {
-        history.push({
-          pathname: '/prestartLobby',
-        });
       });
     } else {
       history.push({
