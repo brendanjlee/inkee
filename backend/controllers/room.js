@@ -59,16 +59,21 @@ class Room {
   joinRoom(userData, inviteCode) {
     const newUser = new User(userData.uid, userData.avatar, 0, false, false);
     this.socket.player = newUser;
-    this.socket.roomID = inviteCode;
 
     if (rooms[inviteCode] !== undefined) {
       console.log(rooms[inviteCode].users[newUser.uid]);
       if (rooms[inviteCode].users[newUser.uid] === undefined) {
         addNewUser(userData, inviteCode)
             .then(() => {
-              this.socket.broadcast.to(this.socket.roomID).emit('newPlayer',
+              this.socket.roomId = inviteCode;
+              this.io.to(this.socket.roomId).emit('newPlayer',
                   newUser);
-              this.socket.emit('inviteCode', inviteCode);
+              this.socket.join(inviteCode);
+              if (rooms[inviteCode].in_progress) {
+                this.socket.emit('startGame', inviteCode);
+              } else {
+                this.socket.emit('inviteCode', inviteCode);
+              }
               rooms[inviteCode].users[newUser.uid] = newUser;
             });
       } else {
@@ -111,7 +116,7 @@ class Room {
    */
   updateSettings(data) {
     if (this.socket.player.isAdmin) {
-      this.socket.broadcast.to(this.socket.roomID).emit('settingsUpdate', data);
+      this.io.to(this.socket.roomId).emit('settingsUpdate', data);
     } else {
       this.socket.emit('ERROR', 'Not authorized to update settings!');
     }
