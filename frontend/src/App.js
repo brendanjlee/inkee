@@ -16,6 +16,8 @@ function App() {
   const history = useHistory();
 
   useEffect(() => {
+    localStorage.clear();
+
     return () => {
       localStorage.clear();
     }
