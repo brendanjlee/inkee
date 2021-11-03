@@ -75,6 +75,20 @@ function PrestartLobby({socket, history}) {
     }
   }, [socket]);
 
+  // Start-game routines.
+  useEffect(() => {
+    const startGame = () => {
+      history.push({
+        pathname: '/game',
+      });
+    }
+    socket.on('startGame', startGame);
+
+    return () => {
+      socket.off('startGame', startGame);
+    }
+  }, [socket, history]);
+
   useEffect(() => {
     setInviteCode(localStorage.getItem('inviteCode'));
   }, [history]);
@@ -103,7 +117,9 @@ function PrestartLobby({socket, history}) {
           </ul>
         </div>
         <Link to='../game/game.js'>
-          <Button variant='primary'>Ready</Button>
+          <Button onClick={() => {
+            socket.emit('startGame');
+          }} variant='primary'>Ready</Button>
         </Link>
       </div>
     </div>
