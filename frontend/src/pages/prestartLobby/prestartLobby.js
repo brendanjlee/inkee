@@ -86,13 +86,13 @@ function PrestartLobby({socket, history}) {
         <div className='game-id'>
           <p>Game ID: {inviteCode}</p>
         </div>
-         <div class="mt-5">
-        <h1 class="text-white text-center">Invite your friends!</h1>
-        <div class="input-group mb-3">
-            <input type="text" id="gameLink" class="form-control text-center fw-bold bg-white"
-              value={window.location.origin + '/' + inviteCode} readonly>
+         <div className="mt-5">
+        <h1 className="text-white text-center">Invite your friends!</h1>
+        <div className="input-group mb-3">
+            <input type="text" id="gameLink" className="form-control text-center fw-bold bg-white"
+              defaultValue={window.location.origin + '/' + inviteCode} readOnly>
             </input>
-            <button class="copyBtn" type="button" id="copy">Copy Link</button>
+            <button className="copyBtn" type="button" id="copy">Copy Link</button>
           </div>
         </div>
         <div className='lobby-players'>
