@@ -62,6 +62,7 @@ class Room {
     this.socket.roomID = inviteCode;
 
     if (rooms[inviteCode] !== undefined) {
+      console.log(rooms[inviteCode].users[newUser.uid]);
       if (rooms[inviteCode].users[newUser.uid] === undefined) {
         addNewUser(userData, inviteCode)
             .then(() => {
