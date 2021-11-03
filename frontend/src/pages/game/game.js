@@ -38,6 +38,10 @@ function Game({socket, history}) {
         message: data.message
       });
     });
+
+    socket.on('ERROR', (msg) => {
+      alert(msg);
+    });
   }, [])
 
   return (
