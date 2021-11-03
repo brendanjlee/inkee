@@ -16,7 +16,6 @@ function App() {
   const history = useHistory();
 
   useEffect(() => {
-
     return () => {
       localStorage.clear();
     }
@@ -40,7 +39,6 @@ function App() {
     return () => {
       newSocket.removeAllListeners();
       newSocket.close();
-      newSocket.off("connect_error", reconnect);
     }
   }, [setSocket]);
 

@@ -83,6 +83,15 @@
   background-color: white;
 }
 
+.chat {
+  margin-top: 1rem;
+  float:left;
+  border: .5rem solid black;
+  width: 10rem;
+  height: 30rem;
+  background-color: white;
+}
+
 .middleContainer img {
   width: 20%;
   float:left; 
