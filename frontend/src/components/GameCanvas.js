@@ -15,12 +15,14 @@ export function GameCanvas() {
   }, []);
 
   return (
+    <div className="drawArea">
         <canvas
         onMouseDown={startDrawing}
         onMouseUp={finishDrawing}
         onMouseMove={draw}
         ref={canvasRef}
         />
+    </div>
   );
 }
 
