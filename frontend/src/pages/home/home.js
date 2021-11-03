@@ -1,8 +1,11 @@
 import './home.css'
 import React, { useState, useRef } from 'react'
 import Logo from '../../assets/inkee-logo.png'
-import Canvas from '../../components/Canvas';
+
+import GameCanvas from '../../components/GameCanvas';
 import { Button } from 'react-bootstrap';
+import { CanvasProvider } from '../../components/CanvasContext';
+import { ClearCanvasButton } from '../../components/ClearCanvasButton';
 
 function Home({socket, history}) {
   const canvasRef = useRef();
@@ -47,6 +50,7 @@ function Home({socket, history}) {
 
   return (
     <div className='root'>
+      <CanvasProvider>
       <div className='purpleSplat'>
         <div className='orangeSplat'>
           <div className='header'>
@@ -56,11 +60,13 @@ function Home({socket, history}) {
             <input className='username' id='username_input' type='text' placeholder="enter username..."/>
           </form>
           <div align="center">
-            <Canvas canvas={canvasRef} canvasEmpty={canvasEmpty} setCanvasEmpty={setCanvasEmpty}></Canvas>
+            <div className="homeDrawArea">
+              <GameCanvas />
+            </div>
             <div>
               <Button onClick={() => {
-                handleHomeSubmit('/joinLobby', localStorage.getItem('inviteCode')); 
-              }} className='btn' variant="secondary" size='lg'>join game</Button>{' '}
+                handleHomeSubmit('/joinLobby', localStorage.getItem('inviteCode'));
+              }} className='btn' variant="secondary" size='lg'>join game</Button>
             </div>
             <div>
               {
@@ -73,6 +79,7 @@ function Home({socket, history}) {
           </div>
         </div>
       </div>
+      </CanvasProvider>
     </div>
   );
 }

@@ -131,9 +131,9 @@ function CreateLobby({socket, history}) {
     console.log(gameConfiguration)
 
     // create userData
-    let userData = {
-      username: history.location.state.username,
-      avatar: history.location.state.avatar,
+    const userData = {
+      uid: localStorage.getItem('username'),
+      avatar: 'tempAvatar',
     }
     
     socket.emit('createGame', {
@@ -213,9 +213,7 @@ function CreateLobby({socket, history}) {
               </CSVReader>
             </div>
         </div> 
-        <Link to='/prestartLobby'>
-          <Button variant='primary'>start game</Button>
-        </Link>
+        <Button variant='primary' onClick={handleSubmit}>start game</Button>
       </form>
     </div>
   );
