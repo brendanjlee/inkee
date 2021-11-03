@@ -27,9 +27,14 @@ module.exports.init = (server) => {
           gameCreationData.userData);
     });
 
-    /* User join event */
+    /* User join events */
     socket.on('joinRoom', (joinData) => {
+      console.log(joinData);
       new Room(io, socket).joinRoom(joinData.userData, joinData.inviteCode);
+    });
+
+    socket.on('joinRandomRoom', (joinData) => {
+      new Room(io, socket).joinRandomRoom(joinData.userData);
     });
 
     socket.on('getSettings', () => {
@@ -60,7 +65,7 @@ module.exports.init = (server) => {
     });
 
     /* User chat message event */
-    socket.on('message', (messageData) => {
+    socket.on('chatMessage', (messageData) => {
       new Message(io, socket).onMessage(messageData.message);
     });
   });
