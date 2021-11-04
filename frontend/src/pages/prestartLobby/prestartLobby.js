@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import CreateHeader from "../../components/header/header";
-import GameLink from "../../components/GameLink";
 import './prestartLobby.css'
 
 function PrestartLobby({socket, history}) {
@@ -20,6 +19,7 @@ function PrestartLobby({socket, history}) {
       document.execCommand('copy');
     });
   }, []);
+
   
   // User routines.
   useEffect(() => {
@@ -75,6 +75,20 @@ function PrestartLobby({socket, history}) {
     }
   }, [socket]);
 
+  // Start-game routines.
+  useEffect(() => {
+    const startGame = () => {
+      history.push({
+        pathname: '/game',
+      });
+    }
+    socket.on('startGame', startGame);
+
+    return () => {
+      socket.off('startGame', startGame);
+    }
+  }, [socket, history]);
+
   useEffect(() => {
     setInviteCode(localStorage.getItem('inviteCode'));
   }, [history]);
@@ -86,13 +100,13 @@ function PrestartLobby({socket, history}) {
         <div className='game-id'>
           <p>Game ID: {inviteCode}</p>
         </div>
-         <div class="mt-5">
-        <h1 class="text-white text-center">Invite your friends!</h1>
-        <div class="input-group mb-3">
-            <input type="text" id="gameLink" class="form-control text-center fw-bold bg-white"
-              value={window.location.origin + '/' + inviteCode} readonly>
+         <div className="mt-5">
+        <h1 className="text-white text-center">Invite your friends!</h1>
+        <div className="input-group mb-3">
+            <input type="text" id="gameLink" className="form-control text-center fw-bold bg-white"
+              defaultValue={window.location.origin + '/' + inviteCode} readOnly>
             </input>
-            <button class="copyBtn" type="button" id="copy">Copy Link</button>
+            <button className="copyBtn" type="button" id="copy">Copy Link</button>
           </div>
         </div>
         <div className='lobby-players'>
@@ -102,9 +116,9 @@ function PrestartLobby({socket, history}) {
             <li>Milk</li>
           </ul>
         </div>
-        <Link to='../game/game.js'>
-          <Button variant='primary'>Ready</Button>
-        </Link>
+        <Button onClick={() => {
+          socket.emit('startGame');
+        }} variant='primary'>Ready</Button>
       </div>
     </div>
   );

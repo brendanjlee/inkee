@@ -11,8 +11,7 @@ module.exports.init = (server) => {
 
   io.on('connection', (socket) => {
     console.log('CONNECTION!!!!');
-    const {token} = socket.handshake.query;
-    console.log(token);
+    // const {token} = socket.handshake.query;
 
     /* Socket Lifecycle Listeners */
     /* User disconnects from server */
@@ -67,6 +66,11 @@ module.exports.init = (server) => {
     /* User chat message event */
     socket.on('chatMessage', (messageData) => {
       new Message(io, socket).onMessage(messageData.message);
+    });
+
+    /* User start game event */
+    socket.on('startGame', () => {
+      new Game(io, socket).startGame();
     });
   });
 };
