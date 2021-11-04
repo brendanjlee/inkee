@@ -48,13 +48,22 @@ module.exports.init = (server) => {
     /* Canvas related events */
     /* Drawing event */
     socket.on('drawingEvent', (drawingData) => {
-      console.log(drawingData);
       new Canvas(io, socket).emitDrawing(drawingData);
     });
 
     /* Clear canvas event */
     socket.on('clearCanvas', () => {
       new Canvas(io, socket).clearCanvas();
+    });
+
+    /* Start drawing canvas event */
+    socket.on('startDrawing', (data) => {
+      new Canvas(io, socket).startDrawing(data);
+    });
+
+    /* Finish drawing canvas event */
+    socket.on('finishDrawing', () => {
+      new Canvas(io, socket).finishDrawing();
     });
 
     /* Game logic and message events */
