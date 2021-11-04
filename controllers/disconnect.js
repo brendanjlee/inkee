@@ -25,7 +25,6 @@ class Disconnect {
       this.io.to(roomId).emit('disconnection', player.uid);
       delete rooms[roomId].users[player.uid];
       if (rooms[roomId].users.size === 0) {
-        this.socket.to(roomId).emit('endgame');
         delete rooms[roomId];
       }
     });
