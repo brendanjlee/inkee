@@ -72,5 +72,9 @@ module.exports.init = (server) => {
     socket.on('startGame', () => {
       new Game(io, socket).startGame();
     });
+
+    socket.on('getPlayers', () => {
+      new Room(io, socket).sendUsers();
+    });
   });
 };
