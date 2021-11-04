@@ -2,11 +2,11 @@ import React, { useContext, useRef, useState } from "react";
 
 const CanvasContext = React.createContext();
 
-export const CanvasProvider = ({ children, socket = null }) => {
+export const CanvasProvider = ({ children }) => {
   const [isDrawing, setIsDrawing] = useState(false)
   const canvasRef = useRef(null);
   const contextRef = useRef(null);
-  const color = null;
+  const [canvasEmpty, setCanvasEmpty] = useState(true);
 
   const prepareCanvas = () => {
     const canvas = canvasRef.current
@@ -28,13 +28,12 @@ export const CanvasProvider = ({ children, socket = null }) => {
     contextRef.current.beginPath();
     contextRef.current.moveTo(offsetX, offsetY);
     setIsDrawing(true);
-    socket.emit('startDrawing');
+    setCanvasEmpty(false);
   };
 
   const finishDrawing = () => {
     contextRef.current.closePath();
     setIsDrawing(false);
-    socket.emit('finishDrawing');
   };
 
   const draw = ({ nativeEvent }) => {
@@ -43,19 +42,6 @@ export const CanvasProvider = ({ children, socket = null }) => {
     }
     const { offsetX, offsetY } = nativeEvent;
     contextRef.current.lineTo(offsetX, offsetY);
-
-    const canvas = canvasRef.current;
-    const context = canvas.getContext("2d");
-
-    if (socket) {
-      socket.emit('drawingEvent', ({
-        x: offsetX,
-        y: offsetY,
-        color: context.strokeStyle,
-        thickness: context.lineWidth,
-        drawEvent: nativeEvent,
-      }));
-    }
     contextRef.current.stroke();
   };
 
@@ -64,9 +50,7 @@ export const CanvasProvider = ({ children, socket = null }) => {
     const context = canvas.getContext("2d")
     context.fillStyle = "white"
     context.fillRect(0, 0, canvas.width, canvas.height)
-    if (socket) {
-      socket.emit('clearCanvas');
-    }
+    setCanvasEmpty(true);
   }
 
   const changeColor = color => () => {
@@ -74,6 +58,17 @@ export const CanvasProvider = ({ children, socket = null }) => {
     const context = canvas.getContext("2d");
     const lineColor = color;
     context.strokeStyle = lineColor;
+  }
+
+  const exportImage = () => {
+    const canvas = canvasRef.current;
+    const context = canvas.getContext("2d");
+    const uri = canvas.toDataURL("image/png");
+    
+    if (canvasEmpty) {
+      throw 'Canvas is empty!';
+    }
+    console.log(uri);
   }
 
   return (
@@ -86,6 +81,7 @@ export const CanvasProvider = ({ children, socket = null }) => {
         finishDrawing,
         clearCanvas,
         changeColor,
+        exportImage,
         draw,
       }}
     >
