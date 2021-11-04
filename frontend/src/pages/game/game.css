@@ -99,6 +99,18 @@
   background-color: rgba(207, 204, 204, 0.973);
 }
 
+.correctAnswer {
+  color: #24ce0e;
+  background-color: #d1e7dd !important;
+  border-color: #badbcc;
+}
+
+.closeAnswer {
+  color: #e00d0d;
+  background-color: #fff3cd !important;
+  border-color: #ffecb5;
+}
+
 .middleContainer img {
   width: 20%;
   float:left; 
