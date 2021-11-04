@@ -1,14 +1,17 @@
 import React, { useEffect } from "react";
 import { useCanvas } from "./CanvasContext";
 
-export function GameCanvas({socket}) {
+export function GameCanvas({socket = null}) {
   const {
     canvasRef,
     prepareCanvas,
     startDrawing,
     finishDrawing,
-    clearCanvas,
     draw,
+    startDrawingSocket,
+    finishDrawingSocket,
+    drawSocket,
+    clearCanvasSocket,
   } = useCanvas();
 
   useEffect(() => {
@@ -17,25 +20,20 @@ export function GameCanvas({socket}) {
 
   // Socket game handlers.
   useEffect(() => {
-    const startDrawingHandler = (startDrawingData) => {
-      startDrawing({nativeEvent: startDrawingData});
-    };
-
-    socket.on('startDrawing', startDrawingHandler);
-    socket.on('finishDrawing', finishDrawing);
-
-    const drawingHandler = (drawingData) => {
-      draw({nativeEvent: drawingData});
-    };
-
-    socket.on('drawingEvent', drawingHandler);
-    socket.on('clearCanvas', clearCanvas);
-
+    if (socket) {
+      socket.on('drawingEvent', drawSocket);
+      socket.on('clearCanvas', clearCanvasSocket);
+      socket.on('startDrawing', startDrawingSocket);
+      socket.on('finishDrawing', finishDrawingSocket);
+    }
+    
     return () => {
-      socket.off('drawingEvent', drawingHandler);
-      socket.off('clearCanvas', clearCanvas);
-      socket.off('startDrawing', startDrawingHandler);
-      socket.off('finishDrawing', finishDrawing);
+      if (socket) {
+        socket.off('drawingEvent', drawSocket);
+        socket.off('clearCanvas', clearCanvasSocket);
+        socket.off('startDrawing', startDrawingSocket);
+        socket.off('finishDrawing', finishDrawingSocket);
+      }
     }
   }, [socket]);
 

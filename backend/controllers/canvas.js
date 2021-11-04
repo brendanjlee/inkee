@@ -21,10 +21,6 @@ class Canvas {
   emitDrawing(drawingData) {
     const {socket} = this;
     this.socket.broadcast.to(socket.roomId).emit('drawingEvent', drawingData);
-    // if (this.socket.player.isDrawing) {
-    //   } else {
-    //   this.socket.broadcast.emit('ERROR', 'Not authorized to draw!');
-    // }
   }
 
   /**
@@ -33,25 +29,22 @@ class Canvas {
   clearCanvas() {
     const {socket} = this;
     this.socket.broadcast.to(socket.roomId).emit('clearCanvas');
-    // if (this.socket.player.isDrawing) {
-    //
-    // }
   }
 
   /**
-   * Starts the drawing event.
+   * Handles start drawing canvas event.
    * 
-   * @param {object} startDrawingData the start drawing native event
+   * @param {object} drawingData the drawing data that marks start event.
    */
-  startDrawing(startDrawingData) {
+  startDrawing(drawingData) {
     const {socket} = this;
-    this.socket.broadcast.to(socket.roomId).emit('startDrawing', startDrawingData);
+    this.socket.broadcast.to(socket.roomId).emit('startDrawing', drawingData);
   }
 
   /**
-   * Finishes the drawing event.
+   * Handles finish drawing canvas event.
    */
-   finishDrawing() {
+  finishDrawing() {
     const {socket} = this;
     this.socket.broadcast.to(socket.roomId).emit('finishDrawing');
   }
