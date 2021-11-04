@@ -12,12 +12,17 @@ function PrestartLobby({socket, history}) {
   // Copy button setup.
   useEffect(() => {
     const copyBtn = document.querySelector('#copy.copyBtn');
-
-    copyBtn.addEventListener('click', (e) => {
+    const handleClick = (e) => {
       e.preventDefault();
       document.querySelector('#gameLink').select();
       document.execCommand('copy');
-    });
+    };
+
+    copyBtn.addEventListener('click', handleClick);
+
+    return () => {
+      copyBtn.removeEventListener('click', handleClick);
+    };
   }, []);
 
   
