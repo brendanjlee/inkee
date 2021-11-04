@@ -1,23 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import CreateHeader from "../../components/header/header";
 import './joinLobby.css'
 
 function JoinLobby({socket, history}) {
-  const handleSubmit = (inviteCode = null, joinById) => {
-    const userData = {
-      userData: {
-        uid: localStorage.getItem('username'),
-        avatar: 'tempAvatar',
-      },
-      inviteCode: inviteCode,
-    };
-
-    socket.on('ERROR', (msg) => {
-      alert(msg);
-    });
-
+  useEffect(() => {
     socket.on('startGame', (inviteCode) => {
       localStorage.setItem('inviteCode', inviteCode);
       history.push({
@@ -31,6 +19,16 @@ function JoinLobby({socket, history}) {
         pathname: '/prestartLobby',
       });
     });
+  }, [socket, history]);
+
+  const handleSubmit = (inviteCode = null, joinById) => {
+    const userData = {
+      userData: {
+        uid: localStorage.getItem('username'),
+        avatar: 'tempAvatar',
+      },
+      inviteCode: inviteCode,
+    };
 
     if (joinById && inviteCode === '') {
       alert("Game ID text box is empty!");

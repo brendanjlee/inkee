@@ -16,19 +16,24 @@ function Game({socket, history}) {
     socket.on('drawingEvent', (data) => {
       console.log(data);
     });
+
+    return () => {
+      socket.off('drawingEvent');
+    }
   }, [socket]);
 
   useEffect(() => {
     const sendMessage = document.querySelector('#sendMessage');
-    
-    sendMessage.addEventListener('keypress', function (e) {
+    const keyPressFunc = (e) => {
       if (e.key === 'Enter') {
         e.preventDefault();
-        const message = this.firstElementChild.value;
-        this.firstElementChild.value = '';
+        const message = sendMessage.value;
+        sendMessage.value = '';
         socket.emit('chatMessage', { message });
+        console.log(message);
       }
-    });
+    }
+    sendMessage.addEventListener('keypress', keyPressFunc);
 
     socket.on('chatMessage', (data) => {
       console.log(data);
@@ -39,10 +44,36 @@ function Game({socket, history}) {
       });
     });
 
-    socket.on('ERROR', (msg) => {
-      alert(msg);
+    socket.on('closeGuess', (data) => {
+      console.log(data);
+      setMessages([...messages, data]);
+      writeMessage({
+        name: data.uid,
+        message: data.message,
+       }, { closeGuess: true });
     });
-  }, [])
+
+    socket.on('correctGuess', (data) => {
+      console.log(data);
+      setMessages([...messages, data]);
+      writeMessage({
+        name: data.uid,
+        message: data.message,
+       }, { correctGuess: true });
+    });
+
+    socket.on('ERROR', (msg) => {
+      console.log(msg);
+    });
+
+    return () => {
+      socket.off('ERROR');
+      socket.off('correctGuess');
+      socket.off('closeGuess');
+      socket.off('chatMessage');
+      sendMessage.removeEventListener('keypress', keyPressFunc);
+    }
+  }, [socket, messages])
 
   return (
     <div className='gameRoot'>
@@ -62,8 +93,8 @@ function Game({socket, history}) {
                 <div className="chat" id='chat'></div>
               </div>
               <div className="bottomContainer">
-                <div className="sendMessage" id="sendMessage">
-                  <input type='text' placeholder="enter guess..."/>
+                <div className="sendMessage">
+                  <input type='text' id='sendMessage' placeholder="enter guess..."/>
                 </div>
                 <ClearCanvasButton/>
                 <ColorPalette/>
@@ -77,7 +108,7 @@ function Game({socket, history}) {
   );
 }
 
-function writeMessage({ name = '', message}) {
+function writeMessage({ name = '', message}, {correctGuess = false, closeGuess = false} = {}) {
   const p = document.createElement('p');
   const chatBox = document.createTextNode(`${message}`);
   const messages = document.getElementById('chat');
@@ -89,6 +120,14 @@ function writeMessage({ name = '', message}) {
   }
   p.classList.add('p-2', 'mb-0');
   p.append(chatBox);
+  if (closeGuess) {
+    p.classList.add('closeAnswer');
+  }
+
+  if (correctGuess) {
+    p.classList.add('correctAnswer');
+  }
+
   messages.appendChild(p);
   messages.scrollTop = messages.scrollHeight;
 }
