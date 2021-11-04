@@ -7,6 +7,7 @@ import { CanvasProvider } from "../../components/CanvasContext";
 import { ClearCanvasButton } from "../../components/ClearCanvasButton";
 import { ColorPalette } from "../../components/ColorPalette";
 import { UserProfile } from "../../components/UserProfile";
+import { StrokeThickness } from "../../components/StrokeThickness";
 
 function Game({socket, history}) {
   const [messages, setMessages] = useState([]);
@@ -122,6 +123,7 @@ function Game({socket, history}) {
                   <input type='text' id='sendMessage' placeholder="enter guess..."/>
                 </div>
                 <ClearCanvasButton/>
+                <StrokeThickness />
                 <ColorPalette/>
               </div>
             </div>
