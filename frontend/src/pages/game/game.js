@@ -49,16 +49,18 @@ function Game({socket, history}) {
 
   // Socket game handlers.
   useEffect(() => {
-    socket.on('drawingEvent', (data) => {
+    const drawingHandler = (data) => {
       console.log(data);
-    });
+    };
 
-    socket.on('newUser', (data) => {
-      console.log(data);
+    socket.on('drawingEvent', drawingHandler);
+
+    socket.on('clearCanvas', () => {
+      console.log('Clear Canvas');
     });
 
     return () => {
-      socket.off('drawingEvent');
+      socket.off('drawingEvent', drawingHandler);
     }
   }, [socket]);
 
@@ -93,12 +95,12 @@ function Game({socket, history}) {
        }, { closeGuess: true });
     });
 
-    socket.on('correctGuess', (data) => {
-      console.log(data);
-      setMessages([...messages, data]);
+    socket.on('correctGuess', (messageData) => {
+      console.log(messageData);
+      setMessages([...messages, messageData]);
       writeMessage({
-        name: data.uid,
-        message: data.message,
+        name: messageData.uid,
+        message: messageData.message,
        }, { correctGuess: true });
     });
 
@@ -146,10 +148,6 @@ function Game({socket, history}) {
       </CanvasProvider>
     </div>
   );
-}
-
-const addUser = ({name = '', avatar = '', score = 0}) => {
-  const users = document.getElementById('users');
 }
 
 const writeMessage = ({ name = '', message}, {correctGuess = false, closeGuess = false} = {}) => {
