@@ -10,10 +10,50 @@ import { UserProfile } from "../../components/UserProfile";
 
 function Game({socket, history}) {
   const [messages, setMessages] = useState([]);
+  const [users, setUsers] = useState([]);
+
+  /* Load player routine */
+  useEffect(() => {
+    const loadPlayers = (users) => {
+      setUsers(users);
+    };
+
+    socket.on('getPlayers', loadPlayers);
+  
+    const loadNewPlayer = (userData) => {
+      setUsers((prevUsers) => {
+        const newUsers = [...prevUsers, userData];
+        return newUsers;
+      });
+    };
+
+    socket.on('newPlayer', loadNewPlayer);
+
+    const disconnectPlayer = (userId) => {
+      setUsers((prevUsers) => {
+        const newUsers = prevUsers.filter((user) => user.uid !== userId);
+        return newUsers;
+      });
+    };
+
+    socket.on('disconnection', disconnectPlayer);
+
+    socket.emit('getPlayers');
+
+    return () => {
+      socket.off('getPlayers', loadPlayers);
+      socket.off('newPlayer', loadNewPlayer);
+      socket.off('disconnection', disconnectPlayer);
+    }
+  }, [socket]);
 
   // Socket game handlers.
   useEffect(() => {
     socket.on('drawingEvent', (data) => {
+      console.log(data);
+    });
+
+    socket.on('newUser', (data) => {
       console.log(data);
     });
 
@@ -86,7 +126,7 @@ function Game({socket, history}) {
                 <div className="time" > 3:19 </div>
               </div>
               <div className="middleContainer">
-                <UserProfile/>
+                <UserProfile users={users}/>
                 <div className="drawArea">
                   <GameCanvas/>
                 </div>
@@ -108,7 +148,11 @@ function Game({socket, history}) {
   );
 }
 
-function writeMessage({ name = '', message}, {correctGuess = false, closeGuess = false} = {}) {
+const addUser = ({name = '', avatar = '', score = 0}) => {
+  const users = document.getElementById('users');
+}
+
+const writeMessage = ({ name = '', message}, {correctGuess = false, closeGuess = false} = {}) => {
   const p = document.createElement('p');
   const chatBox = document.createTextNode(`${message}`);
   const messages = document.getElementById('chat');
