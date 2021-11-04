@@ -11,54 +11,72 @@ import { UserProfile } from "../../components/UserProfile";
 
 function Game({socket, history}) {
   const [messages, setMessages] = useState([]);
+  const [users, setUsers] = useState([]);
+
+  /* Load player routine */
+  useEffect(() => {
+    const loadPlayers = (users) => {
+      setUsers(users);
+    };
+
+    socket.on('getPlayers', loadPlayers);
+  
+    const loadNewPlayer = (userData) => {
+      setUsers((prevUsers) => {
+        const newUsers = [...prevUsers, userData];
+        return newUsers;
+      });
+    };
+
+    socket.on('newPlayer', loadNewPlayer);
+
+    const disconnectPlayer = (userId) => {
+      setUsers((prevUsers) => {
+        const newUsers = prevUsers.filter((user) => user.uid !== userId);
+        return newUsers;
+      });
+    };
+
+    socket.on('disconnection', disconnectPlayer);
+
+    socket.emit('getPlayers');
+
+    return () => {
+      socket.off('getPlayers', loadPlayers);
+      socket.off('newPlayer', loadNewPlayer);
+      socket.off('disconnection', disconnectPlayer);
+    }
+  }, [socket]);
 
   // Socket game handlers.
   useEffect(() => {
-    socket.on('drawingEvent', (data) => {
+    const drawingHandler = (data) => {
       console.log(data);
+    };
+
+    socket.on('drawingEvent', drawingHandler);
+
+    socket.on('clearCanvas', () => {
+      console.log('Clear Canvas');
     });
+
+    return () => {
+      socket.off('drawingEvent', drawingHandler);
+    }
   }, [socket]);
 
   useEffect(() => {
     const sendMessage = document.querySelector('#sendMessage');
-    const wordChoice = "TestWord";
-    sendMessage.addEventListener('keypress', function (e) {
+    const keyPressFunc = (e) => {
       if (e.key === 'Enter') {
         e.preventDefault();
-        const message = this.firstElementChild.value;
-        const distance = leven(wordChoice, message);
-        this.firstElementChild.value = '';
-        if (distance === 0) {
-          socket.emit('correctGuess', { message: 'Wow you are kinda smart!!!'});
-        }
-        else if (distance < 3) {
-          socket.emit('closeGuess', { message: 'So close keep trying!!' });
-          socket.emit('chatMessage', { message })
-        }
-        else {
-          socket.emit('chatMessage', { message });
-        }
-        
+        const message = sendMessage.value;
+        sendMessage.value = '';
+        socket.emit('chatMessage', { message });
+        console.log(message);
       }
-    });
-    socket.on('closeGuess', (data) => {
-      console.log(data);
-      setMessages([...messages, data]);
-      writeMessage({
-        name: data.uid,
-        message: 'So close keep trying!!'
-       }, { closeGuess: true });
-    });
-
-    socket.on('correctGuess', (data) => {
-      console.log(data);
-      setMessages(['Wow you are kinda smart!!!', data]);
-      writeMessage({
-        name: data.uid,
-        message: 'Wow you are kinda smart!!!'
-       }, { correctGuess: true });
-    });
-
+    }
+    sendMessage.addEventListener('keypress', keyPressFunc);
 
     socket.on('chatMessage', (data) => {
       console.log(data);
@@ -69,10 +87,36 @@ function Game({socket, history}) {
       });
     });
 
-    socket.on('ERROR', (msg) => {
-      alert(msg);
+    socket.on('closeGuess', (data) => {
+      console.log(data);
+      setMessages([...messages, data]);
+      writeMessage({
+        name: data.uid,
+        message: data.message,
+       }, { closeGuess: true });
     });
-  }, [])
+
+    socket.on('correctGuess', (messageData) => {
+      console.log(messageData);
+      setMessages([...messages, messageData]);
+      writeMessage({
+        name: messageData.uid,
+        message: messageData.message,
+       }, { correctGuess: true });
+    });
+
+    socket.on('ERROR', (msg) => {
+      console.log(msg);
+    });
+
+    return () => {
+      socket.off('ERROR');
+      socket.off('correctGuess');
+      socket.off('closeGuess');
+      socket.off('chatMessage');
+      sendMessage.removeEventListener('keypress', keyPressFunc);
+    }
+  }, [socket, messages])
 
   return (
     <div className='gameRoot'>
@@ -85,15 +129,15 @@ function Game({socket, history}) {
                 <div className="time" > 3:19 </div>
               </div>
               <div className="middleContainer">
-                <UserProfile/>
+                <UserProfile users={users}/>
                 <div className="drawArea">
                   <GameCanvas/>
                 </div>
                 <div className="chat" id='chat'></div>
               </div>
               <div className="bottomContainer">
-                <div className="sendMessage" id="sendMessage">
-                  <input type='text' placeholder="enter guess..."/>
+                <div className="sendMessage">
+                  <input type='text' id='sendMessage' placeholder="enter guess..."/>
                 </div>
                 <ClearCanvasButton/>
                 <ColorPalette/>
@@ -107,7 +151,7 @@ function Game({socket, history}) {
   );
 }
 
-function writeMessage({ name = '', message}, {correctGuess = false, closeGuess = false} = {}) {
+const writeMessage = ({ name = '', message}, {correctGuess = false, closeGuess = false} = {}) => {
   const p = document.createElement('p');
   const chatBox = document.createTextNode(`${message}`);
   const messages = document.getElementById('chat');
@@ -126,6 +170,14 @@ function writeMessage({ name = '', message}, {correctGuess = false, closeGuess =
     p.classList.add('correctAnswer');
   }
   p.append(chatBox);
+  if (closeGuess) {
+    p.classList.add('closeAnswer');
+  }
+
+  if (correctGuess) {
+    p.classList.add('correctAnswer');
+  }
+
   messages.appendChild(p);
   messages.scrollTop = messages.scrollHeight;
 }

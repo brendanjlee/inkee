@@ -12,12 +12,17 @@ function PrestartLobby({socket, history}) {
   // Copy button setup.
   useEffect(() => {
     const copyBtn = document.querySelector('#copy.copyBtn');
-
-    copyBtn.addEventListener('click', (e) => {
+    const handleClick = (e) => {
       e.preventDefault();
       document.querySelector('#gameLink').select();
       document.execCommand('copy');
-    });
+    };
+
+    copyBtn.addEventListener('click', handleClick);
+
+    return () => {
+      copyBtn.removeEventListener('click', handleClick);
+    };
   }, []);
 
   
@@ -25,27 +30,25 @@ function PrestartLobby({socket, history}) {
   useEffect(() => {
     const userListener = (userToAdd) => {
       setUsers((prevUsers) => {
-        const newUsers = [...prevUsers];
-        newUsers.push(userToAdd);
+        const newUsers = [...prevUsers, userToAdd];
+        return newUsers;
+      });
+    };
+    
+    const deleteUser = (userId) => {
+      setUsers((prevUsers) => {
+        const newUsers = prevUsers.filter((user) => user.uid !== userId);
         return newUsers;
       });
     };
   
-    const deleteUserListener = (userToRemove) => {
-      setUsers((prevUsers) => {
-        const newUsers = [...prevUsers];
-        const idx = newUsers.findIndex(user => user.id === userToRemove.id);
-        return newUsers.splice(idx);
-      });
-    };
-  
     socket.on('newUser', userListener);
-    socket.on('deleteUser', deleteUserListener);
-    socket.emit('getUsers');
+    socket.on('disconnection', deleteUser);
+    socket.emit('getPlayers');
 
     return () => {
       socket.off('newUser', userListener);
-      socket.off('deleteUser', deleteUserListener);
+      socket.off('disconnection', deleteUser);
     };
   }, [socket]);
 
