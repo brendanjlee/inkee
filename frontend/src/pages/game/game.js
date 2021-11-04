@@ -47,23 +47,6 @@ function Game({socket, history}) {
     }
   }, [socket]);
 
-  // Socket game handlers.
-  useEffect(() => {
-    const drawingHandler = (data) => {
-      console.log(data);
-    };
-
-    socket.on('drawingEvent', drawingHandler);
-
-    socket.on('clearCanvas', () => {
-      console.log('Clear Canvas');
-    });
-
-    return () => {
-      socket.off('drawingEvent', drawingHandler);
-    }
-  }, [socket]);
-
   useEffect(() => {
     const sendMessage = document.querySelector('#sendMessage');
     const keyPressFunc = (e) => {
@@ -130,7 +113,7 @@ function Game({socket, history}) {
               <div className="middleContainer">
                 <UserProfile users={users}/>
                 <div className="drawArea">
-                  <GameCanvas/>
+                  <GameCanvas socket={socket}/>
                 </div>
                 <div className="chat" id='chat'></div>
               </div>
