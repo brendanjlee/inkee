@@ -23,10 +23,17 @@ class Message {
    */
   onMessage(messageData) {
     const userId = this.socket.player.uid;
-    writeMessage(userId, this.socket.roomId, messageData).then(() => {
-      this.socket.broadcast.to(this.socket.roomId).emit('message',
-          userId, messageData);
-    });
+    if (messageData === '') {
+      this.socket.emit('ERROR', 'Message cannot be empty!');
+    } else {
+      writeMessage(userId, this.socket.roomId, messageData).then(() => {
+        this.io.to(this.socket.roomId).emit('chatMessage',
+            {
+              uid: userId,
+              message: messageData,
+            });
+      });
+    }
   }
 }
 

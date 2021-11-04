@@ -18,6 +18,13 @@ function JoinLobby({socket, history}) {
       alert(msg);
     });
 
+    socket.on('startGame', (inviteCode) => {
+      localStorage.setItem('inviteCode', inviteCode);
+      history.push({
+        pathname: '/game',
+      });
+    });
+
     socket.on('inviteCode', (inviteCode) => {
       localStorage.setItem('inviteCode', inviteCode);
       history.push({

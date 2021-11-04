@@ -48,9 +48,6 @@ function CreateLobby({socket, history}) {
       let word = event[i].data;
       if (!words.includes(word[0])) words.push(word[0]);
     }
-
-
-
     setCsvContent(words);
   }
 
@@ -103,6 +100,11 @@ function CreateLobby({socket, history}) {
       console.log('csvContent Created');
     }
 
+    // delete after sprint reivew
+    if (customWords.length < 10 && customWords.length > 0) {
+      alert("Entered less than 10 custom words");
+    }
+
     return customWords
   }
 
@@ -117,6 +119,7 @@ function CreateLobby({socket, history}) {
     let customWords = parseCustomWords(textAreaContent, csvContent);
 
     // create gameConfiguration
+    // Use default word list if custom_words is empty
     let gameConfiguration = {
       num_rounds: numRounds,
       round_length: roundLength,
@@ -131,9 +134,9 @@ function CreateLobby({socket, history}) {
     //console.log(gameConfiguration)
 
     // create userData
-    let userData = {
-      username: history.location.state.username,
-      avatar: history.location.state.avatar,
+    const userData = {
+      uid: localStorage.getItem('username'),
+      avatar: 'tempAvatar',
     }
     
     socket.emit('createGame', {
@@ -162,7 +165,7 @@ function CreateLobby({socket, history}) {
           value={numRounds}
           className="select"
         >
-          <option hidden="true">choose rounds</option>
+          <option hidden={true}>choose rounds</option>
           <option value="1rounds">1</option>
           <option value="2rounds">2</option>
           <option value="3rounds">3</option>
@@ -181,7 +184,7 @@ function CreateLobby({socket, history}) {
           value={roundLength}
           className="select"
         >
-          <option hidden="true">drawing time</option>
+          <option hidden={true}>drawing time</option>
           <option value="30seconds">30</option>
           <option value="40seconds">40</option>
           <option value="50seconds">50</option>
@@ -213,9 +216,7 @@ function CreateLobby({socket, history}) {
               </CSVReader>
             </div>
         </div> 
-        <Link to='/prestartLobby'>
-          <Button variant='primary'>start game</Button>
-        </Link>
+        <Button variant='primary' onClick={handleSubmit}>start game</Button>
       </form>
     </div>
   );
