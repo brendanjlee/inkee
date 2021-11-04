@@ -57,6 +57,16 @@ module.exports.init = (server) => {
       new Canvas(io, socket).clearCanvas();
     });
 
+    /* Start Drawing Handler */
+    socket.on('startDrawing', (startDrawingData) => {
+      new Canvas(io, socket).startDrawing(startDrawingData);
+    });
+
+    /* Finish Drawing Handler */
+    socket.on('finishDrawing', () => {
+      new Canvas(io, socket).finishDrawing();
+    });
+
     /* Game logic and message events */
     /* Start timer on the running game instnace */
     socket.on('startTimer', () => {
@@ -71,6 +81,10 @@ module.exports.init = (server) => {
     /* User start game event */
     socket.on('startGame', () => {
       new Game(io, socket).startGame();
+    });
+
+    socket.on('getPlayers', () => {
+      new Room(io, socket).sendUsers();
     });
   });
 };
