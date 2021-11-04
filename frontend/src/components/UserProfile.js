@@ -2,7 +2,7 @@ import { React } from 'react';
 
 export function UserProfile({users = []}) {
   const listItems = users.map((user) =>
-    <div className="userProfile">
+    <div className="userProfile" id={user.uid}>
       <div>
         <b>{user.uid}</b>
       </div>
