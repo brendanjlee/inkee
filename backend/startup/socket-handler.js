@@ -48,7 +48,6 @@ module.exports.init = (server) => {
     /* Canvas related events */
     /* Drawing event */
     socket.on('drawingEvent', (drawingData) => {
-      console.log(drawingData);
       new Canvas(io, socket).emitDrawing(drawingData);
     });
 
@@ -57,12 +56,12 @@ module.exports.init = (server) => {
       new Canvas(io, socket).clearCanvas();
     });
 
-    /* Start Drawing Handler */
-    socket.on('startDrawing', (startDrawingData) => {
-      new Canvas(io, socket).startDrawing(startDrawingData);
+    /* Start drawing canvas event */
+    socket.on('startDrawing', (data) => {
+      new Canvas(io, socket).startDrawing(data);
     });
 
-    /* Finish Drawing Handler */
+    /* Finish drawing canvas event */
     socket.on('finishDrawing', () => {
       new Canvas(io, socket).finishDrawing();
     });
