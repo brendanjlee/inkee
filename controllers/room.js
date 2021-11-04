@@ -110,6 +110,18 @@ class Room {
   }
 
   /**
+   * Send players to the connected user
+   */
+  sendUsers() {
+    const userNames = Object.keys(rooms[this.socket.roomId].users);
+    const users = [];
+    userNames.map((userName) => {
+      users.push(rooms[this.socket.roomId].users[userName]);
+    });
+    this.socket.emit('getPlayers', users);
+  }
+
+  /**
    * Updates settings in the room.
    *
    * @param {object} data the settings data that has been updated.
