@@ -30,7 +30,7 @@ export const CanvasProvider = ({ children, socket = null }) => {
     setIsDrawing(true);
     setCanvasEmpty(false);
     if (socket != null) {
-      socket.emit('startDrawing');
+      socket.emit('startDrawing', nativeEvent);
     }
   };
 
@@ -53,13 +53,7 @@ export const CanvasProvider = ({ children, socket = null }) => {
     const context = canvas.getContext("2d");
 
     if (socket) {
-      socket.emit('drawingEvent', ({
-        x: offsetX,
-        y: offsetY,
-        color: context.strokeStyle,
-        thickness: context.lineWidth,
-        drawEvent: nativeEvent,
-      }));
+      socket.emit('drawingEvent', nativeEvent);
     }
     contextRef.current.stroke();
   };
