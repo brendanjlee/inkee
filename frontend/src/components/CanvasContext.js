@@ -29,15 +29,39 @@ export const CanvasProvider = ({ children, socket = null }) => {
     contextRef.current.moveTo(offsetX, offsetY);
     setIsDrawing(true);
     setCanvasEmpty(false);
-    if (socket != null) {
-      socket.emit('startDrawing');
+    if (socket) {
+      socket.emit('startDrawing', {
+        x: offsetX,
+        y: offsetY,
+      });
     }
+  };
+
+  const startDrawingSocket = (drawingData) => {
+    contextRef.current.beginPath();
+    contextRef.current.moveTo(drawingData.x, drawingData.y);
+    setIsDrawing(true);
+    setCanvasEmpty(false);
+  };
+
+  const finishDrawingSocket = () => {
+    contextRef.current.closePath();
+    setIsDrawing(false);
+  };
+
+  const drawSocket = (drawingData) => {
+    const canvas = canvasRef.current;
+    const context = canvas.getContext("2d");
+    context.lineWidth = drawingData.thickness;
+    context.strokeStyle = drawingData.color;
+    contextRef.current.lineTo(drawingData.x, drawingData.y);
+    contextRef.current.stroke();
   };
 
   const finishDrawing = () => {
     contextRef.current.closePath();
     setIsDrawing(false);
-    if (socket != null) {
+    if (socket) {
       socket.emit('finishDrawing');
     }
   };
@@ -46,22 +70,30 @@ export const CanvasProvider = ({ children, socket = null }) => {
     if (!isDrawing) {
       return;
     }
+    console.log('drawing');
     const { offsetX, offsetY } = nativeEvent;
     contextRef.current.lineTo(offsetX, offsetY);
 
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
+    contextRef.current.stroke();
 
     if (socket) {
-      socket.emit('drawingEvent', ({
+      socket.emit('drawingEvent', {
         x: offsetX,
         y: offsetY,
-        color: context.strokeStyle,
         thickness: context.lineWidth,
-        drawEvent: nativeEvent,
-      }));
+        color: context.strokeStyle,
+      });
     }
-    contextRef.current.stroke();
+  };
+
+  const clearCanvasSocket = () => {
+    const canvas = canvasRef.current;
+    const context = canvas.getContext("2d")
+    context.fillStyle = "white"
+    context.fillRect(0, 0, canvas.width, canvas.height)
+    setCanvasEmpty(true);
   };
 
   const clearCanvas = () => {
@@ -78,19 +110,13 @@ export const CanvasProvider = ({ children, socket = null }) => {
   const changeColor = color => () => {
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
-    const lineColor = color;
-    context.strokeStyle = lineColor;
+    context.strokeStyle = color;
   }
 
   const changeLineWidth = (lineWidthValue) => {
     const canvas = canvasRef.current;
     const context = canvas.getContext('2d');
     context.lineWidth = lineWidthValue;
-    /*
-    if (socket) {
-      socket.emit('lineWidthChange', lineWidthValue);
-    }
-    */
   }
 
   const exportImage = () => {
@@ -116,6 +142,10 @@ export const CanvasProvider = ({ children, socket = null }) => {
         changeColor,
         changeLineWidth,
         exportImage,
+        startDrawingSocket,
+        finishDrawingSocket,
+        drawSocket,
+        clearCanvasSocket,
         draw,
       }}
     >
