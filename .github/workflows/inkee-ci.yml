@@ -15,6 +15,7 @@ jobs:
     env:
       backend-working-directory: ./backend
       frontend-working-directory: ./frontend
+      CI: ""
     strategy:
       matrix:
         node-version: [10.x, 8.x]
