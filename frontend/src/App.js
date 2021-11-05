@@ -7,7 +7,6 @@ import CreateLobby from './pages/createLobby/createLobby';
 import JoinLobby from './pages/joinLobby/joinLobby';
 import PrestartLobby from './pages/prestartLobby/prestartLobby';
 import Game from './pages/game/game';
-import testPage from './reactTesting/testPage';
 import io from 'socket.io-client';
 
 function App() {
@@ -59,7 +58,6 @@ function App() {
           <Route path='/joinLobby' render={(props) => (<JoinLobby socket={socket} history={history} {...props} />)}/>
           <Route path='/prestartLobby' render={(props) => (<PrestartLobby socket={socket} history={history} {...props} />)}/>
           <Route path='/game' render={(props) => (<Game socket={socket} history={history} {...props} />)}/>
-          <Route path='/testPage' component={testPage} />
         </Switch>
       </div>
     </Router>
