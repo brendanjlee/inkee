@@ -24,7 +24,13 @@ function App() {
 
   useEffect(() => {
     // Initialize Socket connection.
-    const newSocket = io(`http://${window.location.hostname}:3001`, {
+    let domain;
+    if (window.location.hostname === 'localhost') {
+      domain = `http://${window.location.hostname}:3001`;
+    } else {
+      domain = '/';
+    }
+    const newSocket = io(domain, {
       transports: ['websocket', 'polling'],
       upgrade: true,
     });
