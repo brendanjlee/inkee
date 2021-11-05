@@ -4,12 +4,26 @@
         "commonjs": true,
         "es2021": true
     },
-    "extends": [
-        "./node_modules/eslint-config-google/index.js"
-    ],
+    "extends": "eslint:recommended",
     "parserOptions": {
-        "ecmaVersion": 12
+        "ecmaVersion": 13
     },
     "rules": {
+        "indent": [
+            "error",
+            4
+        ],
+        "linebreak-style": [
+            "error",
+            "unix"
+        ],
+        "quotes": [
+            "error",
+            "single"
+        ],
+        "semi": [
+            "error",
+            "always"
+        ]
     }
 }
