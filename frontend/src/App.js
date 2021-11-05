@@ -33,6 +33,7 @@ function App() {
     const newSocket = io(domain, {
       transports: ['websocket', 'polling'],
       upgrade: true,
+      secure: true,
     });
     
     const reconnect = () => {
