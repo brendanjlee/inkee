@@ -1,7 +1,7 @@
 import './App.css';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
-import {BrowserRouter as Router, Switch, Route} from 'react-router-dom'
+import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 import Home from './pages/home/home';
 import CreateLobby from './pages/createLobby/createLobby';
 import JoinLobby from './pages/joinLobby/joinLobby';
@@ -19,7 +19,7 @@ function App() {
 
     return () => {
       localStorage.clear();
-    }
+    };
   }, []);
 
   useEffect(() => {
@@ -30,17 +30,17 @@ function App() {
     });
     
     const reconnect = () => {
-      newSocket.io.opts.transports = ["polling", "websocket"];
+      newSocket.io.opts.transports = ['polling', 'websocket'];
     };
 
-    newSocket.on("connect_error", reconnect);
+    newSocket.on('connect_error', reconnect);
     setSocket(newSocket);
 
     // Clean-up routine for socket.
     return () => {
       newSocket.removeAllListeners();
       newSocket.close();
-    }
+    };
   }, [setSocket]);
 
   return (
