@@ -24,10 +24,14 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
-    - name: Install and build frontend
+    - name: Remove existing frontend build files
+      run: |
+        rm -rf build
+      working-directory: ${{env.backend-working-directory}}
+
+    - name: Build new frontend build files
       run: |
         npm install
-        rm -rf ../backend/build
         npm run build
         mv build ../backend/
       working-directory: ${{env.frontend-working-directory}}
