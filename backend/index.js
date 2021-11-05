@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 // Initalize express and application routes.
 const express = require('express');
 const path = require('path');
