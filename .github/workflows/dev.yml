@@ -1,4 +1,4 @@
-name: Inkee CI
+name: Dev Builders
 
 on:
   push:
