@@ -28,7 +28,7 @@ function App() {
     if (window.location.hostname === 'localhost') {
       domain = `http://${window.location.hostname}:3001`;
     } else {
-      domain = '/';
+      domain = `wss://${window.location.hostname/}`;
     }
     const newSocket = io(domain, {
       transports: ['websocket', 'polling'],
