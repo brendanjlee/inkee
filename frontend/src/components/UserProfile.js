@@ -12,9 +12,9 @@ export function UserProfile({users = []}) {
     </div>);
 
   return (
-      <div className="profiles">
-        {listItems}
-      </div>
+    <div className="profiles">
+      {listItems}
+    </div>
   );
 }
 
