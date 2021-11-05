@@ -33,10 +33,7 @@ jobs:
         npm install
       working-directory: ${{env.frontend-working-directory}}
 
-    - name: build
-      run: |
-        npm run build --if-present
-      working-directory: ${{env.frontend-working-directory}}
+    
 
     - name: Add remote origin
       run: |
