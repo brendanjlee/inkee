@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { useCanvas } from "./CanvasContext";
+import React, { useEffect } from 'react';
+import { useCanvas } from './CanvasContext';
 
 export function GameCanvas({socket = null}) {
   const {
@@ -34,7 +34,7 @@ export function GameCanvas({socket = null}) {
         socket.off('startDrawing', startDrawingSocket);
         socket.off('finishDrawing', finishDrawingSocket);
       }
-    }
+    };
   }, [socket]);
 
   return (

@@ -1,6 +1,6 @@
 import React from 'react';
 // Assets
-import Logo from '../../assets/inkee-logo.png'
+import Logo from '../../assets/inkee-logo.png';
 
 function CreateHeader() {
   return (
@@ -10,4 +10,4 @@ function CreateHeader() {
   );
 } 
 
-export default CreateHeader
+export default CreateHeader;

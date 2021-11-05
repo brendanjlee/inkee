@@ -2,7 +2,7 @@ import { React } from 'react';
 
 export function UserProfile({users = []}) {
   const listItems = users.map((user) =>
-    <div className="userProfile" id={user.uid}>
+    <div className="userProfile" key={user.uid}>
       <div>
         <b>{user.uid}</b>
       </div>
@@ -12,9 +12,9 @@ export function UserProfile({users = []}) {
     </div>);
 
   return (
-      <div className="profiles">
-        {listItems}
-      </div>
+    <div className="profiles">
+      {listItems}
+    </div>
   );
 }
 
