@@ -39,5 +39,5 @@ jobs:
     
     - name: Deploy to Heroku
       run: |
-        git push heroku HEAD:master -f
+        git subtree push --prefix ${{env.backend-working-directory}} heroku HEAD:master
       working-directory: ${{env.backend-working-directory}}
