@@ -10,6 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       backend-working-directory: ./backend
+      deployment-path: backend
       frontend-working-directory: ./frontend
       CI: ""
     strategy:
@@ -39,4 +40,4 @@ jobs:
     
     - name: Deploy to Heroku
       run: |
-        git subtree push --prefix ${{env.backend-working-directory}} heroku HEAD:master
+        git subtree push --prefix ${{env.deployment-path}} heroku HEAD:master
