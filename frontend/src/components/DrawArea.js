@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import Immutable from 'immutable';
 
 class DrawArea extends React.Component {
@@ -16,11 +16,11 @@ class DrawArea extends React.Component {
   }
 
   componentDidMount() {
-    document.addEventListener('mouseup', this.handleMouseUp);
+    document.addEventListener("mouseup", this.handleMouseUp);
   }
 
   componentWillUnmount() {
-    document.removeEventListener('mouseup', this.handleMouseUp);
+    document.removeEventListener("mouseup", this.handleMouseUp);
   }
 
   handleMouseDown(mouseEvent) {
@@ -87,12 +87,12 @@ function Drawing({ lines }) {
 }
 
 function DrawingLine({ line }) {
-  const pathData = 'M ' +
+  const pathData = "M " +
     line
       .map(p => {
         return `${p.get('x')} ${p.get('y')}`;
       })
-      .join(' L ');
+      .join(" L ");
 
   return <path className="path" d={pathData} />;
 }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 function CompoList(props) {
   console.log(props.stuff);
@@ -7,11 +7,11 @@ function CompoList(props) {
   return (
     <ul className='goal-list'> {
       props.stuff.map((single_item) => {
-        return <li key={single_item.id}>{single_item.text}</li>;
+        return <li key={single_item.id}>{single_item.text}</li>
       })
     }
     </ul>
   );
 }
 
-export default CompoList;
+export default CompoList

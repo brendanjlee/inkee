@@ -1,9 +1,9 @@
-import {React, useEffect, useState} from 'react';
-import { Link, history } from 'react-router-dom';
-import { Button } from 'react-bootstrap';
-import CreateHeader from '../../components/header/header';
-import { CSVReader } from 'react-papaparse';
-import './createLobby.css';
+import {React, useEffect, useState} from "react";
+import { Link, history } from "react-router-dom";
+import { Button } from "react-bootstrap";
+import CreateHeader from "../../components/header/header";
+import { CSVReader } from "react-papaparse";
+import './createLobby.css'
 
 function CreateLobby({socket, history}) {
   // Game Settings
@@ -34,9 +34,9 @@ function CreateLobby({socket, history}) {
    * @param {onChange} event 
    */
   const handleTextAreaChange = (event) => {
-    let text = event.target.value;
+    let text = event.target.value
     setTextAreaContent(text); 
-  };
+  }
 
   /**
    *  User drops csv file into CSVReader
@@ -49,7 +49,7 @@ function CreateLobby({socket, history}) {
       if (!words.includes(word[0])) words.push(word[0]);
     }
     setCsvContent(words);
-  };
+  }
 
   /**
    * User removes csv file from CSVReader
@@ -57,14 +57,14 @@ function CreateLobby({socket, history}) {
    */
   const handleOnRemoveFile = (event) => {
     setCsvContent(null);
-  };
+  }
 
   /**
    * Error
    */
   const handleOnError = (err, file, inputElem, reason) => {
     console.log(err);
-  };
+  }
 
   /**
    *  Parses through text area content and csv content and adds them to the
@@ -73,7 +73,7 @@ function CreateLobby({socket, history}) {
    * @param {List} csvContent 
    */
   const parseCustomWords = (textAreaContent, csvContent) => {
-    console.log('Parse Custom Words');
+    console.log('Parse Custom Words')
     let customWords = [];
     if (textAreaContent.length > 0) {
       let lines = textAreaContent.split(/\r\n|\r|\n/);
@@ -102,11 +102,11 @@ function CreateLobby({socket, history}) {
 
     // delete after sprint reivew
     if (customWords.length < 10 && customWords.length > 0) {
-      alert('Entered less than 10 custom words');
+      alert("Entered less than 10 custom words");
     }
 
-    return customWords;
-  };
+    return customWords
+  }
 
   useEffect(() => {
     socket.on('inviteCode', (inviteCode) => {
@@ -139,7 +139,7 @@ function CreateLobby({socket, history}) {
       num_rounds: numRounds,
       round_length: roundLength,
       custom_words: [],
-    };
+    }
 
     // add custom words if possible
     if (customWords.length > 0) {
@@ -152,14 +152,14 @@ function CreateLobby({socket, history}) {
     const userData = {
       uid: localStorage.getItem('username'),
       avatar: 'tempAvatar',
-    };
+    }
     
     socket.emit('createGame', {
       gameConfiguration,
       userData,
     });
-    console.log('socket emit invite code');
-  };
+    console.log('socket emit invite code')
+  }
 
   return (
     <div className='lobbyRoot'>
@@ -205,22 +205,22 @@ function CreateLobby({socket, history}) {
           <label>Custom Words:</label>
           <br/>
           <textarea
-            placeholder='Enter Custom Words...'
-            value={textAreaContent}
-            onChange={handleTextAreaChange}
-          >
-          </textarea>
-          <div className='csvReader'>
-            <h5>Or Upload a CSV File</h5>
-            <CSVReader
-              onDrop={handleOnDrop}
-              onError={handleOnError}
-              addRemoveButton
-              onRemoveFile={handleOnRemoveFile}
-            >
-              <span>Drop CSV file here or click to upload.</span>
-            </CSVReader>
-          </div>
+              placeholder='Enter Custom Words...'
+              value={textAreaContent}
+              onChange={handleTextAreaChange}
+              >
+            </textarea>
+            <div className='csvReader'>
+              <h5>Or Upload a CSV File</h5>
+              <CSVReader
+                onDrop={handleOnDrop}
+                onError={handleOnError}
+                addRemoveButton
+                onRemoveFile={handleOnRemoveFile}
+              >
+                <span>Drop CSV file here or click to upload.</span>
+              </CSVReader>
+            </div>
         </div> 
         <Button variant='primary' onClick={handleSubmit}>start game</Button>
       </form>
