@@ -88,10 +88,6 @@ function Game({socket, history}) {
       }, { correctGuess: true });
     });
 
-    socket.on('ERROR', (msg) => {
-      console.log(msg);
-    });
-
     return () => {
       socket.off('ERROR');
       socket.off('correctGuess');
