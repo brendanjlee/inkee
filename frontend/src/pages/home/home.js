@@ -1,6 +1,6 @@
-import './home.css';
-import React, { useState, useRef } from 'react';
-import Logo from '../../assets/inkee-logo.png';
+import './home.css'
+import React, { useState, useRef } from 'react'
+import Logo from '../../assets/inkee-logo.png'
 import GameCanvas from '../../components/GameCanvas';
 import { Button } from 'react-bootstrap';
 import { CanvasProvider } from '../../components/CanvasContext';
@@ -58,34 +58,34 @@ function Home({socket, history}) {
   return (
     <div className='root'>
       <CanvasProvider>
-        <div className='purpleSplat'>
-          <div className='orangeSplat'>
-            <div className='header'>
-              <img className='logo' src={Logo} alt='inkee-logo'/>
+      <div className='purpleSplat'>
+        <div className='orangeSplat'>
+          <div className='header'>
+          <img className='logo' src={Logo} alt='inkee-logo'/>
+          </div>
+          <form>
+            <input className='username' id='username_input' type='text' placeholder="enter username..."/>
+          </form>
+          <div align="center">
+            <div className="homeDrawArea">
+              <GameCanvas />
             </div>
-            <form>
-              <input className='username' id='username_input' type='text' placeholder="enter username..."/>
-            </form>
-            <div align="center">
-              <div className="homeDrawArea">
-                <GameCanvas />
-              </div>
-              <div>
+            <div>
+              <Button onClick={() => {
+                handleHomeSubmit('/joinLobby', localStorage.getItem('inviteCode')); 
+              }} className='btn' variant="secondary" size='lg'>join game</Button>
+            </div>
+            <div>
+              {
+                !localStorage.getItem('inviteCode') &&
                 <Button onClick={() => {
-                  handleHomeSubmit('/joinLobby', localStorage.getItem('inviteCode')); 
-                }} className='btn' variant="secondary" size='lg'>join game</Button>
-              </div>
-              <div>
-                {
-                  !localStorage.getItem('inviteCode') &&
-                <Button onClick={() => {
-                  handleHomeSubmit('/createLobby');
+                  handleHomeSubmit('/createLobby')
                 }} className='btn' variant="outline-primary" size='lg'>create game</Button>
-                }
-              </div>
+              }
             </div>
           </div>
         </div>
+      </div>
       </CanvasProvider>
     </div>
   );

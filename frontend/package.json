@@ -26,11 +26,17 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "prebuild": "rm -rf ../backend/build",
     "build": "react-scripts build",
+    "postbuild": "mv build ../backend/",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "lint": "eslint -c .eslintrc.json --ext .js,.jsx .",
-    "lint:fix": "npm run lint -- --fix"
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
   },
   "browserslist": {
     "production": [
@@ -43,9 +49,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "eslint": "^7.11.0",
-    "eslint-plugin-react": "^7.26.1"
   }
 }

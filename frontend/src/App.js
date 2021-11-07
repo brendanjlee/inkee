@@ -1,12 +1,13 @@
 import './App.css';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router';
-import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
+import {BrowserRouter as Router, Switch, Route} from 'react-router-dom'
 import Home from './pages/home/home';
 import CreateLobby from './pages/createLobby/createLobby';
 import JoinLobby from './pages/joinLobby/joinLobby';
 import PrestartLobby from './pages/prestartLobby/prestartLobby';
 import Game from './pages/game/game';
+import testPage from './reactTesting/testPage';
 import io from 'socket.io-client';
 
 function App() {
@@ -18,35 +19,28 @@ function App() {
 
     return () => {
       localStorage.clear();
-    };
+    }
   }, []);
 
   useEffect(() => {
     // Initialize Socket connection.
-    let domain;
-    if (window.location.hostname === 'localhost') {
-      domain = `http://${window.location.hostname}:3001`;
-    } else {
-      domain = `wss://${window.location.hostname}/`;
-    }
-    const newSocket = io(domain, {
+    const newSocket = io(`http://${window.location.hostname}:3001`, {
       transports: ['websocket', 'polling'],
       upgrade: true,
-      secure: true,
     });
     
     const reconnect = () => {
-      newSocket.io.opts.transports = ['polling', 'websocket'];
+      newSocket.io.opts.transports = ["polling", "websocket"];
     };
 
-    newSocket.on('connect_error', reconnect);
+    newSocket.on("connect_error", reconnect);
     setSocket(newSocket);
 
     // Clean-up routine for socket.
     return () => {
       newSocket.removeAllListeners();
       newSocket.close();
-    };
+    }
   }, [setSocket]);
 
   return (
@@ -58,6 +52,7 @@ function App() {
           <Route path='/joinLobby' render={(props) => (<JoinLobby socket={socket} history={history} {...props} />)}/>
           <Route path='/prestartLobby' render={(props) => (<PrestartLobby socket={socket} history={history} {...props} />)}/>
           <Route path='/game' render={(props) => (<Game socket={socket} history={history} {...props} />)}/>
+          <Route path='/testPage' component={testPage} />
         </Switch>
       </div>
     </Router>
