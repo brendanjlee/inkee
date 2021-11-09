@@ -12,6 +12,7 @@ function CreateLobby({socket, history}) {
   // Custom Words 
   const [textAreaContent, setTextAreaContent] = useState('');
   const [csvContent, setCsvContent] = useState(null);
+  window.history.replaceState(null, 'Inkee Create Lobby', '/');
 
   /**
    * User sets round numbers
