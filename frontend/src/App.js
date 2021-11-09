@@ -26,7 +26,7 @@ function App() {
     // Initialize Socket connection.
     let domain;
     if (window.location.hostname === 'localhost') {
-      domain = `http://${window.location.hostname}:3001`;
+      domain = `http://${window.location.hostname}:8080`;
     } else {
       domain = `wss://${window.location.hostname}/`;
     }
