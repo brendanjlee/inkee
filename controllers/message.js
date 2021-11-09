@@ -44,10 +44,10 @@ class Message {
 
         writeMessage(userId, this.socket.roomId, messageData).then(() => {
           this.io.to(this.socket.roomId).emit('chatMessage',
-              {
-                uid: userId,
-                message: messageData,
-              });
+            {
+              uid: userId,
+              message: messageData,
+            });
         });
       }
     }
