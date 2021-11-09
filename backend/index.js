@@ -12,8 +12,16 @@ const sockets = require('./startup/socket-handler');
 
 rooms = {};
 
+app.get('*', (req, res, next) => {
+  if(req.headers['x-forwarded-proto'] != 'https' && req.hostname !== 'localhost') {
+    res.redirect('https://' + req.hostname);
+  } else {
+    next();
+  }
+});
+
 // App Initialization.
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 8080;
 app.use(express.static(path.join(__dirname, 'build')));
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));

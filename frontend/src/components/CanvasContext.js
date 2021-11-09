@@ -62,7 +62,7 @@ export const CanvasProvider = ({ children, socket = null }) => {
     tempState.x = offsetX;
     tempState.y = offsetY;
     setCurrentState(tempState);
-  }
+  };
 
   const draw = (x0, y0, x1, y1, lineThickness, color, emit) => { //{ nativeEvent }) => {
     contextRef.current.beginPath();
@@ -83,6 +83,22 @@ export const CanvasProvider = ({ children, socket = null }) => {
       });
     }
   };
+
+  const undoStroke = (emit) => {
+    contextRef.current.undo();
+
+    if (emit && socket) {
+      socket.emit('undo');
+    }
+  }
+
+  const redoStroke = (emit) => {
+    contextRef.current.undo();
+
+    if (emit && socket) {
+      socket.emit('redo');
+    }
+  }
 
   const clearCanvas = (emit) => {
     const canvas = canvasRef.current;
@@ -131,6 +147,8 @@ export const CanvasProvider = ({ children, socket = null }) => {
         changeLineWidth,
         exportImage,
         draw,
+        undoStroke,
+        redoStroke,
       }}
     >
       {children}
