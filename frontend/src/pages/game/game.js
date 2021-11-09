@@ -12,6 +12,8 @@ import { StrokeThickness } from '../../components/StrokeThickness';
 function Game({socket, history}) {
   const [messages, setMessages] = useState([]);
   const [users, setUsers] = useState([]);
+  window.history.replaceState(null, 'Inkee',
+    `/${localStorage.getItem('inviteCode')}`);
 
   /* Load player routine */
   useEffect(() => {
