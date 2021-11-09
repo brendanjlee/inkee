@@ -33,7 +33,7 @@ class Canvas {
 
   /**
    * Handles start drawing canvas event.
-   * 
+   *
    * @param {object} drawingData the drawing data that marks start event.
    */
   startDrawing(drawingData) {
