@@ -7,7 +7,6 @@ import CreateLobby from './pages/createLobby/createLobby';
 import JoinLobby from './pages/joinLobby/joinLobby';
 import PrestartLobby from './pages/prestartLobby/prestartLobby';
 import Game from './pages/game/game';
-import testPage from './reactTesting/testPage';
 import io from 'socket.io-client';
 
 function App() {
@@ -26,7 +25,7 @@ function App() {
     // Initialize Socket connection.
     let domain;
     if (window.location.hostname === 'localhost') {
-      domain = `http://${window.location.hostname}:3001`;
+      domain = `http://${window.location.hostname}:8080`;
     } else {
       domain = `wss://${window.location.hostname}/`;
     }
@@ -62,7 +61,6 @@ function App() {
           <Route path='/joinLobby' render={(props) => (<JoinLobby socket={socket} history={history} {...props} />)}/>
           <Route path='/prestartLobby' render={(props) => (<PrestartLobby socket={socket} history={history} {...props} />)}/>
           <Route path='/game' render={(props) => (<Game socket={socket} history={history} {...props} />)}/>
-          <Route path='/testPage' component={testPage} />
         </Switch>
       </div>
     </Router>
