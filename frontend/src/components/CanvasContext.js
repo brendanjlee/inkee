@@ -84,21 +84,13 @@ export const CanvasProvider = ({ children, socket = null }) => {
     }
   };
 
-  const clearCanvasSocket = () => {
+  const clearCanvas = (emit) => {
     const canvas = canvasRef.current;
     const context = canvas.getContext('2d');
     context.fillStyle = 'white';
     context.fillRect(0, 0, canvas.width, canvas.height);
     setCanvasEmpty(true);
-  };
-
-  const clearCanvas = () => {
-    const canvas = canvasRef.current;
-    const context = canvas.getContext('2d');
-    context.fillStyle = 'white';
-    context.fillRect(0, 0, canvas.width, canvas.height);
-    setCanvasEmpty(true);
-    if (socket) {
+    if (socket && emit) {
       socket.emit('clearCanvas');
     }
   };
@@ -138,7 +130,6 @@ export const CanvasProvider = ({ children, socket = null }) => {
         changeColor,
         changeLineWidth,
         exportImage,
-        clearCanvasSocket,
         draw,
       }}
     >
