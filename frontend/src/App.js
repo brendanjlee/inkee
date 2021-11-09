@@ -41,6 +41,9 @@ function App() {
     };
 
     newSocket.on('connect_error', reconnect);
+    newSocket.on('ERROR', (msg) => {
+      console.log(msg);
+    });
     setSocket(newSocket);
 
     // Clean-up routine for socket.
