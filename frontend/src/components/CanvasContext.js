@@ -3,10 +3,16 @@ import React, { useContext, useRef, useState } from 'react';
 const CanvasContext = React.createContext();
 
 export const CanvasProvider = ({ children, socket = null }) => {
-  const [isDrawing, setIsDrawing] = useState(false);
   const canvasRef = useRef(null);
   const contextRef = useRef(null);
+  const [isDrawing, setIsDrawing] = useState(false);
   const [canvasEmpty, setCanvasEmpty] = useState(true);
+  const [currentState, setCurrentState] = useState({
+    x: 0,
+    y: 0,
+    color: 'black',
+    lineThickness: 5,
+  });
 
   const prepareCanvas = () => {
     const canvas = canvasRef.current;
@@ -25,65 +31,55 @@ export const CanvasProvider = ({ children, socket = null }) => {
 
   const startDrawing = ({ nativeEvent }) => {
     const { offsetX, offsetY } = nativeEvent;
-    contextRef.current.beginPath();
-    contextRef.current.moveTo(offsetX, offsetY);
     setIsDrawing(true);
-    setCanvasEmpty(false);
-    if (socket) {
-      socket.emit('startDrawing', {
-        x: offsetX,
-        y: offsetY,
-      });
-    }
+    const tempState = currentState;
+    tempState.x = offsetX;
+    tempState.y = offsetY;
+    setCurrentState(tempState);
   };
 
-  const startDrawingSocket = (drawingData) => {
-    contextRef.current.beginPath();
-    contextRef.current.moveTo(drawingData.x, drawingData.y);
-    setIsDrawing(true);
-    setCanvasEmpty(false);
-  };
-
-  const finishDrawingSocket = () => {
-    contextRef.current.closePath();
-    setIsDrawing(false);
-  };
-
-  const drawSocket = (drawingData) => {
-    const canvas = canvasRef.current;
-    const context = canvas.getContext('2d');
-    context.lineWidth = drawingData.thickness;
-    context.strokeStyle = drawingData.color;
-    contextRef.current.lineTo(drawingData.x, drawingData.y);
-    contextRef.current.stroke();
-  };
-
-  const finishDrawing = () => {
-    contextRef.current.closePath();
-    setIsDrawing(false);
-    if (socket) {
-      socket.emit('finishDrawing');
-    }
-  };
-
-  const draw = ({ nativeEvent }) => {
+  const finishDrawing = ({ nativeEvent }) => {
     if (!isDrawing) {
       return;
     }
-    console.log('drawing');
-    const { offsetX, offsetY } = nativeEvent;
-    contextRef.current.lineTo(offsetX, offsetY);
 
-    const canvas = canvasRef.current;
-    const context = canvas.getContext('2d');
+    const { offsetX, offsetY } = nativeEvent;
+    draw(currentState.x, currentState.y, offsetX, offsetY,
+      currentState.lineThickness, currentState.color, true);
+    setIsDrawing(false);
+  };
+
+  const inDrawing = ({ nativeEvent }) => {
+    if (!isDrawing) {
+      return;
+    }
+
+    const { offsetX, offsetY } = nativeEvent;
+    draw(currentState.x, currentState.y, offsetX, offsetY,
+      currentState.lineThickness, currentState.color, true);
+    
+    const tempState = currentState;
+    tempState.x = offsetX;
+    tempState.y = offsetY;
+    setCurrentState(tempState);
+  }
+
+  const draw = (x0, y0, x1, y1, lineThickness, color, emit) => { //{ nativeEvent }) => {
+    contextRef.current.beginPath();
+    contextRef.current.moveTo(x0, y0);
+    contextRef.current.lineTo(x1, y1);
+    contextRef.current.strokeStyle = color;
+    contextRef.current.lineWidth = lineThickness;
     contextRef.current.stroke();
 
-    if (socket) {
+    if (socket && emit) {
       socket.emit('drawingEvent', {
-        x: offsetX,
-        y: offsetY,
-        thickness: context.lineWidth,
-        color: context.strokeStyle,
+        x0: x0,
+        y0: y0,
+        x1: x1,
+        y1: y1,
+        lineThickness: lineThickness,
+        color: color,
       });
     }
   };
@@ -108,15 +104,15 @@ export const CanvasProvider = ({ children, socket = null }) => {
   };
 
   const changeColor = color => () => {
-    const canvas = canvasRef.current;
-    const context = canvas.getContext('2d');
-    context.strokeStyle = color;
+    const tempState = currentState;
+    tempState.color = color;
+    setCurrentState(tempState);
   };
 
   const changeLineWidth = (lineWidthValue) => {
-    const canvas = canvasRef.current;
-    const context = canvas.getContext('2d');
-    context.lineWidth = lineWidthValue;
+    const tempState = currentState;
+    tempState.lineThickness = lineWidthValue;
+    setCurrentState(tempState);
   };
 
   const exportImage = () => {
@@ -134,17 +130,14 @@ export const CanvasProvider = ({ children, socket = null }) => {
     <CanvasContext.Provider
       value={{
         canvasRef,
-        contextRef,
         prepareCanvas,
         startDrawing,
+        inDrawing,
         finishDrawing,
         clearCanvas,
         changeColor,
         changeLineWidth,
         exportImage,
-        startDrawingSocket,
-        finishDrawingSocket,
-        drawSocket,
         clearCanvasSocket,
         draw,
       }}

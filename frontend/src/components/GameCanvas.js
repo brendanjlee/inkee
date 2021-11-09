@@ -7,10 +7,8 @@ export function GameCanvas({socket = null}) {
     prepareCanvas,
     startDrawing,
     finishDrawing,
+    inDrawing,
     draw,
-    startDrawingSocket,
-    finishDrawingSocket,
-    drawSocket,
     clearCanvasSocket,
   } = useCanvas();
 
@@ -21,18 +19,12 @@ export function GameCanvas({socket = null}) {
   // Socket game handlers.
   useEffect(() => {
     if (socket) {
-      socket.on('drawingEvent', drawSocket);
       socket.on('clearCanvas', clearCanvasSocket);
-      socket.on('startDrawing', startDrawingSocket);
-      socket.on('finishDrawing', finishDrawingSocket);
     }
     
     return () => {
       if (socket) {
-        socket.off('drawingEvent', drawSocket);
         socket.off('clearCanvas', clearCanvasSocket);
-        socket.off('startDrawing', startDrawingSocket);
-        socket.off('finishDrawing', finishDrawingSocket);
       }
     };
   }, [socket]);
@@ -41,7 +33,7 @@ export function GameCanvas({socket = null}) {
     <canvas
       onMouseDown={startDrawing}
       onMouseUp={finishDrawing}
-      onMouseMove={draw}
+      onMouseMove={inDrawing}
       ref={canvasRef}
     />
   );
