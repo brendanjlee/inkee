@@ -51,4 +51,4 @@ jobs:
     
     - name: Deploy to Heroku
       run: |
-        git subtree push --prefix ${{env.deployment-path}} heroku HEAD:master
+        git subtree push --prefix ${{env.deployment-path}} heroku master
