@@ -1,5 +1,5 @@
-import React from "react";
-import { useState } from "react";
+import React from 'react';
+import { useState } from 'react';
 
 const NewGoal = (props) => {
   // let enteredText = ''; // This only sets a variable. Use states
@@ -20,7 +20,7 @@ const NewGoal = (props) => {
     console.log(`@addGoalHandler: ${newGoal.id}`);
 
     setEnteredText('');
-  }
+  };
 
   // For capturiing user input with the onChange() handler
   const textChangeHandler = event => {
@@ -36,6 +36,6 @@ const NewGoal = (props) => {
       <button type='submit'>Add Goal</button>
     </form>
   );
-}
+};
 
-export default NewGoal 
+export default NewGoal; 

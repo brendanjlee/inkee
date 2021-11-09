@@ -1,6 +1,6 @@
-import React from "react";
-import { useState } from "react";
-import { useCanvas } from "./CanvasContext";
+import React from 'react';
+import { useState } from 'react';
+import { useCanvas } from './CanvasContext';
 
 export const StrokeThickness = () => {
   const { changeLineWidth } = useCanvas();
@@ -19,5 +19,5 @@ export const StrokeThickness = () => {
         }}
       />
     </div>
-  )
-}
+  );
+};

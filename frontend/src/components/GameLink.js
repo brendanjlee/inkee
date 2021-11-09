@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 function GameLink(props) {
   return (
@@ -13,4 +13,4 @@ function GameLink(props) {
   );
 }
 
-export default GameLink
+export default GameLink;

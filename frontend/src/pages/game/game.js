@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 //Style
-import './game.css'
+import './game.css';
 // Assets
 import GameCanvas from '../../components/GameCanvas';
-import { CanvasProvider } from "../../components/CanvasContext";
-import { ClearCanvasButton } from "../../components/ClearCanvasButton";
-import { ColorPalette } from "../../components/ColorPalette";
-import { UserProfile } from "../../components/UserProfile";
-import { StrokeThickness } from "../../components/StrokeThickness";
+import { CanvasProvider } from '../../components/CanvasContext';
+import { ClearCanvasButton } from '../../components/ClearCanvasButton';
+import { ColorPalette } from '../../components/ColorPalette';
+import { UserProfile } from '../../components/UserProfile';
+import { StrokeThickness } from '../../components/StrokeThickness';
 
 function Game({socket, history}) {
   const [messages, setMessages] = useState([]);
@@ -45,7 +45,7 @@ function Game({socket, history}) {
       socket.off('getPlayers', loadPlayers);
       socket.off('newPlayer', loadNewPlayer);
       socket.off('disconnection', disconnectPlayer);
-    }
+    };
   }, [socket]);
 
   useEffect(() => {
@@ -58,7 +58,7 @@ function Game({socket, history}) {
         socket.emit('chatMessage', { message });
         console.log(message);
       }
-    }
+    };
     sendMessage.addEventListener('keypress', keyPressFunc);
 
     socket.on('chatMessage', (data) => {
@@ -76,7 +76,7 @@ function Game({socket, history}) {
       writeMessage({
         name: data.uid,
         message: data.message,
-       }, { closeGuess: true });
+      }, { closeGuess: true });
     });
 
     socket.on('correctGuess', (messageData) => {
@@ -85,11 +85,7 @@ function Game({socket, history}) {
       writeMessage({
         name: messageData.uid,
         message: messageData.message,
-       }, { correctGuess: true });
-    });
-
-    socket.on('ERROR', (msg) => {
-      console.log(msg);
+      }, { correctGuess: true });
     });
 
     return () => {
@@ -98,8 +94,8 @@ function Game({socket, history}) {
       socket.off('closeGuess');
       socket.off('chatMessage');
       sendMessage.removeEventListener('keypress', keyPressFunc);
-    }
-  }, [socket, messages])
+    };
+  }, [socket, messages]);
 
   return (
     <div className='gameRoot'>
@@ -157,6 +153,6 @@ const writeMessage = ({ name = '', message}, {correctGuess = false, closeGuess =
 
   messages.appendChild(p);
   messages.scrollTop = messages.scrollHeight;
-}
+};
 
-export default Game
+export default Game;
