@@ -24,7 +24,7 @@ class Disconnect {
     removePlayerFromGame(roomId, player).then(() => {
       this.io.to(roomId).emit('disconnection', player.uid);
       delete rooms[roomId].users[player.uid];
-      if (rooms[roomId].users.size === 0) {
+      if (Object.keys(rooms[roomId].users).length === 0) {
         delete rooms[roomId];
       }
     });
