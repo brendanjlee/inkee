@@ -4,6 +4,7 @@ import CreateHeader from '../../components/header/header';
 import './joinLobby.css';
 
 function JoinLobby({socket, history}) {
+  window.history.replaceState(null, 'Inkee Join Lobby', '/');
   useEffect(() => {
     socket.on('startGame', (inviteCode) => {
       localStorage.setItem('inviteCode', inviteCode);
