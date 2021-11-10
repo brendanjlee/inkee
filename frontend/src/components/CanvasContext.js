@@ -34,12 +34,14 @@ export const CanvasProvider = ({ children, socket = null }) => {
     if (!socket) {
       const canvas = canvasRef.current;
       const context = canvas.getContext('2d');
-      const drawing = new Image(canvas.width, canvas.height);
-      drawing.crossOrigin = 'anonymous';
-      drawing.onload = () => {
-        context.drawImage(drawing, 0, 0, canvas.width / 2, canvas.height / 2);
-      };
-      drawing.src = 'https://i.ibb.co/z4Gb7Sw/output-onlinepngtools-1.png';
+      context.font = '38px Chalkduster';
+      context.fillText('Draw your avatar!', 50, 50);
+      // const drawing = new Image(canvas.width, canvas.height);
+      // drawing.crossOrigin = 'anonymous';
+      // drawing.onload = () => {
+      //   context.drawImage(drawing, 5, 0);
+      // };
+      // drawing.src = 'https://i.ibb.co/GxP0h8k/output.png';
     }
   };
 
@@ -108,7 +110,7 @@ export const CanvasProvider = ({ children, socket = null }) => {
     if (emit && socket) {
       socket.emit('undo');
     }
-  };
+  }
 
   const redoStroke = (emit) => {
     contextRef.current.undo();
@@ -116,7 +118,7 @@ export const CanvasProvider = ({ children, socket = null }) => {
     if (emit && socket) {
       socket.emit('redo');
     }
-  };
+  }
 
   const clearCanvas = (emit) => {
     const canvas = canvasRef.current;
