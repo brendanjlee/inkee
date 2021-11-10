@@ -37,6 +37,7 @@ class Game {
       this.io.to(this.socket.roomId).emit('timer', count);
       if (count === 0) {
         this.io.to(this.socket.roomId).emit('endRound');
+        rooms[this.socket.roomId].currentTimer = 0;
         clearInterval(interval);
       }
     }, 1000);
