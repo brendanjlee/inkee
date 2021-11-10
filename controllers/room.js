@@ -137,25 +137,6 @@ class Room {
       this.socket.emit('ERROR', 'Not authorized to update settings!');
     }
   }
-
-  /**
-   * Start room session timer.
-   */
-  startTimer() {
-    let count = rooms[this.socket.roomId].roundLength;
-    this.io.to(this.socket.roomId).emit('timer', count);
-    const interval = setInterval(() => {
-      count--;
-      this.io.to(this.socket.roomId).emit('timer', count);
-      if (count === 0) {
-        this.io.to(this.socket.roomId).emit('endRound');
-        clearInterval(interval);
-      }
-    }, 1000);
-    rooms[this.socket.roomId].currentTimer = interval;
-  }
-
-
 }
 
 module.exports = {
