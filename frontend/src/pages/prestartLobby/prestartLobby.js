@@ -1,14 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { Button } from "react-bootstrap";
-import { Link } from "react-router-dom";
-import CreateHeader from "../../components/header/header";
-import './prestartLobby.css'
+import React, { useEffect, useState } from 'react';
+import { Button } from 'react-bootstrap';
+import CreateHeader from '../../components/header/header';
+import './prestartLobby.css';
 
 function PrestartLobby({socket, history}) {
   const [inviteCode, setInviteCode] = useState('');
   const [users, setUsers] = useState([]);
   const [settings, setSettings] = useState({});
-  
+  window.history.replaceState(null, 'Inkee Prestart Lobby',
+    `/${localStorage.getItem('inviteCode')}`);
+
   // Copy button setup.
   useEffect(() => {
     const copyBtn = document.querySelector('#copy.copyBtn');
@@ -66,7 +67,7 @@ function PrestartLobby({socket, history}) {
 
     const populateSettings = (settingsData) => {
       setSettings(settingsData.settings);
-    }
+    };
 
     socket.on('settingUpdate', settingListener);
     socket.on('loadSettings', populateSettings);
@@ -75,7 +76,7 @@ function PrestartLobby({socket, history}) {
     return () => {
       socket.off('settingUpdate', settingListener);
       socket.off('loadSettings', populateSettings);
-    }
+    };
   }, [socket]);
 
   // Start-game routines.
@@ -84,12 +85,12 @@ function PrestartLobby({socket, history}) {
       history.push({
         pathname: '/game',
       });
-    }
+    };
     socket.on('startGame', startGame);
 
     return () => {
       socket.off('startGame', startGame);
-    }
+    };
   }, [socket, history]);
 
   useEffect(() => {
@@ -103,9 +104,9 @@ function PrestartLobby({socket, history}) {
         <div className='game-id'>
           <p>Game ID: {inviteCode}</p>
         </div>
-         <div className="mt-5">
-        <h1 className="text-white text-center">Invite your friends!</h1>
-        <div className="input-group mb-3">
+        <div className="mt-5">
+          <h1 className="text-white text-center">Invite your friends!</h1>
+          <div className="input-group mb-3">
             <input type="text" id="gameLink" className="form-control text-center fw-bold bg-white"
               defaultValue={window.location.origin + '/' + inviteCode} readOnly>
             </input>
@@ -127,4 +128,4 @@ function PrestartLobby({socket, history}) {
   );
 }
 
-export default PrestartLobby
+export default PrestartLobby;

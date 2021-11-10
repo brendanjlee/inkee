@@ -1,3 +1,4 @@
+/* global rooms */
 // eslint-disable-next-line
 const {addNewUser, createGameInstance, makeAdmin} = require('../firebase/lobby-generation');
 const {Invite} = require('../classes/invite');
@@ -32,23 +33,23 @@ class Room {
     this.socket.roomId = inviteCode;
 
     createGameInstance(gameConfiguration, inviteCode)
-        .then(() => {
-          addNewUser(newUser, inviteCode)
+      .then(() => {
+        addNewUser(newUser, inviteCode)
+          .then(() => {
+            makeAdmin(newUser, inviteCode)
               .then(() => {
-                makeAdmin(newUser, inviteCode)
-                    .then(() => {
-                      this.socket.join(inviteCode);
-                      this.socket.emit('inviteCode', inviteCode);
-                      rooms[inviteCode] = {
-                        in_progress: false,
-                        users: {},
-                      };
-                      rooms[inviteCode].users[newUser.uid] = newUser;
-                      console.log(rooms[inviteCode]);
-                    });
+                this.socket.join(inviteCode);
+                this.socket.emit('inviteCode', inviteCode);
+                rooms[inviteCode] = {
+                  in_progress: false,
+                  users: {},
+                };
+                rooms[inviteCode].users[newUser.uid] = newUser;
+                console.log(rooms[inviteCode]);
               });
-        });
-  };
+          });
+      });
+  }
 
   /**
    * Adds user to room corresponding to the provided invite code.
@@ -64,18 +65,18 @@ class Room {
       console.log(rooms[inviteCode].users[newUser.uid]);
       if (rooms[inviteCode].users[newUser.uid] === undefined) {
         addNewUser(userData, inviteCode)
-            .then(() => {
-              this.socket.roomId = inviteCode;
-              this.io.to(this.socket.roomId).emit('newPlayer',
-                  newUser);
-              this.socket.join(inviteCode);
-              if (rooms[inviteCode].in_progress) {
-                this.socket.emit('startGame', inviteCode);
-              } else {
-                this.socket.emit('inviteCode', inviteCode);
-              }
-              rooms[inviteCode].users[newUser.uid] = newUser;
-            });
+          .then(() => {
+            this.socket.roomId = inviteCode;
+            this.io.to(this.socket.roomId).emit('newPlayer',
+              newUser);
+            this.socket.join(inviteCode);
+            if (rooms[inviteCode].in_progress) {
+              this.socket.emit('startGame', inviteCode);
+            } else {
+              this.socket.emit('inviteCode', inviteCode);
+            }
+            rooms[inviteCode].users[newUser.uid] = newUser;
+          });
       } else {
         this.socket.emit('ERROR', 'Another player has this name already!');
       }
