@@ -46,7 +46,7 @@ class Room {
                   roundLength: 30,
                   numRounds: 3,
                   currentRound: 1,
-                  currentTimer: -1,
+                  currentTimer: 0,
                 };
                 rooms[inviteCode].users[newUser.uid] = newUser;
                 console.log(rooms[inviteCode]);
