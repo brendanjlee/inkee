@@ -30,24 +30,6 @@ class Canvas {
     const {socket} = this;
     this.socket.broadcast.to(socket.roomId).emit('clearCanvas');
   }
-
-  /**
-   * Handles start drawing canvas event.
-   *
-   * @param {object} drawingData the drawing data that marks start event.
-   */
-  startDrawing(drawingData) {
-    const {socket} = this;
-    this.socket.broadcast.to(socket.roomId).emit('startDrawing', drawingData);
-  }
-
-  /**
-   * Handles finish drawing canvas event.
-   */
-  finishDrawing() {
-    const {socket} = this;
-    this.socket.broadcast.to(socket.roomId).emit('finishDrawing');
-  }
 }
 
 module.exports = {

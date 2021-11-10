@@ -6,12 +6,15 @@
     },
     "extends": "eslint:recommended",
     "parserOptions": {
-        "ecmaVersion": 13
+        "ecmaVersion": 12
     },
     "rules": {
         "indent": [
             "warn",
-            2
+            2,
+            {
+                "SwitchCase": 1
+            }
         ],
         "linebreak-style": [
             "warn",
