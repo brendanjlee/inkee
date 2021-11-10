@@ -41,8 +41,12 @@ class Room {
                 this.socket.join(inviteCode);
                 this.socket.emit('inviteCode', inviteCode);
                 rooms[inviteCode] = {
-                  in_progress: false,
+                  inProgress: false,
                   users: {},
+                  roundLength: 30,
+                  numRounds: 3,
+                  currentRound: 1,
+                  currentTimer: -1,
                 };
                 rooms[inviteCode].users[newUser.uid] = newUser;
                 console.log(rooms[inviteCode]);
@@ -104,7 +108,6 @@ class Room {
 
   /**
    * Send settings to the connected user.
-   *
    */
   sendSettings() {
 
@@ -134,6 +137,25 @@ class Room {
       this.socket.emit('ERROR', 'Not authorized to update settings!');
     }
   }
+
+  /**
+   * Start room session timer.
+   */
+  startTimer() {
+    let count = rooms[this.socket.roomId].roundLength;
+    this.io.to(this.socket.roomId).emit('timer', count);
+    const interval = setInterval(() => {
+      count--;
+      this.io.to(this.socket.roomId).emit('timer', count);
+      if (count === 0) {
+        this.io.to(this.socket.roomId).emit('endRound');
+        clearInterval(interval);
+      }
+    }, 1000);
+    rooms[this.socket.roomId].currentTimer = interval;
+  }
+
+
 }
 
 module.exports = {
