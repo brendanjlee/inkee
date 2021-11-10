@@ -1,3 +1,4 @@
+/* global rooms */
 const {updateGameStatus} = require('../firebase/game-handler');
 
 /**
@@ -24,7 +25,7 @@ class Game {
       this.io.to(this.socket.roomId).emit('startGame');
     });
   }
-};
+}
 
 module.exports = {
   Game,
