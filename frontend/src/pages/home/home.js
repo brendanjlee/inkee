@@ -52,8 +52,13 @@ function Home({socket, history}) {
     const canvas = document.getElementById('canvas');
     const uri = canvas.toDataURL('image/png');
 
-    if (uri === defaultCanvas.toDataURL('image/png')) {
-      console.log('Avatar is empty, draw something nice!');
+    const blank = document.createElement('canvas');
+    blank.width = canvas.width;
+    blank.height = canvas.height;
+
+    if (uri === defaultCanvas.toDataURL('image/png')
+      || uri === blank.toDataURL('image/png')) {
+      console.log('Draw a nice avatar!');
       return false;
     }
 
