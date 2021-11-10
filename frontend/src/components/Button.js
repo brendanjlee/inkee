@@ -6,7 +6,6 @@ function MyButton() {
 
   return (
     <button type="button">
-      Shop
     </button>
   );
 }
