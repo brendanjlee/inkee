@@ -35,5 +35,17 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
-server.listen(port, () => console.log(`Listening on port ${port}...`));
-sockets.init(server);
+
+const io = sockets.init(server);
+const config = require('./config');
+const {instrument} = require('@socket.io/admin-ui');
+instrument(io, {
+  auth: {
+    type: 'basic',
+    username: 'admin',
+    password: config.adminPassword,
+  },
+  namespaceName: '/admin',
+});
+
+server.listen(port, () => console.log(`Listening on Port ${port}...`));
