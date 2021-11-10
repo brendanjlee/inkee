@@ -9,7 +9,7 @@ evtSource.onerror = (e) => {
 };
 
 evtSource.onopen = (e) => {
-  console.log('Connected to Realtime Database');
+  console.log('Connected to Realtime Database ' + e);
 };
 
 evtSource.addEventListener('patch', (e) => {
@@ -25,11 +25,11 @@ evtSource.addEventListener('put', (e) => {
 });
 
 evtSource.addEventListener('cancel', (e) => {
-  console.log('Cannot read change.');
+  console.log('Cannot read change. ' + e);
 });
 
 evtSource.addEventListener('auth_revoked', (e) => {
-  console.log('Lost connection to Realtime Database');
+  console.log('Lost connection to Realtime Database ' + e);
 });
 
 module.exports = {

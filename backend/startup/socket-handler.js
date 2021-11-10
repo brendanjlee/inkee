@@ -23,12 +23,11 @@ module.exports.init = (server) => {
     /* Create Game */
     socket.on('createGame', (gameCreationData) => {
       new Room(io, socket).createRoom(gameCreationData.gameConfiguration,
-          gameCreationData.userData);
+        gameCreationData.userData);
     });
 
     /* User join events */
     socket.on('joinRoom', (joinData) => {
-      console.log(joinData);
       new Room(io, socket).joinRoom(joinData.userData, joinData.inviteCode);
     });
 
@@ -56,16 +55,6 @@ module.exports.init = (server) => {
       new Canvas(io, socket).clearCanvas();
     });
 
-    /* Start drawing canvas event */
-    socket.on('startDrawing', (data) => {
-      new Canvas(io, socket).startDrawing(data);
-    });
-
-    /* Finish drawing canvas event */
-    socket.on('finishDrawing', () => {
-      new Canvas(io, socket).finishDrawing();
-    });
-
     /* Game logic and message events */
     /* Start timer on the running game instnace */
     socket.on('startTimer', () => {
@@ -86,4 +75,6 @@ module.exports.init = (server) => {
       new Room(io, socket).sendUsers();
     });
   });
+
+  return io;
 };
