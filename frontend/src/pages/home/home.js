@@ -15,6 +15,34 @@ function Home({socket, history}) {
     localStorage.setItem('inviteCode', inviteCode);
   }
 
+  useEffect(() => {
+    const startGameHandler = (inviteCode) => {
+      localStorage.setItem('inviteCode', inviteCode);
+      history.push({
+        pathname: '/game',
+      });
+    };
+
+    const inviteCodeHandler = () => {
+      localStorage.setItem('inviteCode', inviteCode);
+      history.push({
+        pathname: '/prestartLobby',
+      });
+    };
+
+    if (socket) {
+      socket.on('startGame', startGameHandler);
+      socket.on('inviteCode', inviteCodeHandler);
+    }
+
+    return () => {
+      if (socket) {
+        socket.off('startGame', startGameHandler);
+        socket.off('inviteCode', inviteCodeHandler);
+      }
+    };
+  }, [socket]);
+
   const exportCanvasImage = () => {
     const canvas = document.getElementById('canvas');
     const uri = canvas.toDataURL('image/png');
@@ -47,20 +75,6 @@ function Home({socket, history}) {
     }
 
     if (inviteCode) {
-      socket.on('startGame', (inviteCode) => {
-        localStorage.setItem('inviteCode', inviteCode);
-        history.push({
-          pathname: '/game',
-        });
-      });
-
-      socket.on('inviteCode', () => {
-        localStorage.setItem('inviteCode', inviteCode);
-        history.push({
-          pathname: '/prestartLobby',
-        });
-      });
-
       socket.emit('joinRoom', {
         userData: {
           uid: localStorage.getItem('username'),
