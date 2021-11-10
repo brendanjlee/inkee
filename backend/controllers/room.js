@@ -41,8 +41,12 @@ class Room {
                 this.socket.join(inviteCode);
                 this.socket.emit('inviteCode', inviteCode);
                 rooms[inviteCode] = {
-                  in_progress: false,
+                  inProgress: false,
                   users: {},
+                  roundLength: 30,
+                  numRounds: 3,
+                  currentRound: 1,
+                  currentTimer: 0,
                 };
                 rooms[inviteCode].users[newUser.uid] = newUser;
                 console.log(rooms[inviteCode]);
@@ -104,7 +108,6 @@ class Room {
 
   /**
    * Send settings to the connected user.
-   *
    */
   sendSettings() {
 
