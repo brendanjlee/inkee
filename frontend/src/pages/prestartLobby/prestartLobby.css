@@ -41,17 +41,28 @@
   width: 31rem;
   height: 3.6rem;
   background-color: white;
-  border: .45rem solid #000000;
+  border: .5rem solid #000000;
   box-sizing: border-box;
   font-family: 'Montserrat', sans-serif;
   font-weight: bold;
   text-align: center;
   font-size: 2rem;
   margin-bottom: -.4rem;
+  outline: none;
+}
+
+.shareContainer {
+  margin-top: -.4;
+  margin-bottom: .5;
+}
+
+.emailBtn {
+  margin-left: 0;
 }
 
 .copyBtn {
-  width: 15rem;
+  float: left;
+  width: 17.10rem;
   height: 3.6rem;
   background-color: white;
   border: .45rem solid #000000;
@@ -60,11 +71,24 @@
   font-weight: bold;
   text-align: center;
   font-size: 2rem;
-  margin-bottom: .5rem;
 }
 
 .copyBtn:hover {
   color: #fff;
   background-color: #000000;
   outline: 0;
+}
+
+.shareBtn {
+  float: left;
+  width: 14.335rem;
+  height: 3.6rem;
+  background-color: white;
+  border: .45rem solid #000000;
+  box-sizing: border-box;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: bold;
+  text-align: center;
+  font-size: 2rem;
+  margin-left: -.4rem;
 }

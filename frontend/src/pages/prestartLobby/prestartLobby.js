@@ -1,10 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import './prestartLobby.css';
-import { EmailShareButton, WhatsappShareButton, FacebookShareButton} from "react-share";
+import {
+  EmailShareButton,
+  FacebookMessengerShareButton,
+  TelegramShareButton,
+  TwitterShareButton,
+  WhatsappShareButton
+} from "react-share";
+import {
+  EmailIcon,
+  FacebookMessengerIcon,
+  TelegramIcon,
+  TumblrIcon,
+  WhatsappIcon
+} from "react-share";
 
 function PrestartLobby({socket, history}) {
   const [inviteCode, setInviteCode] = useState('');
+  const [inviteCodeURL, setInviteCodeURL] = useState(window.location.origin);
   const [users, setUsers] = useState([]);
   const [settings, setSettings] = useState({});
   window.history.replaceState(null, 'Inkee Prestart Lobby',
@@ -95,6 +109,7 @@ function PrestartLobby({socket, history}) {
 
   useEffect(() => {
     setInviteCode(localStorage.getItem('inviteCode'));
+    setInviteCodeURL(inviteCodeURL + "/" + inviteCode);
   }, [history]);
 
   return (
@@ -103,11 +118,40 @@ function PrestartLobby({socket, history}) {
           <p className='gameId'>game ID: {inviteCode}</p>
           <div>
             <input className="linkBox" type="text" id="gameLink" 
-              defaultValue={window.location.origin + '/' + inviteCode} readOnly>
+              value={window.location.origin + '/' + inviteCode} readOnly>
             </input>
           </div>
+          <div className="shareContainer">
           <button className="copyBtn" type="button" id="copy">Copy Link</button>
-          <EmailShareButton url={window.location.origin + '/' + inviteCode}  />
+          <div className="shareBtn">
+            <EmailShareButton
+              url={inviteCodeURL}
+              quote={"Join my Inkee.io game!"}
+              >
+              <EmailIcon size={43} />
+            </EmailShareButton>
+            <TwitterShareButton
+              url={window.location.origin + '/' + inviteCode}
+              quote={"Join my Inkee.io game!"}>
+              <TumblrIcon size={43}  />
+            </TwitterShareButton>
+            <FacebookMessengerShareButton
+              url={window.location.origin + '/' + inviteCode}
+              quote={"Join my Inkee.io game!"}>
+              <FacebookMessengerIcon size={43} />
+            </FacebookMessengerShareButton>
+            <TelegramShareButton
+              url={window.location.origin + '/' + inviteCode}
+              quote={"Join my Inkee.io game!"}>
+              <TelegramIcon size={43} />
+            </TelegramShareButton>
+            <WhatsappShareButton
+              url={window.location.origin + '/' + inviteCode}
+              quote={"Join my Inkee.io game!"}>
+              <WhatsappIcon size={43} />
+            </WhatsappShareButton>
+          </div>
+          </div>
           <Button onClick={() => {
             socket.emit('startGame');
           }} variant='primary'>ready</Button>
