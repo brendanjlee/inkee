@@ -1,7 +1,6 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
-const gameRouter = require('../routes/game-routes');
 const imageRouter = require('../routes/image-uploader');
 
 /**
@@ -64,18 +63,14 @@ const validateFirebaseIdToken = async (req, res, next) => {
 
 // TODO: WHEN DEPLOYED, SUBSTITUDE ORIGIN WITH DOMAIN OF PROJECT.
 const corsOptions = {
-  origin: '*',
+  origin: ['https://admin.socket.io', 'https://inkee-io.herokuapp.com'],
   optionsSuccessStatus: 200,
-  methods: 'GET, POST',
+  credentials: false,
 };
 
 module.exports = (app) => {
   app.use(express.json());
-  //app.use(validateFirebaseIdToken);
   app.use(cookieParser());
   app.use(cors(corsOptions));
   app.use('/avatar', imageRouter.router);
-
-  // Setup Routes
-  app.use('/games', gameRouter.router);
 };
