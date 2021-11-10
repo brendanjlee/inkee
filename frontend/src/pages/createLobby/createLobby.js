@@ -203,23 +203,20 @@ function CreateLobby({socket, history}) {
           <option value="180seconds">180</option>
         </select>
         <div className='wordlist'>
-          <label>Custom Words:</label>
-          <br/>
-          <textarea
-            placeholder='Enter Custom Words...'
+          <textarea className='words'
+            placeholder='enter custom words...'
             value={textAreaContent}
             onChange={handleTextAreaChange}
           >
           </textarea>
           <div className='csvReader'>
-            <h5>Or Upload a CSV File</h5>
             <CSVReader
               onDrop={handleOnDrop}
               onError={handleOnError}
               addRemoveButton
               onRemoveFile={handleOnRemoveFile}
             >
-              <span>Drop CSV file here or click to upload.</span>
+              <span>drop a csv file or upload</span>
             </CSVReader>
           </div>
         </div> 
