@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import './prestartLobby.css';
-import { EmailShareButton, FacebookShareButton} from "react-share";
+import { EmailShareButton, WhatsappShareButton, FacebookShareButton} from "react-share";
 
 function PrestartLobby({socket, history}) {
   const [inviteCode, setInviteCode] = useState('');
@@ -107,7 +107,7 @@ function PrestartLobby({socket, history}) {
             </input>
           </div>
           <button className="copyBtn" type="button" id="copy">Copy Link</button>
-          <ShareBtn url={window.location.origin + '/' + inviteCode} text={text}className='ib' displayText='Share'/>
+          <EmailShareButton url={window.location.origin + '/' + inviteCode}  />
           <Button onClick={() => {
             socket.emit('startGame');
           }} variant='primary'>ready</Button>
