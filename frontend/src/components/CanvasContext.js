@@ -27,9 +27,22 @@ export const CanvasProvider = ({ children, socket = null }) => {
     context.strokeStyle = 'black';
     context.lineWidth = 5;
     contextRef.current = context;
+
+    if (!socket) {
+      const drawing = new Image(canvas.width, canvas.height);
+      drawing.crossOrigin = 'anonymous';
+      drawing.onload = () => {
+        context.drawImage(drawing, -20, 0);
+      };
+      drawing.src = 'https://i.ibb.co/wCXLxvw/output.png';
+    }
   };
 
   const startDrawing = ({ nativeEvent }) => {
+    if (canvasEmpty) {
+      clearCanvas(false);
+      setCanvasEmpty(false);
+    }
     const { offsetX, offsetY } = nativeEvent;
     setIsDrawing(true);
     const tempState = currentState;
@@ -123,17 +136,6 @@ export const CanvasProvider = ({ children, socket = null }) => {
     setCurrentState(tempState);
   };
 
-  const exportImage = () => {
-    const canvas = canvasRef.current;
-    const context = canvas.getContext('2d');
-    const uri = canvas.toDataURL('image/png');
-    
-    if (canvasEmpty) {
-      throw 'Canvas is empty!';
-    }
-    console.log(uri);
-  };
-
   return (
     <CanvasContext.Provider
       value={{
@@ -145,7 +147,6 @@ export const CanvasProvider = ({ children, socket = null }) => {
         clearCanvas,
         changeColor,
         changeLineWidth,
-        exportImage,
         draw,
         undoStroke,
         redoStroke,
