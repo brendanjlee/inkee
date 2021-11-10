@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
-import CreateHeader from '../../components/header/header';
 import './prestartLobby.css';
+import { EmailShareButton, FacebookShareButton} from "react-share";
 
 function PrestartLobby({socket, history}) {
   const [inviteCode, setInviteCode] = useState('');
@@ -98,32 +98,20 @@ function PrestartLobby({socket, history}) {
   }, [history]);
 
   return (
-    <div className='root'>
-      <CreateHeader/>
-      <div className='content'>
-        <div className='game-id'>
-          <p>Game ID: {inviteCode}</p>
-        </div>
-        <div className="mt-5">
-          <h1 className="text-white text-center">Invite your friends!</h1>
-          <div className="input-group mb-3">
-            <input type="text" id="gameLink" className="form-control text-center fw-bold bg-white"
+    <div className='prestartRoot'>
+        <div className="form">
+          <p className='gameId'>game ID: {inviteCode}</p>
+          <div>
+            <input className="linkBox" type="text" id="gameLink" 
               defaultValue={window.location.origin + '/' + inviteCode} readOnly>
             </input>
-            <button className="copyBtn" type="button" id="copy">Copy Link</button>
           </div>
+          <button className="copyBtn" type="button" id="copy">Copy Link</button>
+          <ShareBtn url={window.location.origin + '/' + inviteCode} text={text}className='ib' displayText='Share'/>
+          <Button onClick={() => {
+            socket.emit('startGame');
+          }} variant='primary'>ready</Button>
         </div>
-        <div className='lobby-players'>
-          <ul>
-            <li>Coffee</li>
-            <li>Tea</li>
-            <li>Milk</li>
-          </ul>
-        </div>
-        <Button onClick={() => {
-          socket.emit('startGame');
-        }} variant='primary'>Ready</Button>
-      </div>
     </div>
   );
 }
