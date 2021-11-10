@@ -1,5 +1,5 @@
 import './home.css';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Logo from '../../assets/inkee-logo.png';
 import GameCanvas from '../../components/GameCanvas';
 import { Button } from 'react-bootstrap';
@@ -7,14 +7,30 @@ import { CanvasProvider } from '../../components/CanvasContext';
 import { ClearCanvasButton } from '../../components/ClearCanvasButton';
 
 function Home({socket, history}) {
-  const canvasRef = useRef();
-  const [canvasEmpty, setCanvasEmpty] = useState(true);
   const query = new URLSearchParams(window.location.search);
   const inviteCode = query.get('gameId');
+  const [avatar, setAvatar] = useState('');
 
   if (inviteCode !== null) {
     localStorage.setItem('inviteCode', inviteCode);
   }
+
+  const exportCanvasImage = () => {
+    const canvas = document.getElementById('canvas');
+    const uri = canvas.toDataURL('image/png');
+    
+    const blank = document.createElement('canvas');
+    blank.width = canvas.width;
+    blank.height = canvas.height;
+    if (uri === blank.toDataURL('image/png')) {
+      console.log('Avatar is empty, draw something nice!');
+      return false;
+    }
+
+    console.log(uri);
+    setAvatar(uri);
+    return true;
+  };
 
   const handleHomeSubmit = (path, inviteCode = null) => {
     const userNameInput = document.getElementById('username_input');
@@ -23,6 +39,10 @@ function Home({socket, history}) {
       console.log(userNameInput.value);
     } else {
       alert('Username cannot be empty!');
+      return;
+    }
+
+    if (!exportCanvasImage()) {
       return;
     }
 
@@ -44,7 +64,7 @@ function Home({socket, history}) {
       socket.emit('joinRoom', {
         userData: {
           uid: localStorage.getItem('username'),
-          avatar: 'tempAvatar',
+          avatar: avatar,
         },
         inviteCode: localStorage.getItem('inviteCode'),
       });
@@ -69,6 +89,9 @@ function Home({socket, history}) {
             <div align="center">
               <div className="homeDrawArea">
                 <GameCanvas />
+              </div>
+              <div>
+                <ClearCanvasButton />
               </div>
               <div>
                 <Button onClick={() => {
