@@ -34,6 +34,8 @@ export const CanvasProvider = ({ children, socket = null }) => {
     if (!socket) {
       const canvas = canvasRef.current;
       const context = canvas.getContext('2d');
+      // context.font = '38px Chalkduster';
+      // context.fillText('Draw your avatar!', 50, 50);
       const drawing = new Image(canvas.width, canvas.height);
       drawing.crossOrigin = 'anonymous';
       drawing.onload = () => {
