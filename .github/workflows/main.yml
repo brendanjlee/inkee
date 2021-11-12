@@ -28,6 +28,7 @@ jobs:
     - name: Build backend
       run: |
         npm ci
+        npm install -g jest
       working-directory: ${{env.backend-working-directory}}
 
     - name: Test Backend
