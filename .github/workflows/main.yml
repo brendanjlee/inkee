@@ -50,6 +50,9 @@ jobs:
         mv build ../backend/
       working-directory: ${{env.frontend-working-directory}}
     
+    - name: Git Configuration
+      run: git config --global user.email ${{ secrets.EMAIL }}
+
     - name: switching from HTTPS to SSH
       run: git remote set-url origin ${{ secrets.SSH }}
 
