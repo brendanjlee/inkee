@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "my first socket.io app",
   "dependencies": {
+    "@socket.io/admin-ui": "^0.2.0",
     "chance": "^1.1.8",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
@@ -16,14 +17,21 @@
     "multer": "^1.4.3",
     "nanoid": "^3.1.30",
     "nodemon": "^2.0.14",
+    "path": "^0.12.7",
+    "react-share-button": "0.0.4",
     "socket.io": "^4.1.2",
+    "socket.io-client": "^4.3.2",
     "uuid": "^8.3.2"
+  },
+  "jest": {
+    "testPathIgnorePatterns": ["assert.js"]
   },
   "scripts": {
     "start": "nodemon index.js",
-    "test": "jest"
+    "test": "jest --detectOpenHandles"
   },
   "devDependencies": {
+    "@babel/preset-react": "^7.16.0",
     "eslint": "^8.1.0",
     "eslint-config-google": "^0.14.0"
   }

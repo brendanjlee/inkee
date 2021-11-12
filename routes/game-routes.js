@@ -10,6 +10,7 @@ const {Invite} = require('../classes/invite');
 const functions = require('../firebase/lobby-generation');
 
 /* Create game in Firebase Realtime Database */
+/* eslint-disable-next-line */
 router.post('/', (req, res) => {
   console.log(req.body);
   const gameConfiguration = req.body.gameConfiguration;
@@ -18,12 +19,12 @@ router.post('/', (req, res) => {
   const userData = new User(reqUserData.uid, reqUserData.avatar, 0);
 
   functions.createGameInstance(gameConfiguration, inviteCode)
-      .then(() => {
-        functions.addNewUser(userData, inviteCode)
-            .then(() => {
-              functions.makeAdmin(userData, inviteCode);
-            });
-      });
+    .then(() => {
+      functions.addNewUser(userData, inviteCode)
+        .then(() => {
+          functions.makeAdmin(userData, inviteCode);
+        });
+    });
 });
 
 /* Add user to game in Firebase Realtime Database */
