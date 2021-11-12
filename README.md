@@ -1,4 +1,4 @@
-# Inkee
+# Inkee.io
 A collaborative drawing web app game!
 
 # Master Continuous Integration
