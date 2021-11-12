@@ -21,11 +21,11 @@ export function GameCanvas({socket = null}) {
     const onDrawingEvent = (drawingData) => {
       draw(drawingData.x0, drawingData.y0, drawingData.x1, drawingData.y1,
         drawingData.lineThickness, drawingData.color, false);
-    }
+    };
 
     const onClearCanvas = () => {
       clearCanvas(false);
-    }
+    };
 
     if (socket) {
       socket.on('drawingEvent', onDrawingEvent);
@@ -42,6 +42,7 @@ export function GameCanvas({socket = null}) {
 
   return (
     <canvas
+      id='canvas'
       onMouseDown={startDrawing}
       onMouseUp={finishDrawing}
       onMouseMove={inDrawing}

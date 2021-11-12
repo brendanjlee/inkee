@@ -1,4 +1,4 @@
-const {removePlayerFromGame} = require('../firebase/game-handler');
+/* global rooms */
 
 /**
  * Handles user disconnect logic for the game.
@@ -21,13 +21,16 @@ class Disconnect {
   onDisconnect() {
     const {roomId, player} = this.socket;
 
-    removePlayerFromGame(roomId, player).then(() => {
-      this.io.to(roomId).emit('disconnection', player.uid);
-      delete rooms[roomId].users[player.uid];
+    // User disconnected from a live game.
+    if (roomId !== undefined && player !== undefined) {
       if (Object.keys(rooms[roomId].users).length === 0) {
         delete rooms[roomId];
+      } else {
+        delete rooms[roomId].users[player.uid];
       }
-    });
+
+      this.io.to(roomId).emit('disconnection', player.uid);
+    }
   }
 }
 
