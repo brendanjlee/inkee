@@ -50,26 +50,17 @@ jobs:
         mv build ../backend/
       working-directory: ${{env.frontend-working-directory}}
     
-    - name: Git Configuration
-      run: git config --global user.email ${{ secrets.EMAIL }}
+    - name: Commit files
+      run: |
+        git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        git commit -m "Auto updating build files." -a
 
-    - name: switching from HTTPS to SSH
-      run: git remote set-url origin ${{ secrets.SSH }}
-
-    - name: check for changes
-      run: git status
-
-    - name: Stage new build files
-      run: git add backend/
-    
-    - name: Commit new build files
-      run: git commit -m "Auto updating build files."
-    
-    - name: Fetch from master
-      run: git fetch origin master
-    
-    - name: Push build files to master
-      run: git push origin HEAD:master
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: ${{ github.ref }}
 
     - name: Add remote origin
       run: |
