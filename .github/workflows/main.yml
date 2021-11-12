@@ -68,6 +68,12 @@ jobs:
     needs: build
     if: needs.build.changes.outputs.changed == 0 || needs.build.push.outputs.status == 'success'
     runs-on: ubuntu-latest
+    env:
+      deployment-path: backend
+      CI: ""
+    strategy:
+      matrix:
+        node-version: [16.x]
     steps:
     - name: Add remote origin
       run: |
