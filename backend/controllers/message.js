@@ -1,5 +1,6 @@
 const {writeMessage} = require('../firebase/game-handler');
 const leven = require('fast-levenshtein');
+const {getScore} = require('backend/controllers/helpers.js');
 
 /**
  * Handles storing messages for the game.
@@ -30,10 +31,21 @@ class Message {
       const distance = leven.get(messageData, 'TestWord');
 
       if (distance === 0) {
+        const {startTime} = this.rooms[this.socket.roomId];
+        const gameTime = this.rooms[this.socket.roomId].time;
+        this.rooms[this.socket.roomId][this.socket.id].score += getScore(startTime, gameTime);
+        this.socket.emit('updateScore', {
+          playerID: userId,
+          score: this.rooms[this.socket.roomID][this.socket.id].score,
+          // drawerID: drawer.id,
+          // drawerScore: this.rooms[this.socket.roomID][drawer.id].score,
+        });
         this.socket.emit('correctGuess', {
           uid: userId,
           message: 'You guessed correctly!!',
         });
+
+
       } else {
         if (distance < 3) {
           this.socket.emit('closeGuess', {
