@@ -76,7 +76,9 @@ jobs:
         node-version: [16.x]
     steps:
     - uses: actions/checkout@v2
-    
+      env:
+        backend-working-directory: ./backend
+
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
@@ -88,4 +90,9 @@ jobs:
 
     - name: Deploy to Heroku
       run: |
-        git push origin `git subtree split --prefix backend master`:heroku --force
+        git init
+        git add .
+        git commit -am "deploy"
+        git push --force https://heroku:${{ secrets.HEROKU_API_KEY }}@git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git master
+        rm -rf .git
+      working-directory: ${{env.backend-working-directory}}
