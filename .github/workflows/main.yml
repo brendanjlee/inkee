@@ -38,7 +38,7 @@ jobs:
         npm run build
       working-directory: ${{env.frontend-working-directory}}
 
-    - name: Generate Build Files
+    - name: Set Build Files
       run: |
         rm -rf backend/build
         mv frontend/build backend/.
@@ -71,7 +71,7 @@ jobs:
   
   release:
     needs: build
-    if: needs.build.changes_exist.outputs.status == 'success' || needs.build.push == 'success'
+    if: needs.build.changes.outputs.status == 'success' || needs.build.push.outputs.status == 'success'
     runs-on: ubuntu-latest
     steps:
     - name: Add remote origin
