@@ -43,6 +43,14 @@ function Game({socket, history}) {
 
     socket.emit('getPlayers');
 
+    // socket.on('updateScore', ({
+    //   playerID,
+    //   score
+    // }) => {
+    //   //Change score on frontent
+    //   document.querySelector().textContent = `Score: ${score}`;
+    // });
+
     return () => {
       socket.off('getPlayers', loadPlayers);
       socket.off('newPlayer', loadNewPlayer);
@@ -50,6 +58,7 @@ function Game({socket, history}) {
     };
   }, [socket]);
 
+  /* Send Message Routine */
   useEffect(() => {
     const sendMessage = document.querySelector('#sendMessage');
     const keyPressFunc = (e) => {
