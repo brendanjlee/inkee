@@ -23,15 +23,16 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    
+        cache: 'npm'
+
     - name: Build backend
       run: |
         npm ci
+        npm install -g jest
       working-directory: ${{env.backend-working-directory}}
 
     - name: Test Backend
-      run: |
-        npm test
+      run: npm test
       working-directory: ${{env.backend-working-directory}}
 
     - name: Remove existing frontend build files
