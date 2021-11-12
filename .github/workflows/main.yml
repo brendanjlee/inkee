@@ -3,22 +3,8 @@ on:
   push:
     branches:    
       - master 
-jobs:
-  check:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check if there are changes
-        id: changes
-        uses: UnicornGlobal/has-changes-action@v1.0.11
-
-      - name: Process changes
-        id: changes_exist
-        if: steps.changes.outputs.changed == 1
-        run: exit 1
-  
+jobs:  
   build:
-    needs: check
-    if: needs.check.changes_exist == 'failure'
     runs-on: ubuntu-latest
     env:
       backend-working-directory: ./backend
@@ -61,7 +47,17 @@ jobs:
         git config --local user.name "github-actions[bot]"
         git commit -m "Auto updating build files." -a
     
+    - name: Check if there are changes
+      id: changes
+      uses: UnicornGlobal/has-changes-action@v1.0.11
+
+    - name: Process changes
+      id: changes_exist
+      if: steps.changes.outputs.changed == 1
+      run: exit 1
+    
     - name: Push changes
+      if: steps.changes_exist.outputs.status == 'failure'
       id: commit
       uses: ad-m/github-push-action@master
       with:
