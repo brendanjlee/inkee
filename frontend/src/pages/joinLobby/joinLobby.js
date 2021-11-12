@@ -4,20 +4,29 @@ import CreateHeader from '../../components/header/header';
 import './joinLobby.css';
 
 function JoinLobby({socket, history}) {
+  window.history.replaceState(null, 'Inkee Join Lobby', '/');
   useEffect(() => {
-    socket.on('startGame', (inviteCode) => {
+    const startGameHandler = (inviteCode) => {
       localStorage.setItem('inviteCode', inviteCode);
       history.push({
         pathname: '/game',
       });
-    });
+    };
 
-    socket.on('inviteCode', (inviteCode) => {
+    const prestartLobbyHandler = (inviteCode) => {
       localStorage.setItem('inviteCode', inviteCode);
       history.push({
         pathname: '/prestartLobby',
       });
-    });
+    };
+
+    socket.on('startGame', startGameHandler);
+    socket.on('inviteCode', prestartLobbyHandler);
+
+    return () => {
+      socket.off('startGame', startGameHandler);
+      socket.off('inviteCode', prestartLobbyHandler);
+    };
   }, [socket, history]);
 
   const handleSubmit = (inviteCode = null, joinById) => {
