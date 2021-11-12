@@ -1,4 +1,4 @@
-const {updateGameStatus} = require('../firebase/game-handler');
+/* global rooms */
 
 /**
  * Handles game logic for the game.
@@ -19,12 +19,28 @@ class Game {
    * Starts the game and notifies connected clients.
    */
   startGame() {
-    updateGameStatus(this.socket.roomId, true).then(() => {
-      rooms[this.socket.roomId].in_progress = true;
-      this.io.to(this.socket.roomId).emit('startGame');
-    });
+    rooms[this.socket.roomId].in_progress = true;
+    this.io.to(this.socket.roomId).emit('startGame');
   }
-};
+
+  /**
+   * Start room session timer.
+   */
+  startTimer() {
+    let count = rooms[this.socket.roomId].roundLength;
+    this.io.to(this.socket.roomId).emit('timer', count);
+    const interval = setInterval(() => {
+      count--;
+      this.io.to(this.socket.roomId).emit('timer', count);
+      if (count === 0) {
+        this.io.to(this.socket.roomId).emit('endRound');
+        rooms[this.socket.roomId].currentTimer = 0;
+        clearInterval(interval);
+      }
+    }, 1000);
+    rooms[this.socket.roomId].currentTimer = interval;
+  }
+}
 
 module.exports = {
   Game,
