@@ -10,7 +10,6 @@ function Home({socket, history}) {
   const query = new URLSearchParams(window.location.search);
   const inviteCode = query.get('gameId');
   const [avatar, setAvatar] = useState('');
-  const [defaultCanvas, setDefaultCanvas] = useState(null);
 
   if (inviteCode !== null) {
     localStorage.setItem('inviteCode', inviteCode);
@@ -44,10 +43,6 @@ function Home({socket, history}) {
     };
   }, [socket]);
 
-  useEffect(() => {
-    setDefaultCanvas(document.getElementById('canvas'));
-  }, []);
-
   const exportCanvasImage = () => {
     const canvas = document.getElementById('canvas');
     const uri = canvas.toDataURL('image/png');
@@ -56,8 +51,7 @@ function Home({socket, history}) {
     blank.width = canvas.width;
     blank.height = canvas.height;
 
-    if (uri === defaultCanvas.toDataURL('image/png')
-      || uri === blank.toDataURL('image/png')) {
+    if (uri === blank.toDataURL('image/png')) {
       console.log('Draw a nice avatar!');
       return false;
     }
