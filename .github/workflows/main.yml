@@ -39,7 +39,7 @@ jobs:
         npm ci
         npm run build
         rm -rf ../backend/build
-        mv build ../backend/
+        mv build ../backend/.
       working-directory: ${{env.frontend-working-directory}}
     
     - name: Commit files
