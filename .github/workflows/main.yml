@@ -85,6 +85,8 @@ jobs:
     - name: Deploy to Heroku
       run: |
         git init
+        git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
         git remote add heroku https://heroku:${{ secrets.HEROKU_API_KEY }}@git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git
         git add .
         git commit -am "Deploy"
