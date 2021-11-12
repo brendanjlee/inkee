@@ -8,6 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       backend-working-directory: ./backend
+      deployment-path: backend
       frontend-working-directory: ./frontend
       CI: ""
     strategy:
@@ -69,7 +70,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       deployment-path: backend
-      backend-working-directory: ./backend
       CI: ""
     strategy:
       matrix:
@@ -81,15 +81,11 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-
+    
+    - name: Add remote origin
+      run: |
+        git remote add heroku https://heroku:${{ secrets.HEROKU_API_KEY }}@git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git
+    
     - name: Deploy to Heroku
       run: |
-        git init
-        git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-        git config --global user.name "github-actions[bot]"
-        git remote add heroku https://heroku:${{ secrets.HEROKU_API_KEY }}@git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git
-        git add .
-        git commit -am "Deploy"
-        git push --force heroku master
-        rm -rf .git
-      working-directory: ${{env.backend-working-directory}}
+        git subtree push --prefix ${{env.deployment-path}} heroku master
