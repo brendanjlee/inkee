@@ -6,9 +6,8 @@ function MyButton() {
 
   return (
     <button type="button">
-      Shop
     </button>
   );
 }
 
-export default MyButton
+export default MyButton;
