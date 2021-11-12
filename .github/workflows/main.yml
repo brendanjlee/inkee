@@ -71,7 +71,7 @@ jobs:
   
   release:
     needs: build
-    if: needs.build.changes.outputs.status == 'success' || needs.build.push.outputs.status == 'success'
+    if: needs.build.push.outputs.status == 'success' || needs.build.changes.outputs.status == 'success'
     runs-on: ubuntu-latest
     steps:
     - name: Add remote origin
