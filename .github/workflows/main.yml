@@ -15,7 +15,7 @@ jobs:
       CI: ""
     strategy:
       matrix:
-        node-version: [12.x, 14.x, 16.x]
+        node-version: [10.x]
 
     steps:
     - uses: actions/checkout@v1
