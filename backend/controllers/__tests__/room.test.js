@@ -83,7 +83,7 @@ describe('Room Test', () => {
     };
 
     clientSocket2.on('ERROR', (msg) => {
-      assert(rooms[createdInviteCode].users[testUserData.uid].uid !== testUserData.uid);
+      assert(rooms[createdInviteCode].users[testUserData.uid].uid === testUserData.uid);
       assert(rooms[createdInviteCode].users[testUserData.uid].avatar !== testUserData.avatar);
       done();
     });
@@ -120,7 +120,7 @@ describe('Room Test', () => {
     };
 
     clientSocket2.on('ERROR', (msg) => {
-      assert(rooms[createdInviteCode].users[testUserData.uid].uid !== testUserData.uid);
+      assert(rooms[createdInviteCode].users[testUserData.uid].uid === testUserData.uid);
       assert(rooms[createdInviteCode].users[testUserData.uid].avatar !== testUserData.avatar);
       done();
     });
