@@ -1,10 +1,8 @@
 name: Inkee CI
-
 on: 
   push:
     branches:    
       - master 
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -16,20 +14,17 @@ jobs:
     strategy:
       matrix:
         node-version: [16.x]
-
     steps:
-    - uses: actions/checkout@master
+    - uses: actions/checkout@v1
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-
     - name: Build backend
       run: |
         npm ci
         npm install -g jest
       working-directory: ${{env.backend-working-directory}}
-
     - name: Test Backend
       run: npm test
       working-directory: ${{env.backend-working-directory}}
@@ -38,27 +33,23 @@ jobs:
       run: |
         npm ci
         npm run build
+        rm -rf ../backend/build
+        mv build ../backend/
       working-directory: ${{env.frontend-working-directory}}
-    
-    - name: Set build files
-      run: |
-        rm -rf backend/build/
-        mv frontend/build/ backend/.
-    
+
     - name: Commit files
       run: |
         git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
         git config --local user.name "github-actions[bot]"
-        git status
         git add backend/build/
         git commit -m "Auto updating build files." -a
-
+    
     - name: Push changes
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         branch: ${{ github.ref }}
-
+    
     - name: Add remote origin
       run: |
         git remote add heroku https://heroku:${{ secrets.HEROKU_API_KEY }}@git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git
