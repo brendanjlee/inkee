@@ -4,7 +4,21 @@ on:
     branches:    
       - master 
 jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if there are changes
+        id: changes
+        uses: UnicornGlobal/has-changes-action@v1.0.11
+
+      - name: Process changes
+        id: changes_exist
+        if: steps.changes.outputs.changed == 1
+        run: exit 1
+  
   build:
+    needs: check
+    if: needs.check.changes_exist == 'failure'
     runs-on: ubuntu-latest
     env:
       backend-working-directory: ./backend
@@ -48,11 +62,17 @@ jobs:
         git commit -m "Auto updating build files." -a
     
     - name: Push changes
+      id: commit
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         branch: ${{ github.ref }}
-    
+  
+  release:
+    needs: build
+    if: needs.build.commit == 'failure' || needs.build.commit == 'success'
+    runs-on: ubuntu-latest
+    steps:
     - name: Add remote origin
       run: |
         git remote add heroku https://heroku:${{ secrets.HEROKU_API_KEY }}@git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git
