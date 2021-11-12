@@ -47,14 +47,9 @@ jobs:
       id: changes
       uses: UnicornGlobal/has-changes-action@v1.0.11
 
-    - name: Process changes
-      id: changes_exist
-      if: steps.changes.outputs.changed == 1
-      run: exit 1
-
     - name: Commit Build Files
       id: commit
-      if: steps.changes_exist.outputs.status == 'failure'
+      if: steps.changes.outputs.changed == 1
       run: |
         git add .
         git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -71,7 +66,7 @@ jobs:
   
   release:
     needs: build
-    if: needs.build.push.outputs.status == 'success' || needs.build.changes.outputs.status == 'success'
+    if: needs.build.changes.outputs.changed == 0 || needs.build.push.outputs.status == 'success'
     runs-on: ubuntu-latest
     steps:
     - name: Add remote origin
