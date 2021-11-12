@@ -49,6 +49,24 @@ jobs:
       run: |
         mv build ../backend/
       working-directory: ${{env.frontend-working-directory}}
+    
+    - name: switching from HTTPS to SSH
+      run: git remote set-url origin ${{ secrets.SSH }}
+
+    - name: check for changes
+      run: git status
+
+    - name: Stage new build files
+      run: git add backend/
+    
+    - name: Commit new build files
+      run: git commit -m "Auto updating build files."
+    
+    - name: Fetch from master
+      run: git fetch origin master
+    
+    - name: Push build files to master
+      run: git push origin HEAD:master
 
     - name: Add remote origin
       run: |
