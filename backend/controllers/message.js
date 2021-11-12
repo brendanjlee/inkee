@@ -1,4 +1,3 @@
-const {writeMessage} = require('../firebase/game-handler');
 const leven = require('fast-levenshtein');
 const {getScore} = require('backend/controllers/helpers.js');
 
@@ -27,9 +26,10 @@ class Message {
     const userId = this.socket.player.uid;
     if (messageData === '') {
       this.socket.emit('ERROR', 'Message cannot be empty!');
-    } else {
-      const distance = leven.get(messageData, 'TestWord');
+      return;
+    }
 
+<<<<<<< HEAD
       if (distance === 0) {
         const {startTime} = this.rooms[this.socket.roomId];
         const gameTime = this.rooms[this.socket.roomId].time;
@@ -53,16 +53,29 @@ class Message {
             message: 'So close, keep trying!!',
           });
         }
-
-        writeMessage(userId, this.socket.roomId, messageData).then(() => {
-          this.io.to(this.socket.roomId).emit('chatMessage',
-            {
-              uid: userId,
-              message: messageData,
-            });
-        });
-      }
+=======
+    const distance = leven.get(messageData, 'TestWord');
+    if (distance === 0) {
+      this.socket.emit('correctGuess', {
+        uid: userId,
+        message: 'You guessed correctly!!',
+      });
+      return;
     }
+>>>>>>> dev
+
+    if (distance < 3) {
+      this.socket.emit('closeGuess', {
+        uid: userId,
+        message: 'So close, keep trying!!',
+      });
+    }
+
+    this.io.to(this.socket.roomId).emit('chatMessage',
+      {
+        uid: userId,
+        message: messageData,
+      });
   }
 }
 
