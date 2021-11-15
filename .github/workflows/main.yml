@@ -71,8 +71,17 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: akhileshns/heroku-deploy@v3.12.12
+        id: heroku_deploy
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: ${{secrets.HEROKU_APP_NAME}}
           heroku_email: ${{secrets.HEROKU_EMAIL}}
           appdir: "backend"
+      - name: Send Success Message to Discord
+        if: steps.heroku_deploy.outputs.status == 'success'
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        uses: Ilshidur/action-discord@master
+        with:
+          args: 'A new version of {{ EVENT_PAYLOAD.repository.full_name }} has been deployed!'
+
