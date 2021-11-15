@@ -90,9 +90,9 @@ jobs:
           heroku_email: ${{secrets.HEROKU_EMAIL}}
           appdir: "backend"
       - name: Send Success Message to Discord
-        if: success()
+        if: steps.heroku_deploy.outcome == 'success'
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@master
         with:
-          args: 'A new version of {{ EVENT_PAYLOAD.repository.full_name }} has been deployed!'
+          args: 'A new version of {{ EVENT_PAYLOAD.repository.full_name }} has been successfully deployed!'
