@@ -6,6 +6,8 @@ on:
 jobs:  
   build:
     runs-on: ubuntu-latest
+    outputs:
+      commitid: ${{ steps.commit.outputs.commitid }}
     env:
       backend-working-directory: ./backend
       deployment-path: backend
@@ -63,6 +65,13 @@ jobs:
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         branch: ${{ github.ref }}
+   
+    - name: Prepare Output
+      id: output_result
+      if: steps.push.outcome == 'success'
+      run: |
+        SHA=$(git rev-parse HEAD)
+        echo "::set-output name=commitid::$SHA"
     
   deploy:
     needs: build
@@ -70,6 +79,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          ref: ${{ needs.build.outputs.commitid }}
+
       - uses: akhileshns/heroku-deploy@v3.12.12
         id: heroku_deploy
         with:
