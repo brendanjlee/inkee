@@ -58,7 +58,7 @@ jobs:
     
     - name: Push changes
       id: push
-      if: steps.commit.outputs.status == 'success'
+      if: steps.commit.outcome == 'success'
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
