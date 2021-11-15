@@ -78,7 +78,7 @@ jobs:
           heroku_email: ${{secrets.HEROKU_EMAIL}}
           appdir: "backend"
       - name: Send Success Message to Discord
-        if: steps.heroku_deploy.outputs.status == 'success'
+        if: success()
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@master
