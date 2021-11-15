@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import './prestartLobby.css';
+import { UserProfile } from '../../components/UserProfile';
 import {
   EmailShareButton,
   FacebookMessengerShareButton,
@@ -56,12 +57,19 @@ function PrestartLobby({socket, history}) {
         return newUsers;
       });
     };
+
+    const getPlayersListener = (users) => {
+      setUsers(users);
+    };
+    
+    socket.on('getPlayers', getPlayersListener);
   
     socket.on('newUser', userListener);
     socket.on('disconnection', deleteUser);
     socket.emit('getPlayers');
 
     return () => {
+      socket.off('getPlayers', getPlayersListener);
       socket.off('newUser', userListener);
       socket.off('disconnection', deleteUser);
     };
@@ -156,6 +164,7 @@ function PrestartLobby({socket, history}) {
             socket.emit('startGame');
           }} variant='primary'>ready</Button>
         </div>
+        <UserProfile users={users}/>
     </div>
   );
 }

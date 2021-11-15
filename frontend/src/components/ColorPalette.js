@@ -15,6 +15,7 @@ export const ColorPalette = () => {
       <button id="colorButton" className="color" onClick={changeColor('purple')}></button>
       <button id="colorButton" className="color" onClick={changeColor('brown')}></button>
       <button id="colorButton" className="color" onClick={changeColor('black')}></button>
+      <button id="colorButton" className="color" onClick={changeColor('white')}></button>
     </div>
   );
 };
