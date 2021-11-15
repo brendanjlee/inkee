@@ -115,7 +115,7 @@ function PrestartLobby({socket, history}) {
 
   useEffect(() => {
     setInviteCode(localStorage.getItem('inviteCode'));
-    setInviteCodeURL(inviteCodeURL + "/" + inviteCode);
+    setInviteCodeURL(inviteCodeURL + '/' + inviteCode);
   }, [history]);
 
   return (

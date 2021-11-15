@@ -19,7 +19,7 @@ class Game {
    * Starts the game and notifies connected clients.
    */
   startGame() {
-    rooms[this.socket.roomId].in_progress = true;
+    rooms[this.socket.roomId].inProgress = true;
     this.io.to(this.socket.roomId).emit('startGame');
   }
 
