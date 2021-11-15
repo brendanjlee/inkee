@@ -96,4 +96,3 @@ jobs:
         uses: Ilshidur/action-discord@master
         with:
           args: 'A new version of {{ EVENT_PAYLOAD.repository.full_name }} has been deployed!'
-
