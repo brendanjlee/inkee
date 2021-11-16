@@ -20,7 +20,7 @@ async function writeMessage(userId, inviteCode, message) {
   };
 
   await messageRef.update(updates);
-};
+}
 
 /**
  * Uploads the settng update to the firebase.
@@ -37,7 +37,7 @@ async function updateSettings(inviteCode, setting, settingValue) {
   updates[setting] = settingValue;
 
   await settingsRef.update(updates);
-};
+}
 
 /**
  * Uploads the settng update to the firebase.
@@ -53,7 +53,7 @@ async function updateGameStatus(inviteCode, inProgress) {
   updates['in_progress'] = inProgress;
 
   await progressRef.update(updates);
-};
+}
 
 /**
  * Removes the player from the firebase game.

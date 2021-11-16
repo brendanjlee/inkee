@@ -1,22 +1,36 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
-import CreateHeader from '../../components/header/header';
 import './prestartLobby.css';
+import {
+  EmailShareButton,
+  FacebookMessengerShareButton,
+  TelegramShareButton,
+  TwitterShareButton,
+  WhatsappShareButton
+} from 'react-share';
+import {
+  EmailIcon,
+  FacebookMessengerIcon,
+  TelegramIcon,
+  TumblrIcon,
+  WhatsappIcon
+} from 'react-share';
 
 function PrestartLobby({socket, history}) {
   const [inviteCode, setInviteCode] = useState('');
+  const [inviteCodeURL, setInviteCodeURL] = useState(window.location.origin);
   const [users, setUsers] = useState([]);
   const [settings, setSettings] = useState({});
   window.history.replaceState(null, 'Inkee Prestart Lobby',
-    `/${localStorage.getItem('inviteCode')}`);
+    `/${sessionStorage.getItem('inviteCode')}`);
 
   // Copy button setup.
   useEffect(() => {
     const copyBtn = document.querySelector('#copy.copyBtn');
     const handleClick = (e) => {
       e.preventDefault();
-      document.querySelector('#gameLink').select();
-      document.execCommand('copy');
+      const gameLink = document.getElementById('gameLink').value;
+      navigator.clipboard.writeText(gameLink);
     };
 
     copyBtn.addEventListener('click', handleClick);
@@ -42,12 +56,18 @@ function PrestartLobby({socket, history}) {
         return newUsers;
       });
     };
-  
+
+    const getPlayersListener = (users) => {
+      setUsers(users);
+    };
+    
+    socket.on('getPlayers', getPlayersListener);
     socket.on('newUser', userListener);
     socket.on('disconnection', deleteUser);
     socket.emit('getPlayers');
 
     return () => {
+      socket.off('getPlayers', getPlayersListener);
       socket.off('newUser', userListener);
       socket.off('disconnection', deleteUser);
     };
@@ -94,35 +114,53 @@ function PrestartLobby({socket, history}) {
   }, [socket, history]);
 
   useEffect(() => {
-    setInviteCode(localStorage.getItem('inviteCode'));
+    setInviteCode(sessionStorage.getItem('inviteCode'));
+    setInviteCodeURL(inviteCodeURL + '/' + inviteCode);
   }, [history]);
 
   return (
-    <div className='root'>
-      <CreateHeader/>
-      <div className='content'>
-        <div className='game-id'>
-          <p>Game ID: {inviteCode}</p>
+    <div className='prestartRoot'>
+      <div className="form">
+        <p className='gameId'>game ID: {inviteCode}</p>
+        <div>
+          <input className="linkBox" type="text" id="gameLink" 
+            value={window.location.origin + '/' + inviteCode} readOnly>
+          </input>
         </div>
-        <div className="mt-5">
-          <h1 className="text-white text-center">Invite your friends!</h1>
-          <div className="input-group mb-3">
-            <input type="text" id="gameLink" className="form-control text-center fw-bold bg-white"
-              defaultValue={window.location.origin + '/' + inviteCode} readOnly>
-            </input>
-            <button className="copyBtn" type="button" id="copy">Copy Link</button>
+        <div className="shareContainer">
+          <button className="copyBtn" type="button" id="copy">Copy Link</button>
+          <div className="shareBtn">
+            <EmailShareButton
+              url={inviteCodeURL}
+              quote={'Join my Inkee.io game!'}
+            >
+              <EmailIcon size={43} />
+            </EmailShareButton>
+            <TwitterShareButton
+              url={window.location.origin + '/' + inviteCode}
+              quote={'Join my Inkee.io game!'}>
+              <TumblrIcon size={43}  />
+            </TwitterShareButton>
+            <FacebookMessengerShareButton
+              url={window.location.origin + '/' + inviteCode}
+              quote={'Join my Inkee.io game!'}>
+              <FacebookMessengerIcon size={43} />
+            </FacebookMessengerShareButton>
+            <TelegramShareButton
+              url={window.location.origin + '/' + inviteCode}
+              quote={'Join my Inkee.io game!'}>
+              <TelegramIcon size={43} />
+            </TelegramShareButton>
+            <WhatsappShareButton
+              url={window.location.origin + '/' + inviteCode}
+              quote={'Join my Inkee.io game!'}>
+              <WhatsappIcon size={43} />
+            </WhatsappShareButton>
           </div>
-        </div>
-        <div className='lobby-players'>
-          <ul>
-            <li>Coffee</li>
-            <li>Tea</li>
-            <li>Milk</li>
-          </ul>
         </div>
         <Button onClick={() => {
           socket.emit('startGame');
-        }} variant='primary'>Ready</Button>
+        }} variant='primary'>ready</Button>
       </div>
     </div>
   );

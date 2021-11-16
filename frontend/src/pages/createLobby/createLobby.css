@@ -55,6 +55,18 @@
   text-align: center;
 }
 
+.words {
+  width: 29rem;
+  height: 13rem;
+  background-color: white;
+  font-size:2rem;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: bold;
+  border: none;
+  outline: none;
+  text-align: center;
+}
+
 .customdiv {
   border-style: dotted;
   margin: 1rem 1rem 1rem 1rem;
