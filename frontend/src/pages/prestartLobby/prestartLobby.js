@@ -22,7 +22,7 @@ function PrestartLobby({socket, history}) {
   const [users, setUsers] = useState([]);
   const [settings, setSettings] = useState({});
   window.history.replaceState(null, 'Inkee Prestart Lobby',
-    `/${localStorage.getItem('inviteCode')}`);
+    `/${sessionStorage.getItem('inviteCode')}`);
 
   // Copy button setup.
   useEffect(() => {
@@ -114,7 +114,7 @@ function PrestartLobby({socket, history}) {
   }, [socket, history]);
 
   useEffect(() => {
-    setInviteCode(localStorage.getItem('inviteCode'));
+    setInviteCode(sessionStorage.getItem('inviteCode'));
     setInviteCodeURL(inviteCodeURL + '/' + inviteCode);
   }, [history]);
 

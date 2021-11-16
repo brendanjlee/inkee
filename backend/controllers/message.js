@@ -24,14 +24,21 @@ class Message {
   onMessage(messageData) {
     const {roomId, player} = this.socket;
 
+    if (rooms[roomId].roundInProgress === false) {
+      return;
+    }
+
     const userId = player.uid;
     if (messageData === '') {
       this.socket.emit('ERROR', 'Message cannot be empty!');
       return;
     }
 
-    const distance = leven.get(messageData, 'TestWord');
+    const distance = leven.get(messageData.toLowerCase(), rooms[roomId].currentWord.toLowerCase());
     if (distance === 0 && rooms[roomId].users[userId].guessedWord === false) {
+      const scoreUpdate = getScore(rooms[roomId].roundLength, rooms[roomId].currentTime);
+      rooms[roomId].users[userId].score += scoreUpdate;
+      
       this.socket.emit('correctGuess', {
         uid: userId,
         message: 'You guessed correctly!!',
@@ -40,6 +47,12 @@ class Message {
       this.socket.broadcast.to(this.socket.roomId).emit('userCorrectGuess', {
         message: `${userId} has guessed the word!`,
       });
+
+      this.io.to(this.socket.roomId).emit('scoreUpdate',
+        {
+          uid: userId,
+          score: rooms[roomId].users[userId].score,
+        });
 
       rooms[roomId].users[userId].guessedWord = true;
       return;
