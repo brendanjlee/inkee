@@ -29,7 +29,6 @@ class Room {
     do {
       inviteCode = new Invite().inviteCode;
     } while (rooms[inviteCode] !== undefined);
-    // Test
     
     const newUser = new User(userData.uid, userData.avatar, 0, false, true, false);
     this.socket.player = newUser;
