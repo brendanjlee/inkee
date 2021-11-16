@@ -47,17 +47,13 @@ function Home({socket, history}) {
     const canvas = document.getElementById('canvas');
     const uri = canvas.toDataURL('image/png');
 
-    const blank = document.createElement('canvas');
-    blank.width = canvas.width;
-    blank.height = canvas.height;
-
-    if (uri === blank.toDataURL('image/png')) {
-      console.log('Draw a nice avatar!');
+    if (canvas.changed === false) {
+      console.log('You haven\'t drawn an avatar! Drawing something nice!');
       return false;
     }
 
     setAvatar(uri);
-    sessionStorage.setItem('avatar', avatar);
+    sessionStorage.setItem('avatar', uri);
     return true;
   };
 

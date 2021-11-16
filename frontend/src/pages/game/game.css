@@ -68,19 +68,37 @@
 .profiles {
   margin-top: 1rem;
   float:left;
-  width: 10rem;
+  width: 12rem;
   height: 30rem;
-  margin-left: 12%;
+  margin-left: 10%;
   margin-right: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-content: flex-start;
 }
 
 .userProfile {
   margin-bottom: .5rem;
   float:left;
   border: .5rem solid black;
-  width: 10rem;
+  width: inherit;
   height: 3rem;
   background-color: white;
+  position: relative;
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.userText {
+  flex: 1 1 auto;
+}
+
+.avatar {
+  width: 6rem;
+  height: 3rem;
 }
 
 /* Chat Features */
