@@ -45,6 +45,7 @@ function Game({socket, history}) {
         const newUsers = [...prevUsers, userData];
         return newUsers;
       });
+      console.log(userData);
       renderUserAvatar(userData);
     };
 

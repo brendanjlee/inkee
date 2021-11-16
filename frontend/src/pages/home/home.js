@@ -9,7 +9,6 @@ import { ClearCanvasButton } from '../../components/ClearCanvasButton';
 function Home({socket, history}) {
   const query = new URLSearchParams(window.location.search);
   const inviteCode = query.get('gameId');
-  const [avatar, setAvatar] = useState(null);
 
   if (inviteCode !== null) {
     sessionStorage.setItem('inviteCode', inviteCode);
@@ -52,7 +51,6 @@ function Home({socket, history}) {
       return false;
     }
 
-    setAvatar(uri);
     sessionStorage.setItem('avatar', uri);
     return true;
   };
@@ -75,7 +73,7 @@ function Home({socket, history}) {
       socket.emit('joinRoom', {
         userData: {
           uid: sessionStorage.getItem('username'),
-          avatar: avatar,
+          avatar: sessionStorage.getItem('avatar'),
         },
         inviteCode: sessionStorage.getItem('inviteCode'),
       });
