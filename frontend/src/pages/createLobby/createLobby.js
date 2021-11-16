@@ -81,6 +81,7 @@ function CreateLobby({socket, history}) {
         gameConfiguration.custom_words = custom_words; 
       } else {
         alert('There must be more than 10 custom words!');
+        return;
       }
     } else if (custom_words.length > 0) {
       gameConfiguration.custom_words = custom_words; 
@@ -147,7 +148,7 @@ function CreateLobby({socket, history}) {
           value={usingCustomWords}
           className="select"
         >
-          <option hidden={true}>use custom words exclusively</option>
+          <option hidden={true}>use custom words only</option>
           <option value="yes">yes</option>
           <option value="no">no</option>
         </select>
