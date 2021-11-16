@@ -20,7 +20,7 @@ jobs:
       CI: ""
     strategy:
       matrix:
-        node-version: [10.x]
+        node-version: [16.x]
 
     steps:
     - uses: actions/checkout@v1
@@ -38,5 +38,9 @@ jobs:
     - name: Build backend
       run: |
         npm ci
+        npm install -g jest
       working-directory: ${{env.backend-working-directory}}
-      
+    
+    - name: Test Backend
+      run: npm test
+      working-directory: ${{env.backend-working-directory}}
