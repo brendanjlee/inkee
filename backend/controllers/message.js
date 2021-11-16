@@ -22,29 +22,49 @@ class Message {
    * @param {object} messageData the content of the message.
    */
   onMessage(messageData) {
-    const userId = this.socket.player.uid;
+    const {roomId, player} = this.socket;
+
+    const userId = player.uid;
     if (messageData === '') {
       this.socket.emit('ERROR', 'Message cannot be empty!');
       return;
     }
 
     const distance = leven.get(messageData, 'TestWord');
-    if (distance === 0) {
+    if (distance === 0 && rooms[roomId].users[userId].guessedWord === false) {
       this.socket.emit('correctGuess', {
         uid: userId,
         message: 'You guessed correctly!!',
       });
+      
+      this.socket.broadcast.to(this.socket.roomId).emit('userCorrectGuess', {
+        message: `${userId} has guessed the word!`,
+      });
+
+      rooms[roomId].users[userId].guessedWord = true;
       return;
     }
 
-    if (distance < 3) {
+    if (distance < 3 && rooms[roomId].users[userId].guessedWord === false) {
       this.socket.emit('closeGuess', {
         uid: userId,
-        message: 'So close, keep trying!!',
+        message: `${messageData} is close, keep trying!`,
       });
+
+      this.socket.broadcast.to(this.socket.roomId).emit('chatMessage',
+      {
+        uid: userId,
+        message: messageData,
+      });
+      return;
     }
 
-    this.io.to(this.socket.roomId).emit('chatMessage',
+    let eventType = 'chatMessage';
+    if (rooms[roomId].users[userId].guessedWord === true) {
+      eventType = 'guessedMessage';
+    }
+
+    this.io.to(this.socket.roomId).emit(eventType,
       {
         uid: userId,
         message: messageData,

@@ -111,6 +111,12 @@
   border-color: #ffecb5;
 }
 
+.guessedMessage {
+  color: #bf03f8;
+  background-color: #ecbbff !important;
+  border-color: #d690ff;
+}
+
 .middleContainer img {
   width: 20%;
   float:left; 

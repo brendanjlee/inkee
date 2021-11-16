@@ -26,7 +26,7 @@ class Room {
    */
   createRoom(gameConfiguration, userData) {
     const inviteCode = new Invite().inviteCode;
-    const newUser = new User(userData.uid, userData.avatar, 0, false, true);
+    const newUser = new User(userData.uid, userData.avatar, 0, false, true, false);
     this.socket.player = newUser;
     this.socket.roomId = inviteCode;
 
@@ -52,7 +52,7 @@ class Room {
    * @param {string} inviteCode
    */
   joinRoom(userData, inviteCode) {
-    const newUser = new User(userData.uid, userData.avatar, 0, false, false);
+    const newUser = new User(userData.uid, userData.avatar, 0, false, false, false);
     this.socket.player = newUser;
 
     if (rooms[inviteCode] !== undefined) {
