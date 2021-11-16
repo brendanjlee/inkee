@@ -39,6 +39,7 @@ class Room {
         roundLength: gameConfiguration.roundLength,
         numRounds: gameConfiguration.numRounds,
         customWords: gameConfiguration.customWords,
+        onlyCustomWords: gameConfiguration.onlyCustomWords,
       },
       currentRound: 1,
       currentTimer: 0,
