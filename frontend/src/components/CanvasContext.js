@@ -91,6 +91,7 @@ export const CanvasProvider = ({ children, socket = null }) => {
     contextRef.current.strokeStyle = color;
     contextRef.current.lineWidth = lineThickness;
     contextRef.current.stroke();
+    contextRef.current.closePath();
 
     if (socket && emit) {
       socket.emit('drawingEvent', {
@@ -121,6 +122,7 @@ export const CanvasProvider = ({ children, socket = null }) => {
   };
 
   const clearCanvas = (emit) => {
+    console.log('clearCanvas');
     const canvas = canvasRef.current;
     const context = canvas.getContext('2d');
     context.clearRect(0, 0, canvas.width, canvas.height);
