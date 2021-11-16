@@ -11,7 +11,7 @@ function CreateLobby({socket, history}) {
   
   // Custom Words 
   const [textAreaContent, setTextAreaContent] = useState('');
-  const [usingCustomWords, setUsingCustomWords] = useState('test');
+  const [usingCustomWords, setUsingCustomWords] = useState(null);
   
   window.history.replaceState(null, 'Inkee Create Lobby', '/');
 
@@ -69,22 +69,24 @@ function CreateLobby({socket, history}) {
     // create gameConfiguration
     // Use default word list if custom_words is empty
     const gameConfiguration = {
-      num_rounds: numRounds,
-      round_length: roundLength,
-      custom_words: [],
+      numRounds: numRounds,
+      roundLength: roundLength,
+      customWords: [],
+      onlyCustomWords: usingCustomWords === null
+        || usingCustomWords === 'no' ? false : true,
     };
 
     const custom_words = document.getElementById('custom_words').value.split(/[ ,]+/);
     
     if (usingCustomWords === 'yes') {
       if (custom_words.length > 10) {
-        gameConfiguration.custom_words = custom_words; 
+        gameConfiguration.customWords = custom_words; 
       } else {
         alert('There must be more than 10 custom words!');
         return;
       }
     } else if (custom_words.length > 0) {
-      gameConfiguration.custom_words = custom_words; 
+      gameConfiguration.customWords = custom_words; 
     }
 
     // create userData
