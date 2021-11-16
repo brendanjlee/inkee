@@ -1,6 +1,5 @@
 const databaseURL = 'wss://splat-io-default-rtdb.firebaseio.com/';
 const storageBucket = 'splat-io.appspot.com';
-const serviceAccount = './secrets/serviceAccountKey.json';
 /* eslint-disable-next-line */
 const adminPassword = process.env.PASSWORD ||
   '$2b$10$heqvAkYMez.Va6Et2uXInOnkCT6/uQj1brkrbyG3LpopDklcq7ZOS';
@@ -8,6 +7,5 @@ const adminPassword = process.env.PASSWORD ||
 module.exports = {
   databaseURL,
   storageBucket,
-  serviceAccount,
   adminPassword,
 };

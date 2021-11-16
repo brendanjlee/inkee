@@ -6,26 +6,34 @@ import './joinLobby.css';
 function JoinLobby({socket, history}) {
   window.history.replaceState(null, 'Inkee Join Lobby', '/');
   useEffect(() => {
-    socket.on('startGame', (inviteCode) => {
-      localStorage.setItem('inviteCode', inviteCode);
+    const startGameHandler = (inviteCode) => {
+      sessionStorage.setItem('inviteCode', inviteCode);
       history.push({
         pathname: '/game',
       });
-    });
+    };
 
-    socket.on('inviteCode', (inviteCode) => {
-      localStorage.setItem('inviteCode', inviteCode);
+    const prestartLobbyHandler = (inviteCode) => {
+      sessionStorage.setItem('inviteCode', inviteCode);
       history.push({
         pathname: '/prestartLobby',
       });
-    });
+    };
+
+    socket.on('startGame', startGameHandler);
+    socket.on('inviteCode', prestartLobbyHandler);
+
+    return () => {
+      socket.off('startGame', startGameHandler);
+      socket.off('inviteCode', prestartLobbyHandler);
+    };
   }, [socket, history]);
 
   const handleSubmit = (inviteCode = null, joinById) => {
     const userData = {
       userData: {
-        uid: localStorage.getItem('username'),
-        avatar: 'tempAvatar',
+        uid: sessionStorage.getItem('username'),
+        avatar: sessionStorage.getItem('avatar'),
       },
       inviteCode: inviteCode,
     };

@@ -1,24 +1,24 @@
-import React from 'react';
-import { useState } from 'react';  // react Hook for functional components
-import CompoList from './components/testComponent';
-import NewGoal from './components/NewGoal';
+import React from "react";
+import { useState } from "react";  // react Hook for functional components
+import CompoList from "./components/testComponent";
+import NewGoal from "./components/NewGoal";
 
 function TestPage() {
   // testing with props
   const goalsList = [{id: 'cg1', text: 'Finish CS 490'},
-    {id: 'cg2', text: 'Start STAT 417'}];
+                    {id: 'cg2', text: 'Start STAT 417'}];
 
   // Create an initial state -> array of goals
   const [courseGoals, setCourseGoals] = useState([{id: 'cg1', text: 'Finish CS 490'},
-    {id: 'cg2', text: 'Start STAT 417'}]); // extract out of useState
+                                                  {id: 'cg2', text: 'Start STAT 417'}]); // extract out of useState
 
   const addNewGoalHandler = (newGoal) => {
     //setCourseGoals(courseGoals.concat(newGoal)); // concats it to the list created by use state
     // you can do the same thing with a function (bulletproof appraoch)
     setCourseGoals((prevCourseGoals) => {
       return prevCourseGoals.concat(newGoal);
-    });
-  };
+    })
+  }
 
   return (
     <div>
@@ -32,4 +32,4 @@ function TestPage() {
   ); 
 }
 
-export default TestPage;
+export default TestPage

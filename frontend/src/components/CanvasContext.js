@@ -28,6 +28,7 @@ export const CanvasProvider = ({ children, socket = null }) => {
     context.lineWidth = 5;
     contextRef.current = context;
     renderSplashPrompt();
+    document.getElementById('canvas').changed = false;
   };
 
   const renderSplashPrompt = () => {
@@ -37,19 +38,21 @@ export const CanvasProvider = ({ children, socket = null }) => {
       const drawing = new Image(canvas.width, canvas.height);
       drawing.crossOrigin = 'anonymous';
       drawing.onload = () => {
-        context.drawImage(drawing, 5, 0);
+        context.drawImage(drawing, 0, 0, canvas.width / 2, canvas.height / 2);
       };
-      drawing.src = 'https://i.ibb.co/GxP0h8k/output.png';
+      drawing.src = 'https://i.ibb.co/z4Gb7Sw/output-onlinepngtools-1.png';
     }
   };
 
   const startDrawing = ({ nativeEvent }) => {
-    if (canvasEmpty) {
+    const { offsetX, offsetY } = nativeEvent;
+    if (!socket && canvasEmpty) {
       clearCanvas(false);
       setCanvasEmpty(false);
     }
-    const { offsetX, offsetY } = nativeEvent;
+
     setIsDrawing(true);
+    document.getElementById('canvas').changed = true;
     const tempState = currentState;
     tempState.x = offsetX;
     tempState.y = offsetY;
@@ -89,6 +92,7 @@ export const CanvasProvider = ({ children, socket = null }) => {
     contextRef.current.strokeStyle = color;
     contextRef.current.lineWidth = lineThickness;
     contextRef.current.stroke();
+    contextRef.current.closePath();
 
     if (socket && emit) {
       socket.emit('drawingEvent', {
@@ -108,7 +112,7 @@ export const CanvasProvider = ({ children, socket = null }) => {
     if (emit && socket) {
       socket.emit('undo');
     }
-  }
+  };
 
   const redoStroke = (emit) => {
     contextRef.current.undo();
@@ -116,14 +120,16 @@ export const CanvasProvider = ({ children, socket = null }) => {
     if (emit && socket) {
       socket.emit('redo');
     }
-  }
+  };
 
   const clearCanvas = (emit) => {
+    console.log('clearCanvas');
     const canvas = canvasRef.current;
     const context = canvas.getContext('2d');
-    context.fillStyle = 'white';
-    context.fillRect(0, 0, canvas.width, canvas.height);
+    context.clearRect(0, 0, canvas.width, canvas.height);
     setCanvasEmpty(true);
+    document.getElementById('canvas').changed = false;
+
     if (socket && emit) {
       socket.emit('clearCanvas');
     }
