@@ -35,11 +35,16 @@ class Room {
     rooms[inviteCode] = {
       inProgress: false,
       users: {},
-      roundLength: gameConfiguration.roundLength,
-      numRounds: gameConfiguration.numRounds,
+      settings: {
+        roundLength: gameConfiguration.roundLength,
+        numRounds: gameConfiguration.numRounds,
+        customWords: gameConfiguration.customWords,
+      },
       currentRound: 1,
       currentTimer: 0,
-      customWords: gameConfiguration.customWords,
+      currentTime: 0,
+      roundInProgress: false,
+      currentWord: 'TestWord',
     };
 
     rooms[inviteCode].users[newUser.uid] = newUser;
@@ -103,7 +108,8 @@ class Room {
    * Send settings to the connected user.
    */
   sendSettings() {
-
+    const {roomId} = this.socket;
+    this.socket.emit('loadSettings', rooms[roomId].settings);
   }
 
   /**

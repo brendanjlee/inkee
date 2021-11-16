@@ -13,7 +13,7 @@ function Game({socket, history}) {
   const [messages, setMessages] = useState([]);
   const [users, setUsers] = useState([]);
   window.history.replaceState(null, 'Inkee',
-    `/${localStorage.getItem('inviteCode')}`);
+    `/${sessionStorage.getItem('inviteCode')}`);
 
   /* Load player routine */
   useEffect(() => {
@@ -121,6 +121,19 @@ function Game({socket, history}) {
     };
     socket.on('guessedMessage', guessedMessageHandler);
 
+    const scoreUpdateHandler = (scoreUpdate) => {
+      const uid = scoreUpdate.uid;
+      const newScore = scoreUpdate.score;
+
+      const tempUsers = users;
+      const matchingUserIdx = tempUsers.findIndex((user => user.uid === uid));
+      tempUsers[matchingUserIdx].score = newScore;
+
+      setUsers(tempUsers);
+    };
+
+    socket.on('scoreUpdate', scoreUpdateHandler);
+
     return () => {
       socket.off('correctGuess', correctGuessHandler);
       socket.off('closeGuess', closeGuessHandler);
@@ -128,6 +141,7 @@ function Game({socket, history}) {
       socket.off('guessedMessage', guessedMessageHandler);
       socket.off('timer', timerHandler);
       socket.off('userCorrectGuess', userCorrectGuessHandler);
+      socket.off('scoreUpdate', scoreUpdateHandler);
       sendMessage.removeEventListener('keypress', keyPressFunc);
     };
   }, [socket, messages]);
