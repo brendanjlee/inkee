@@ -121,8 +121,7 @@ export const CanvasProvider = ({ children, socket = null }) => {
   const clearCanvas = (emit) => {
     const canvas = canvasRef.current;
     const context = canvas.getContext('2d');
-    context.fillStyle = 'white';
-    context.fillRect(0, 0, canvas.width, canvas.height);
+    context.clearRect(0, 0, canvas.width, canvas.height);
     setCanvasEmpty(true);
     if (socket && emit) {
       socket.emit('clearCanvas');

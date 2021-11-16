@@ -89,7 +89,7 @@ function CreateLobby({socket, history}) {
     // create userData
     const userData = {
       uid: sessionStorage.getItem('username'),
-      avatar: 'tempAvatar',
+      avatar: sessionStorage.getItem('avatar'),
     };
     
     socket.emit('createGame', {

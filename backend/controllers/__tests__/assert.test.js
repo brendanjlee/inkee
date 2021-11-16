@@ -1,11 +1,23 @@
 const {assert} = require('./assert');
 
 describe('Assert Test', () => {
-  test('Assert False', (done) => {
+  test('Assert False Default Message', (done) => {
     try {
       assert(false);
     } catch (error) {
-      done();
+      if (error.message === 'Assertion failed') {
+        done();
+      }
+    }
+  });
+
+  test('Assert False Custom Message', (done) => {
+    try {
+      assert(false, 'False!');
+    } catch (error) {
+      if (error.message === 'False!') {
+        done();
+      }
     }
   });
 

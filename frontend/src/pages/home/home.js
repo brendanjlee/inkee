@@ -9,7 +9,7 @@ import { ClearCanvasButton } from '../../components/ClearCanvasButton';
 function Home({socket, history}) {
   const query = new URLSearchParams(window.location.search);
   const inviteCode = query.get('gameId');
-  const [avatar, setAvatar] = useState('');
+  const [avatar, setAvatar] = useState(null);
 
   if (inviteCode !== null) {
     sessionStorage.setItem('inviteCode', inviteCode);
@@ -56,8 +56,8 @@ function Home({socket, history}) {
       return false;
     }
 
-    console.log(uri);
     setAvatar(uri);
+    sessionStorage.setItem('avatar', avatar);
     return true;
   };
 
