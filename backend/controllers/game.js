@@ -24,16 +24,28 @@ class Game {
   }
 
   /**
+   * Starts the round and notifies connected clients.
+   */
+  startRound() {
+    const {roomId, player} = this.socket;
+    this.io.to(roomId).emit('startRound');
+    this.startTimer();
+  }
+
+  /**
    * Start room session timer.
    */
   startTimer() {
     let count = rooms[this.socket.roomId].roundLength;
+    rooms[this.socket.roomId].currentTime = count;
     this.io.to(this.socket.roomId).emit('timer', count);
     const interval = setInterval(() => {
       count--;
+      rooms[this.socket.roomId].currentTime = count;
       this.io.to(this.socket.roomId).emit('timer', count);
       if (count === 0) {
         this.io.to(this.socket.roomId).emit('endRound');
+        rooms[this.socket.roomId].roundInProgress = false;
         rooms[this.socket.roomId].currentTimer = 0;
         clearInterval(interval);
       }
