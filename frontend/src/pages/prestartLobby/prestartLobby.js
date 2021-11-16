@@ -29,8 +29,8 @@ function PrestartLobby({socket, history}) {
     const copyBtn = document.querySelector('#copy.copyBtn');
     const handleClick = (e) => {
       e.preventDefault();
-      document.querySelector('#gameLink').select();
-      document.execCommand('copy');
+      const gameLink = document.getElementById('gameLink').value;
+      navigator.clipboard.writeText(gameLink);
     };
 
     copyBtn.addEventListener('click', handleClick);
