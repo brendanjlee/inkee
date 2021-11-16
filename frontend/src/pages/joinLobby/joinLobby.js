@@ -33,7 +33,7 @@ function JoinLobby({socket, history}) {
     const userData = {
       userData: {
         uid: sessionStorage.getItem('username'),
-        avatar: 'tempAvatar',
+        avatar: sessionStorage.getItem('avatar'),
       },
       inviteCode: inviteCode,
     };
