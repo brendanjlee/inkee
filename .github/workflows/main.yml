@@ -7,7 +7,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     outputs:
-      commitid: ${{ steps.commit.output_result.commitid }}
+      commitid: ${{ steps.output_result.commitid }}
     env:
       backend-working-directory: ./backend
       deployment-path: backend
