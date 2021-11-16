@@ -6,6 +6,7 @@ export const CanvasProvider = ({ children, socket = null }) => {
   const canvasRef = useRef(null);
   const contextRef = useRef(null);
   const [isDrawing, setIsDrawing] = useState(false);
+  const [canvasEmpty, setCanvasEmpty] = useState(true);
   const [currentState, setCurrentState] = useState({
     x: 0,
     y: 0,
@@ -45,8 +46,9 @@ export const CanvasProvider = ({ children, socket = null }) => {
 
   const startDrawing = ({ nativeEvent }) => {
     const { offsetX, offsetY } = nativeEvent;
-    if (!socket) {
+    if (!socket && canvasEmpty) {
       clearCanvas(false);
+      setCanvasEmpty(false);
     }
 
     setIsDrawing(true);
@@ -125,7 +127,7 @@ export const CanvasProvider = ({ children, socket = null }) => {
     const canvas = canvasRef.current;
     const context = canvas.getContext('2d');
     context.clearRect(0, 0, canvas.width, canvas.height);
-    
+    setCanvasEmpty(true);
     document.getElementById('canvas').changed = false;
 
     if (socket && emit) {
