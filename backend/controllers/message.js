@@ -1,4 +1,5 @@
 const leven = require('fast-levenshtein');
+const {getScore} = require('./helpers');
 
 /**
  * Handles storing messages for the game.
