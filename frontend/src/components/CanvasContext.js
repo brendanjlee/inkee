@@ -45,6 +45,10 @@ export const CanvasProvider = ({ children, socket = null }) => {
 
   const startDrawing = ({ nativeEvent }) => {
     const { offsetX, offsetY } = nativeEvent;
+    if (!socket) {
+      clearCanvas(false);
+    }
+
     setIsDrawing(true);
     document.getElementById('canvas').changed = true;
     const tempState = currentState;
