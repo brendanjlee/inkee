@@ -93,7 +93,7 @@ function Home({socket, history}) {
               <img className='logo' src={Logo} alt='inkee-logo'/>
             </div>
             <form>
-              <input className='username' id='username_input' type='text' placeholder="enter username..."/>
+              <input className='username' id='username_input' type='text' placeholder="enter username..." maxLength={9}/>
             </form>
             <div align="center">
               <div className="homeDrawArea">
