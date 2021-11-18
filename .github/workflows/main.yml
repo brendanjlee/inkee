@@ -1,13 +1,13 @@
 name: Inkee CI
-
 on: 
   push:
     branches:    
       - master 
-
-jobs:
+jobs:  
   build:
     runs-on: ubuntu-latest
+    outputs:
+      commitid: ${{ steps.output_result.outputs.commitid }}
     env:
       backend-working-directory: ./backend
       deployment-path: backend
@@ -15,10 +15,10 @@ jobs:
       CI: ""
     strategy:
       matrix:
-        node-version: [10.x]
-
+        node-version: [16.x]
+    
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
@@ -27,33 +27,72 @@ jobs:
     - name: Build backend
       run: |
         npm ci
+        npm install -g jest
       working-directory: ${{env.backend-working-directory}}
-
+    
     - name: Test Backend
-      run: |
-        npm test
+      run: npm test
       working-directory: ${{env.backend-working-directory}}
-
-    - name: Remove existing frontend build files
-      run: |
-        rm -rf build
-      working-directory: ${{env.backend-working-directory}}
-
-    - name: Build new frontend build files
+  
+    - name: Build frontend build files
       run: |
         npm ci
         npm run build
       working-directory: ${{env.frontend-working-directory}}
 
-    - name: Move static files to backend
+    - name: Set Build Files
       run: |
-        mv build ../backend/
-      working-directory: ${{env.frontend-working-directory}}
-
-    - name: Add remote origin
-      run: |
-        git remote add heroku https://heroku:${{ secrets.HEROKU_API_KEY }}@git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git
+        rm -rf backend/build
+        mv frontend/build backend/.
     
-    - name: Deploy to Heroku
+    - name: Check if there are changes
+      id: changes
+      uses: UnicornGlobal/has-changes-action@v1.0.11
+
+    - name: Commit Build Files
+      id: commit
+      if: steps.changes.outputs.changed == 1
       run: |
-        git subtree push --prefix ${{env.deployment-path}} heroku master
+        git add .
+        git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        git commit -m "Auto updating build files." -a
+    
+    - name: Push changes
+      id: push
+      if: steps.commit.outcome == 'success'
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: ${{ github.ref }}
+   
+    - name: Prepare Output
+      id: output_result
+      if: steps.push.outcome == 'success'
+      run: |
+        SHA=$(git rev-parse HEAD)
+        echo "::set-output name=commitid::$SHA"
+    
+  deploy:
+    needs: build
+    if: needs.build.changes.outputs.changed == 0 || needs.build.push.outputs.status == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ needs.build.outputs.commitid }}
+
+      - uses: akhileshns/heroku-deploy@v3.12.12
+        id: heroku_deploy
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: ${{secrets.HEROKU_APP_NAME}}
+          heroku_email: ${{secrets.HEROKU_EMAIL}}
+          appdir: "backend"
+      - name: Send Success Message to Discord
+        if: steps.heroku_deploy.outcome == 'success'
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        uses: Ilshidur/action-discord@master
+        with:
+          args: 'A new version of {{ EVENT_PAYLOAD.repository.full_name }} has been successfully deployed!'

@@ -14,14 +14,6 @@ function App() {
   const history = useHistory();
 
   useEffect(() => {
-    localStorage.clear();
-
-    return () => {
-      localStorage.clear();
-    };
-  }, []);
-
-  useEffect(() => {
     // Initialize Socket connection.
     let domain;
     if (window.location.hostname === 'localhost') {
