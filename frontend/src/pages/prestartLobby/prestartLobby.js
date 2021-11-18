@@ -44,11 +44,28 @@ function PrestartLobby({socket, history}) {
   
   // User routines.
   useEffect(() => {
+    const renderUserAvatar = (user) => {
+      const userCanvas = document.getElementById(`${user.uid}-avatar`);
+      const context = userCanvas.getContext('2d');
+      const image = new Image();
+      image.src = user.avatar;
+      image.onload = () => {
+        context.drawImage(image, 0, 0, userCanvas.width, userCanvas.height);
+      };
+    };
+
+    const renderAvatars = (users) => {
+      users.map((user) => {
+        renderUserAvatar(user);
+      });
+    };
+
     const userListener = (userToAdd) => {
       setUsers((prevUsers) => {
         const newUsers = [...prevUsers, userToAdd];
         return newUsers;
       });
+      renderUserAvatar(userToAdd);
     };
     
     const deleteUser = (userId) => {
@@ -60,6 +77,7 @@ function PrestartLobby({socket, history}) {
 
     const getPlayersListener = (users) => {
       setUsers(users);
+      renderAvatars(users);
     };
     
     socket.on('getPlayers', getPlayersListener);
@@ -76,6 +94,7 @@ function PrestartLobby({socket, history}) {
 
   // Setting routines.
   useEffect(() => {
+    
     const settingListener = (settingUpdate) => {
       setSettings((prevSettings) => {
         const key = settingUpdate.key;
@@ -162,6 +181,7 @@ function PrestartLobby({socket, history}) {
         <Button onClick={() => {
           socket.emit('startGame');
         }} variant='primary'>ready</Button>
+        <UserProfile users={users} check={true}/>
       </div>
     </div>
   );
