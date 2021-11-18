@@ -25,8 +25,12 @@ class Room {
    * @param {object} userData
    */
   createRoom(gameConfiguration, userData) {
-    const inviteCode = new Invite().inviteCode;
-    const newUser = new User(userData.uid, userData.avatar, 0, false, true);
+    let inviteCode;
+    do {
+      inviteCode = new Invite().inviteCode;
+    } while (rooms[inviteCode] !== undefined);
+    
+    const newUser = new User(userData.uid, userData.avatar, 0, false, true, false);
     this.socket.player = newUser;
     this.socket.roomId = inviteCode;
 
@@ -35,11 +39,17 @@ class Room {
     rooms[inviteCode] = {
       inProgress: false,
       users: {},
-      roundLength: gameConfiguration.roundLength,
-      numRounds: gameConfiguration.numRounds,
+      settings: {
+        roundLength: gameConfiguration.roundLength,
+        numRounds: gameConfiguration.numRounds,
+        customWords: gameConfiguration.customWords,
+        onlyCustomWords: gameConfiguration.onlyCustomWords,
+      },
       currentRound: 1,
       currentTimer: 0,
-      customWords: gameConfiguration.customWords,
+      currentTime: 0,
+      roundInProgress: false,
+      currentWord: 'TestWord',
     };
 
     rooms[inviteCode].users[newUser.uid] = newUser;
@@ -52,7 +62,7 @@ class Room {
    * @param {string} inviteCode
    */
   joinRoom(userData, inviteCode) {
-    const newUser = new User(userData.uid, userData.avatar, 0, false, false);
+    const newUser = new User(userData.uid, userData.avatar, 0, false, false, false);
     this.socket.player = newUser;
 
     if (rooms[inviteCode] !== undefined) {
@@ -103,7 +113,8 @@ class Room {
    * Send settings to the connected user.
    */
   sendSettings() {
-
+    const {roomId} = this.socket;
+    this.socket.emit('loadSettings', rooms[roomId].settings);
   }
 
   /**

@@ -9,23 +9,21 @@ import { ClearCanvasButton } from '../../components/ClearCanvasButton';
 function Home({socket, history}) {
   const query = new URLSearchParams(window.location.search);
   const inviteCode = query.get('gameId');
-  const [avatar, setAvatar] = useState('');
-  const [defaultCanvas, setDefaultCanvas] = useState(null);
 
   if (inviteCode !== null) {
-    localStorage.setItem('inviteCode', inviteCode);
+    sessionStorage.setItem('inviteCode', inviteCode);
   }
 
   useEffect(() => {
     const startGameHandler = (inviteCode) => {
-      localStorage.setItem('inviteCode', inviteCode);
+      sessionStorage.setItem('inviteCode', inviteCode);
       history.push({
         pathname: '/game',
       });
     };
 
     const inviteCodeHandler = () => {
-      localStorage.setItem('inviteCode', inviteCode);
+      sessionStorage.setItem('inviteCode', inviteCode);
       history.push({
         pathname: '/prestartLobby',
       });
@@ -44,33 +42,23 @@ function Home({socket, history}) {
     };
   }, [socket]);
 
-  useEffect(() => {
-    setDefaultCanvas(document.getElementById('canvas'));
-  }, []);
-
   const exportCanvasImage = () => {
     const canvas = document.getElementById('canvas');
     const uri = canvas.toDataURL('image/png');
 
-    const blank = document.createElement('canvas');
-    blank.width = canvas.width;
-    blank.height = canvas.height;
-
-    if (uri === defaultCanvas.toDataURL('image/png')
-      || uri === blank.toDataURL('image/png')) {
-      console.log('Draw a nice avatar!');
+    if (canvas.changed === false) {
+      console.log('You haven\'t drawn an avatar! Drawing something nice!');
       return false;
     }
 
-    console.log(uri);
-    setAvatar(uri);
+    sessionStorage.setItem('avatar', uri);
     return true;
   };
 
   const handleHomeSubmit = (path, inviteCode = null) => {
     const userNameInput = document.getElementById('username_input');
     if (userNameInput.value !== '') {
-      localStorage.setItem('username', userNameInput.value);
+      sessionStorage.setItem('username', userNameInput.value);
       console.log(userNameInput.value);
     } else {
       alert('Username cannot be empty!');
@@ -84,10 +72,10 @@ function Home({socket, history}) {
     if (inviteCode) {
       socket.emit('joinRoom', {
         userData: {
-          uid: localStorage.getItem('username'),
-          avatar: avatar,
+          uid: sessionStorage.getItem('username'),
+          avatar: sessionStorage.getItem('avatar'),
         },
-        inviteCode: localStorage.getItem('inviteCode'),
+        inviteCode: sessionStorage.getItem('inviteCode'),
       });
     } else {
       history.push({
@@ -116,12 +104,12 @@ function Home({socket, history}) {
               </div>
               <div>
                 <Button onClick={() => {
-                  handleHomeSubmit('/joinLobby', localStorage.getItem('inviteCode')); 
+                  handleHomeSubmit('/joinLobby', sessionStorage.getItem('inviteCode')); 
                 }} className='btn' variant="secondary" size='lg'>join game</Button>
               </div>
               <div>
                 {
-                  !localStorage.getItem('inviteCode') &&
+                  !sessionStorage.getItem('inviteCode') &&
                 <Button onClick={() => {
                   handleHomeSubmit('/createLobby');
                 }} className='btn' variant="outline-primary" size='lg'>create game</Button>
