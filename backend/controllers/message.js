@@ -29,7 +29,6 @@ class Message {
       return;
     }
 
-<<<<<<< HEAD
       if (distance === 0) {
         const {startTime} = this.rooms[this.socket.roomId];
         const gameTime = this.rooms[this.socket.roomId].time;
@@ -53,16 +52,6 @@ class Message {
             message: 'So close, keep trying!!',
           });
         }
-=======
-    const distance = leven.get(messageData, 'TestWord');
-    if (distance === 0) {
-      this.socket.emit('correctGuess', {
-        uid: userId,
-        message: 'You guessed correctly!!',
-      });
-      return;
-    }
->>>>>>> dev
 
     if (distance < 3) {
       this.socket.emit('closeGuess', {
