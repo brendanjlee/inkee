@@ -12,12 +12,29 @@ const port = process.env.PORT || 8080;
 rooms = {};
 
 app.get('/', (req, res, next) => {
-  if(req.hostname !== 'localhost' && req.headers['x-forwarded-proto'] != 'https') {
-    if (req.originalUrl !== undefined) {
-      res.redirect(301, 'https://' + req.hostname + req.originalUrl);
-    } else {
-      res.redirect(301, 'https://' + req.hostname + req.originalUrl);
-    } 
+  let protocol = req.headers['x-forwarded-proto'];
+  let hostname = req.hostname;
+  let originalUrl = req.originalUrl;
+  const urlModified = false;
+
+  if (hostname === 'localhost') {
+    next();
+    return;
+  }
+  
+  if (hostname === 'herokuapp.com') {
+    hostname = 'inkee.io';
+    urlModified = true;
+  }
+
+  if (protocol !== 'https') {
+    protocol = 'https';
+    urlModified = true;
+  }
+  protocol += '://';
+
+  if (urlModified) {
+    res.redirect(301, protocol + hostname + originalUrl);
   }
   next();
 });
