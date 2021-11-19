@@ -22,15 +22,15 @@ function PrestartLobby({socket, history}) {
   const [users, setUsers] = useState([]);
   const [settings, setSettings] = useState({});
   window.history.replaceState(null, 'Inkee Prestart Lobby',
-    `/${localStorage.getItem('inviteCode')}`);
+    `/${sessionStorage.getItem('inviteCode')}`);
 
   // Copy button setup.
   useEffect(() => {
     const copyBtn = document.querySelector('#copy.copyBtn');
     const handleClick = (e) => {
       e.preventDefault();
-      document.querySelector('#gameLink').select();
-      document.execCommand('copy');
+      const gameLink = document.getElementById('gameLink').value;
+      navigator.clipboard.writeText(gameLink);
     };
 
     copyBtn.addEventListener('click', handleClick);
@@ -114,8 +114,8 @@ function PrestartLobby({socket, history}) {
   }, [socket, history]);
 
   useEffect(() => {
-    setInviteCode(localStorage.getItem('inviteCode'));
-    setInviteCodeURL(inviteCodeURL + "/" + inviteCode);
+    setInviteCode(sessionStorage.getItem('inviteCode'));
+    setInviteCodeURL(inviteCodeURL + '/' + inviteCode);
   }, [history]);
 
   return (
