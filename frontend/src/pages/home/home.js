@@ -15,6 +15,10 @@ function Home({socket, history}) {
   }
 
   useEffect(() => {
+    sessionStorage.clear();
+  }, []);
+
+  useEffect(() => {
     const startGameHandler = (inviteCode) => {
       sessionStorage.setItem('inviteCode', inviteCode);
       history.push({
@@ -93,7 +97,7 @@ function Home({socket, history}) {
               <img className='logo' src={Logo} alt='inkee-logo'/>
             </div>
             <form>
-              <input className='username' id='username_input' type='text' placeholder="enter username..." maxLength={9}/>
+              <input className='username' id='username_input' type='text' placeholder="enter username..." maxLength={8}/>
             </form>
             <div align="center">
               <div className="homeDrawArea">

@@ -60,35 +60,39 @@ function PrestartLobby({socket, history}) {
       });
     };
 
-    const userListener = (userToAdd) => {
+    const loadPlayers = (users) => {
+      setUsers(users);
+      renderAvatars(users);
+    };
+
+    socket.on('getPlayers', loadPlayers);
+  
+    const loadNewPlayer = (userData) => {
       setUsers((prevUsers) => {
-        const newUsers = [...prevUsers, userToAdd];
+        const newUsers = [...prevUsers, userData];
         return newUsers;
       });
-      renderUserAvatar(userToAdd);
+      console.log(userData);
+      renderUserAvatar(userData);
     };
-    
-    const deleteUser = (userId) => {
+
+    socket.on('newPlayer', loadNewPlayer);
+
+    const disconnectPlayer = (userId) => {
       setUsers((prevUsers) => {
         const newUsers = prevUsers.filter((user) => user.uid !== userId);
         return newUsers;
       });
     };
 
-    const getPlayersListener = (users) => {
-      setUsers(users);
-      renderAvatars(users);
-    };
-    
-    socket.on('getPlayers', getPlayersListener);
-    socket.on('newUser', userListener);
-    socket.on('disconnection', deleteUser);
+    socket.on('disconnection', disconnectPlayer);
+
     socket.emit('getPlayers');
 
     return () => {
-      socket.off('getPlayers', getPlayersListener);
-      socket.off('newUser', userListener);
-      socket.off('disconnection', deleteUser);
+      socket.off('getPlayers', loadPlayers);
+      socket.off('newPlayer', loadNewPlayer);
+      socket.off('disconnection', disconnectPlayer);
     };
   }, [socket]);
 

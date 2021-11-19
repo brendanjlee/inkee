@@ -22,7 +22,14 @@ export function UserProfile({users = [], check}) {
           <b>{user.uid}</b>
         </div>
       </div>
+      <button className='removePlayer' onClick={() => {}} >X</button>
     </div>);
+
+    return (
+      <div className="profilesTwo">
+        {listItems}
+      </div>
+    );
   }
 
   return (
