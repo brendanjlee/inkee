@@ -9,6 +9,8 @@ import { ColorPalette } from '../../components/ColorPalette';
 import { UserProfile } from '../../components/UserProfile';
 import { StrokeThickness } from '../../components/StrokeThickness';
 
+let hints = [];
+
 function Game({socket, history}) {
   const [messages, setMessages] = useState([]);
   const [users, setUsers] = useState([]);
@@ -61,14 +63,6 @@ function Game({socket, history}) {
     socket.on('disconnection', disconnectPlayer);
 
     socket.emit('getPlayers');
-
-    // socket.on('updateScore', ({
-    //   playerID,
-    //   score
-    // }) => {
-    //   //Change score on frontent
-    //   document.querySelector().textContent = `Score: ${score}`;
-    // });
 
     return () => {
       socket.off('getPlayers', loadPlayers);
@@ -245,5 +239,14 @@ const writeMessage = ({ name = '', message}, {correctGuess = false, closeGuess =
   messages.appendChild(p);
   messages.scrollTop = messages.scrollHeight;
 };
+
+// function populateHints() {
+//   //Secs will be the time on the clock
+//   let secs = 5;
+//   const word = 'TestWord';
+//   if (hints[0] && secs === hints[0].displayTime) {
+    
+//   }
+// }
 
 export default Game;

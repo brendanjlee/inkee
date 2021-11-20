@@ -54,6 +54,10 @@ class Game {
   }
 }
 
+// changeTurn() {
+//   //gethints()
+// }
+
 module.exports = {
   Game,
 };
