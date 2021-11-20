@@ -5,6 +5,8 @@ import GameCanvas from '../../components/GameCanvas';
 import { Button } from 'react-bootstrap';
 import { CanvasProvider } from '../../components/CanvasContext';
 import { ClearCanvasButton } from '../../components/ClearCanvasButton';
+import { UndoStrokeButton } from '../../components/UndoStroke';
+import { RedoStrokeButton } from '../../components/RedoStrokeButton';
 
 function Home({socket, history}) {
   const query = new URLSearchParams(window.location.search);
@@ -100,6 +102,8 @@ function Home({socket, history}) {
                 <GameCanvas />
               </div>
               <div>
+                <RedoStrokeButton/>
+                <UndoStrokeButton />
                 <ClearCanvasButton />
               </div>
               <div>
