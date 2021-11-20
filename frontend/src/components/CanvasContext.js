@@ -166,8 +166,10 @@ export const CanvasProvider = ({ children, socket = null }) => {
     setCanvasEmpty(true);
     document.getElementById('canvas').changed = false;
 
-    // clear stroke count and list
     // TODO: update the cleared image onto the list instad of clearing the list
+    const drawing = document.getElementById('canvas').toDataURL();
+    undoList.current.push(drawing);
+    strokeCount.current++;
 
     if (socket && emit) {
       socket.emit('clearCanvas');
