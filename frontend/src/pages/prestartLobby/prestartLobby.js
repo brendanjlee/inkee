@@ -16,6 +16,7 @@ import {
   TumblrIcon,
   WhatsappIcon
 } from 'react-share';
+import Sound from '../../assets/buttonClick.mp3';
 
 function PrestartLobby({socket, history}) {
   const [inviteCode, setInviteCode] = useState('');
@@ -183,6 +184,8 @@ function PrestartLobby({socket, history}) {
           </div>
         </div>
         <Button onClick={() => {
+          var ButtonClick = new Audio (Sound);
+          ButtonClick.play();
           socket.emit('startGame');
         }} variant='primary'>ready</Button>
         <UserProfile users={users} check={true}/>

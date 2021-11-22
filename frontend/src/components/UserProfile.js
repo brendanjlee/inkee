@@ -13,6 +13,7 @@ export function UserProfile({users = [], check}) {
         </div>
       </div>
     </div>);
+    
   if (check == true) {
     listItems = users.map((user) =>
     <div className="userProfile" key={user.uid}>

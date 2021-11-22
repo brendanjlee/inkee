@@ -8,6 +8,7 @@ import { ClearCanvasButton } from '../../components/ClearCanvasButton';
 import { ColorPalette } from '../../components/ColorPalette';
 import { UserProfile } from '../../components/UserProfile';
 import { StrokeThickness } from '../../components/StrokeThickness';
+import Sound from '../../assets/buttonClick.mp3';
 
 function Game({socket, history}) {
   const [messages, setMessages] = useState([]);
