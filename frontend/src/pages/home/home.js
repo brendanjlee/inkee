@@ -7,6 +7,7 @@ import { CanvasProvider } from '../../components/CanvasContext';
 import { ClearCanvasButton } from '../../components/ClearCanvasButton';
 import { UndoStrokeButton } from '../../components/UndoStroke';
 import { RedoStrokeButton } from '../../components/RedoStrokeButton';
+import Sound from '../../assets/buttonClick.mp3';
 
 function Home({socket, history}) {
   const query = new URLSearchParams(window.location.search);
@@ -48,6 +49,7 @@ function Home({socket, history}) {
     };
   }, [socket]);
 
+
   const exportCanvasImage = () => {
     const canvas = document.getElementById('canvas');
     const uri = canvas.toDataURL('image/png');
@@ -62,6 +64,8 @@ function Home({socket, history}) {
   };
 
   const handleHomeSubmit = (path, inviteCode = null) => {
+    var ButtonClick = new Audio (Sound);
+    ButtonClick.play();
     const userNameInput = document.getElementById('username_input');
     if (userNameInput.value !== '') {
       sessionStorage.setItem('username', userNameInput.value);

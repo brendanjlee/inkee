@@ -8,10 +8,11 @@ import JoinLobby from './pages/joinLobby/joinLobby';
 import PrestartLobby from './pages/prestartLobby/prestartLobby';
 import Game from './pages/game/game';
 import io from 'socket.io-client';
-import PlaySound from './components/PlaySound';
+import { PlaySound } from './components/PlaySound';
 
 function App() {
   const [socket, setSocket] = useState(null);
+  const [check, setCheck] = useState(false);
   const history = useHistory();
 
   useEffect(() => {
@@ -47,7 +48,6 @@ function App() {
 
   return (
     <Router>
-      <PlaySound></PlaySound>
       <div className="App">
         <Switch>
           <Route path='/' exact render={(props) => (<Home socket={socket} history={history} {...props} />)}/>
@@ -57,6 +57,7 @@ function App() {
           <Route path='/game' render={(props) => (<Game socket={socket} history={history} {...props} />)}/>
         </Switch>
       </div>
+      <PlaySound></PlaySound>
     </Router>
   );
 }

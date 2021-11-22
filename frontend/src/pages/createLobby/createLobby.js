@@ -3,6 +3,7 @@ import { Link, history } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 import CreateHeader from '../../components/header/header';
 import './createLobby.css';
+import Sound from '../../assets/buttonClick.mp3';
 
 function CreateLobby({socket, history}) {
   // Game Settings
@@ -64,6 +65,8 @@ function CreateLobby({socket, history}) {
    * @param {onClick} event 
    */
   const handleSubmit = (event) => {
+    var ButtonClick = new Audio (Sound);
+    ButtonClick.play();
     event.preventDefault();
 
     // create gameConfiguration

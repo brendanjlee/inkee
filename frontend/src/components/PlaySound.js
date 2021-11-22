@@ -4,12 +4,7 @@ import React, {useState} from 'react';
 
 
 
-const PlaySound = (
-  handleSongLoading,
-  handleSongPlaying,
-  handleSongFinishedPlaying,
-
-) => {
+export const PlaySound = () => {
   const [isPlaying, setIsPlaying] = useState(false);
 
   return (
@@ -20,13 +15,8 @@ const PlaySound = (
         url={Music}
         playStatus={isPlaying ? Sound.status.PLAYING : Sound.status.STOPPED}
         playFromPosition={300}
-        onLoading={handleSongLoading}
-        onPlaying={handleSongPlaying}
-        onFinishedPlaying={handleSongFinishedPlaying}
         loop={true}
       />
     </div>
   );
 };
-
-export default PlaySound;
