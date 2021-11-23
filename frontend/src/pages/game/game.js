@@ -8,7 +8,6 @@ import { ClearCanvasButton } from '../../components/ClearCanvasButton';
 import { ColorPalette } from '../../components/ColorPalette';
 import { UserProfile } from '../../components/UserProfile';
 import { StrokeThickness } from '../../components/StrokeThickness';
-
 let hints = [];
 
 function Game({socket, history}) {
@@ -168,6 +167,21 @@ function Game({socket, history}) {
     };
   }, [socket, messages]);
 
+  useEffect(() => {
+    socket.on('hideWord', ({ word }) => {
+      socket.emit
+      const p = document.createElement('p');
+      p.textContent = word;
+      p.classList.add('lead', 'fw-bold', 'mb-0');
+      p.style.letterSpacing = '0.5em';
+      document.querySelector('#word').textContent = 'TESTTEST';
+      document.querySelector('#word').innerHTML = '';
+      document.querySelector('#word').append(p);
+      document.querySelector('#word').textContent = 'TESTTEST';
+    });
+    return () => {
+    };
+  }, [socket]);
   return (
     <div className='gameRoot'>
       <CanvasProvider socket={socket}>
@@ -175,7 +189,7 @@ function Game({socket, history}) {
           <div className='limeSplat'>
             <div className='inkeeLogo'>
               <div className="topContainer" >
-                <div className="word" >word</div>
+                <div className="word" ></div>
                 <div className="time" id="timer"> 3:19 </div>
               </div>
               <div className="middleContainer">

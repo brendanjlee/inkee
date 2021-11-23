@@ -1,4 +1,6 @@
 /* global rooms */
+const GraphemeSplitter = require('grapheme-splitter');
+const splitter = new GraphemeSplitter();
 
 /**
  * Handles game logic for the game.
