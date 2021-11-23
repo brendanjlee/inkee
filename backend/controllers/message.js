@@ -1,6 +1,7 @@
 const leven = require('fast-levenshtein');
 const {getScore} = require('./helpers');
-
+const GraphemeSplitter = require('grapheme-splitter');
+const splitter = new GraphemeSplitter();
 /**
  * Handles storing messages for the game.
  */
@@ -24,6 +25,7 @@ class Message {
    */
   onMessage(messageData) {
     const {roomId, player} = this.socket;
+    this.socket.to(this.socket.roomId).emit('hideWord', { word: splitter.splitGraphemes('TestWord').map((char) => (char !== ' ' ? '_' : char)).join('') });
 
     const userId = player.uid;
     if (messageData === '') {
