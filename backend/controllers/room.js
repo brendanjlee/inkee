@@ -2,6 +2,7 @@
 const {Invite} = require('../classes/invite');
 const {User} = require('../classes/user');
 const {RoomInstance} = require('../classes/room-instance');
+const {prepareUser} = require('./helpers');
 
 /**
  * Handles game room creation/handling.
@@ -55,10 +56,7 @@ class Room {
     if (rooms[inviteCode] !== undefined) {
       if (rooms[inviteCode].users[newUser.uid] === undefined) {
         this.socket.roomId = inviteCode;
-
-        const user = Object.assign({}, newUser);
-        delete user.socket;
-        this.io.to(this.socket.roomId).emit('newPlayer', user);
+        this.io.to(this.socket.roomId).emit('newPlayer', prepareUser(newUser));
         this.socket.join(inviteCode);
         this.socket.emit(rooms[inviteCode].inProgress ?
           'startGame' : 'inviteCode', inviteCode);
@@ -113,11 +111,7 @@ class Room {
     const userNames = Object.keys(rooms[this.socket.roomId].users);
     const users = [];
     userNames.map((userName) => {
-      // Deep copy user object (to make temporary changes)
-      const user = Object.assign({}, rooms[this.socket.roomId].users[userName]);
-      // Can't emit an object with a socket object (causes circular reference)
-      delete user.socket;
-      users.push(user);
+      users.push(prepareUser(rooms[this.socket.roomId].users[userName]));
     });
 
     this.socket.emit('getPlayers', users);
