@@ -6,6 +6,10 @@ const getScore = (gameLength, currentGameTime) => {
   return Math.floor((currentGameTime / gameLength) * 500);
 };
 
+function hideWord() {
+  this.socket.to(this.socket.roomId).emit('hideWord', { word: splitter.splitGraphemes('TestWord').map((char) => (char !== ' ' ? '_' : char)).join('') });
+}
+
 function getHints(word, roomId) {
   let hints = [];
   const length = splitter.countGraphemes(word);
@@ -32,4 +36,5 @@ function getHints(word, roomId) {
 module.exports = {
   getScore,
   getHints,
+  hideWord,
 }

@@ -25,8 +25,6 @@ class Message {
    */
   onMessage(messageData) {
     const {roomId, player} = this.socket;
-    this.socket.to(this.socket.roomId).emit('hideWord', { word: splitter.splitGraphemes('TestWord').map((char) => (char !== ' ' ? '_' : char)).join('') });
-
     const userId = player.uid;
     if (messageData === '') {
       this.socket.emit('ERROR', 'Message cannot be empty!');
