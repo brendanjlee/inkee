@@ -55,8 +55,10 @@ class Room {
     if (rooms[inviteCode] !== undefined) {
       if (rooms[inviteCode].users[newUser.uid] === undefined) {
         this.socket.roomId = inviteCode;
-        this.io.to(this.socket.roomId).emit('newPlayer',
-          newUser);
+
+        const user = Object.assign({}, newUser);
+        delete user.socket;
+        this.io.to(this.socket.roomId).emit('newPlayer', user);
         this.socket.join(inviteCode);
         this.socket.emit(rooms[inviteCode].inProgress ?
           'startGame' : 'inviteCode', inviteCode);
