@@ -7,12 +7,13 @@ import Sound from '../../assets/buttonClick.mp3';
 
 function CreateLobby({socket, history}) {
   // Game Settings
-  const [numRounds, setNumRounds] = useState(2);
-  const [roundLength, setRoundLength] = useState(30);
+  const [numRounds, setNumRounds] = useState(undefined);
+  const [roundLength, setRoundLength] = useState(undefined);
   
   // Custom Words 
   const [textAreaContent, setTextAreaContent] = useState('');
-  const [usingCustomWords, setUsingCustomWords] = useState(null);
+  const [usingCustomWords, setUsingCustomWords] = useState(undefined);
+  const [isPrivate, setIsPrivate] = useState(undefined);
   
   window.history.replaceState(null, 'Inkee Create Lobby', '/');
 
@@ -45,6 +46,10 @@ function CreateLobby({socket, history}) {
     setUsingCustomWords(event.target.value);
   };
 
+  const handlePrivateGameChange = (event) => {
+    setIsPrivate(event.target.value);
+  };
+
   useEffect(() => {
     socket.on('inviteCode', (inviteCode) => {
       console.log(inviteCode);
@@ -74,9 +79,9 @@ function CreateLobby({socket, history}) {
     const gameConfiguration = {
       numRounds: numRounds,
       roundLength: roundLength,
+      isPrivate: isPrivate,
       customWords: [],
-      onlyCustomWords: usingCustomWords === null
-        || usingCustomWords === 'no' ? false : true,
+      customWordsOnly: usingCustomWords,
     };
 
     const custom_words = document.getElementById('custom_words').value.split(/[ ,]+/);
@@ -116,17 +121,17 @@ function CreateLobby({socket, history}) {
           value={numRounds}
           className="select"
         >
-          <option hidden={true}>choose rounds</option>
-          <option value="1rounds">1</option>
-          <option value="2rounds">2</option>
-          <option value="3rounds">3</option>
-          <option value="4rounds">4</option>
-          <option value="5rounds">5</option>
-          <option value="6rounds">6</option>
-          <option value="7rounds">7</option>
-          <option value="8rounds">8</option>
-          <option value="9rounds">9</option>
-          <option value="10rounds">10</option>
+          <option value={undefined}>choose rounds</option>
+          <option value={1}>1</option>
+          <option value={2}>2</option>
+          <option value={3}>3</option>
+          <option value={4}>4</option>
+          <option value={5}>5</option>
+          <option value={6}>6</option>
+          <option value={7}>7</option>
+          <option value={8}>8</option>
+          <option value={9}>9</option>
+          <option value={10}>10</option>
         </select>
         <select
           id="roundLength"
@@ -135,16 +140,27 @@ function CreateLobby({socket, history}) {
           value={roundLength}
           className="select"
         >
-          <option hidden={true}>drawing time</option>
-          <option value="30seconds">30</option>
-          <option value="40seconds">40</option>
-          <option value="50seconds">50</option>
-          <option value="60seconds">60</option>
-          <option value="70seconds">70</option>
-          <option value="80seconds">80</option>
-          <option value="90seconds">90</option>
-          <option value="120seconds">120</option>
-          <option value="180seconds">180</option>
+          <option value={undefined}>drawing time</option>
+          <option value={30}>30</option>
+          <option value={40}>40</option>
+          <option value={50}>50</option>
+          <option value={60}>60</option>
+          <option value={70}>70</option>
+          <option value={80}>80</option>
+          <option value={90}>90</option>
+          <option value={120}>120</option>
+          <option value={180}>180</option>
+        </select>
+        <select
+          id="privateGame"
+          name="privateGame"
+          onChange={handlePrivateGameChange}
+          value={isPrivate}
+          className="select"
+        >
+          <option value={undefined}>private game</option>
+          <option value={true}>yes</option>
+          <option value={false}>no</option>
         </select>
         <select
           id="exclusiveCustomWords"
@@ -153,9 +169,9 @@ function CreateLobby({socket, history}) {
           value={usingCustomWords}
           className="select"
         >
-          <option hidden={true}>use custom words only</option>
-          <option value="yes">yes</option>
-          <option value="no">no</option>
+          <option value={undefined}>use custom words only</option>
+          <option value={false}>no</option>
+          <option value={true}>yes</option>
         </select>
         <div className='wordlist'>
           <textarea className='words'
