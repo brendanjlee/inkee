@@ -1,5 +1,5 @@
 const {getScore} = require('../helpers');
-const { assert } = require('./assert');
+const {assert} = require('./assert');
 
 describe('Helpers Test', () => {
   test('getScore 1 30', (done) => {
