@@ -54,11 +54,19 @@ class Game {
     }, 1000);
     rooms[this.socket.roomId].currentTimer = interval;
   }
+
+  giveTurnTo(i) {
+    const players = rooms[this.socket.roomId].users;
+    const player1 = players[i];
+    const player2 = players[i+1];
+    const drawers = [player1, player2];
+    if (!player1 || !player2 || !rooms[this.socket.roomId]) return;
+    rooms[this.socket.roomId].drawers = drawers;
+    drawers.to(this.socket.roomId).broadcast.emit('choosing', { name: drawers });
+  }
 }
 
-// changeTurn() {
-//   //gethints()
-// }
+
 
 module.exports = {
   Game,

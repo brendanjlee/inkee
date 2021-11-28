@@ -8,6 +8,7 @@ import { ClearCanvasButton } from '../../components/ClearCanvasButton';
 import { ColorPalette } from '../../components/ColorPalette';
 import { UserProfile } from '../../components/UserProfile';
 import { StrokeThickness } from '../../components/StrokeThickness';
+import {hideWord} from '../../../backend/controllers/helpers.js';
 let hints = [];
 
 function Game({socket, history}) {
@@ -60,7 +61,7 @@ function Game({socket, history}) {
     };
 
     socket.on('disconnection', disconnectPlayer);
-
+    hideWord();
     socket.emit('getPlayers');
 
     return () => {
@@ -167,9 +168,9 @@ function Game({socket, history}) {
     };
   }, [socket, messages]);
 
+  //On hide word Test
   useEffect(() => {
     socket.on('hideWord', ({ word }) => {
-      socket.emit
       const p = document.createElement('p');
       p.textContent = word;
       p.classList.add('lead', 'fw-bold', 'mb-0');
@@ -182,6 +183,21 @@ function Game({socket, history}) {
     return () => {
     };
   }, [socket]);
+
+  // On drawing and choosing alert
+  useEffect(() => {
+    socket.on('choosing', ({ name }) => {
+      const p = document.createElement('p');
+      p.textContent = `${name[0]} and ${name[1]} are drawing`;
+      p.classList.add('lead', 'fw-bold', 'mb-0');
+      document.querySelector('#topContainer').innerHTML = '';
+      document.querySelector('#topContainer').append(p);
+
+    });
+    return () => {
+    };
+  }, [socket]);
+
   return (
     <div className='gameRoot'>
       <CanvasProvider socket={socket}>
