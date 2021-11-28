@@ -1,7 +1,7 @@
-const getScore = (gameLength, currentGameTime) => {
+const getGuesserScore = (gameLength, currentGameTime) => {
   return Math.floor((currentGameTime / gameLength) * 500);
 };
 
 module.exports = {
-  getScore,
+  getGuesserScore,
 }
