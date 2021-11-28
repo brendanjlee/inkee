@@ -23,7 +23,7 @@ export function UserProfile({users = [], check}) {
           <b>{user.uid}</b>
         </div>
       </div>
-      <button className='removePlayer' onClick={() => {}} >X</button>
+      <button className='removePlayer'>X</button>
     </div>);
 
     return (
