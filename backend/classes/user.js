@@ -9,13 +9,14 @@ class User {
    * @param {boolean} isDrawing user is drawing.
    * @param {boolean} isAdmin user is admin of game.
    */
-  constructor(uid, avatar, score = 0, isDrawing = false, isAdmin = false, guessedWord = false) {
+  constructor(uid, avatar, isAdmin = false, socket = null) {
     this.uid = uid;
     this.avatar = avatar;
-    this.score = score;
-    this.isDrawing = isDrawing;
+    this.score = 0;
     this.isAdmin = isAdmin;
-    this.guessedWord = guessedWord;
+    this.isDrawing = false;
+    this.guessedWord = false;
+    this.socket = socket;
   }
 
   /**
@@ -25,7 +26,7 @@ class User {
    * @return {Object} a User object.
    */
   deserialize(obj) {
-    return new User(obj.uid, obj.avatar, obj.score, obj.isDrawing, obj.isAdmin, obj.guessedWord);
+    return new User(obj.uid, obj.avatar, obj.score, obj.isDrawing, obj.isAdmin, obj.guessedWord, obj.socket);
   }
 }
 

@@ -17,6 +17,10 @@ function Home({socket, history}) {
   }
 
   useEffect(() => {
+    sessionStorage.clear();
+  }, []);
+
+  useEffect(() => {
     const startGameHandler = (inviteCode) => {
       sessionStorage.setItem('inviteCode', inviteCode);
       history.push({
