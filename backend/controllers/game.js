@@ -31,14 +31,16 @@ class Game {
   startRound() {
     const {roomId, player} = this.socket;
     this.io.to(roomId).emit('startRound');
-    this.startTimer();
+    this.startTimer(rooms[this.socket.roomId].roundLength);
   }
 
   /**
    * Start room session timer.
+   * 
+   * @param {int} length length of the timer
    */
-  startTimer() {
-    let count = rooms[this.socket.roomId].roundLength;
+  startTimer(length) {
+    let count = length;
     rooms[this.socket.roomId].currentTime = count;
     this.io.to(this.socket.roomId).emit('timer', count);
     const interval = setInterval(() => {
@@ -64,10 +66,13 @@ class Game {
     rooms[this.socket.roomId].drawers = drawers;
     drawers.to(this.socket.roomId).broadcast.emit('choosing', { name: drawers });
   }
+  /**
+   * Choose round word.
+   */
+  chooseWord(word) {
+    
+  }
 }
-
-
-
 module.exports = {
   Game,
 };

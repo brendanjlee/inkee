@@ -1,7 +1,8 @@
 const leven = require('fast-levenshtein');
-const {getScore} = require('./helpers');
 const GraphemeSplitter = require('grapheme-splitter');
 const splitter = new GraphemeSplitter();
+const {getGuesserScore} = require('./helpers');
+
 /**
  * Handles storing messages for the game.
  */
@@ -33,7 +34,7 @@ class Message {
 
     const distance = leven.get(messageData.toLowerCase(), rooms[roomId].currentWord.toLowerCase());
     if (distance === 0 && rooms[roomId].users[userId].guessedWord === false) {
-      const scoreUpdate = getScore(rooms[roomId].roundLength, rooms[roomId].currentTime);
+      const scoreUpdate = getGuesserScore(rooms[roomId].roundLength, rooms[roomId].currentTime);
       rooms[roomId].users[userId].score += scoreUpdate;
       
       this.socket.emit('correctGuess', {
