@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import './prestartLobby.css';
+import { UserProfile } from '../../components/UserProfile';
 import {
   EmailShareButton,
   FacebookMessengerShareButton,
@@ -15,6 +16,7 @@ import {
   TumblrIcon,
   WhatsappIcon
 } from 'react-share';
+import Sound from '../../assets/buttonClick.mp3';
 
 function PrestartLobby({socket, history}) {
   const [inviteCode, setInviteCode] = useState('');
@@ -43,38 +45,61 @@ function PrestartLobby({socket, history}) {
   
   // User routines.
   useEffect(() => {
-    const userListener = (userToAdd) => {
-      setUsers((prevUsers) => {
-        const newUsers = [...prevUsers, userToAdd];
-        return newUsers;
+    const renderUserAvatar = (user) => {
+      const userCanvas = document.getElementById(`${user.uid}-avatar`);
+      const context = userCanvas.getContext('2d');
+      const image = new Image();
+      image.src = user.avatar;
+      image.onload = () => {
+        context.drawImage(image, 0, 0, userCanvas.width, userCanvas.height);
+      };
+    };
+
+    const renderAvatars = (users) => {
+      users.map((user) => {
+        renderUserAvatar(user);
       });
     };
-    
-    const deleteUser = (userId) => {
+
+    const loadPlayers = (users) => {
+      setUsers(users);
+      renderAvatars(users);
+    };
+
+    socket.on('getPlayers', loadPlayers);
+  
+    const loadNewPlayer = (userData) => {
+      setUsers((prevUsers) => {
+        const newUsers = [...prevUsers, userData];
+        return newUsers;
+      });
+      console.log(userData);
+      renderUserAvatar(userData);
+    };
+
+    socket.on('newPlayer', loadNewPlayer);
+
+    const disconnectPlayer = (userId) => {
       setUsers((prevUsers) => {
         const newUsers = prevUsers.filter((user) => user.uid !== userId);
         return newUsers;
       });
     };
 
-    const getPlayersListener = (users) => {
-      setUsers(users);
-    };
-    
-    socket.on('getPlayers', getPlayersListener);
-    socket.on('newUser', userListener);
-    socket.on('disconnection', deleteUser);
+    socket.on('disconnection', disconnectPlayer);
+
     socket.emit('getPlayers');
 
     return () => {
-      socket.off('getPlayers', getPlayersListener);
-      socket.off('newUser', userListener);
-      socket.off('disconnection', deleteUser);
+      socket.off('getPlayers', loadPlayers);
+      socket.off('newPlayer', loadNewPlayer);
+      socket.off('disconnection', disconnectPlayer);
     };
   }, [socket]);
 
   // Setting routines.
   useEffect(() => {
+    
     const settingListener = (settingUpdate) => {
       setSettings((prevSettings) => {
         const key = settingUpdate.key;
@@ -159,8 +184,11 @@ function PrestartLobby({socket, history}) {
           </div>
         </div>
         <Button onClick={() => {
+          const ButtonClick = new Audio (Sound);
+          ButtonClick.play();
           socket.emit('startGame');
         }} variant='primary'>ready</Button>
+        <UserProfile users={users} isPrestartLobby={true}/>
       </div>
     </div>
   );
