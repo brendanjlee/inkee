@@ -61,7 +61,6 @@ function Game({socket, history}) {
     };
 
     socket.on('disconnection', disconnectPlayer);
-    hideWord();
     socket.emit('getPlayers');
 
     return () => {
