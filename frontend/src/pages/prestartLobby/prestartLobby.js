@@ -184,11 +184,11 @@ function PrestartLobby({socket, history}) {
           </div>
         </div>
         <Button onClick={() => {
-          var ButtonClick = new Audio (Sound);
+          const ButtonClick = new Audio (Sound);
           ButtonClick.play();
           socket.emit('startGame');
         }} variant='primary'>ready</Button>
-        <UserProfile users={users} check={true}/>
+        <UserProfile users={users} isPrestartLobby={true}/>
       </div>
     </div>
   );

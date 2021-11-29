@@ -70,7 +70,7 @@ function CreateLobby({socket, history}) {
    * @param {onClick} event 
    */
   const handleSubmit = (event) => {
-    var ButtonClick = new Audio (Sound);
+    const ButtonClick = new Audio (Sound);
     ButtonClick.play();
     event.preventDefault();
 
