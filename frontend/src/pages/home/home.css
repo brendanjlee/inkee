@@ -19,7 +19,6 @@
 }
 
 .header {
-  margin-top: 1rem;
   margin-bottom: .1rem;
 }
 
@@ -93,6 +92,36 @@
   color: #fff;
   background-color: #000000;
   outline: 0;
+}
+
+.btn3
+{
+  background-size: 200%;
+  bottom: 4rem;
+  left: 1rem;
+  width: 5;
+  height: 3rem;
+  background-color: white;
+  border: .40rem solid #000000;
+  box-sizing: border-box;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: bold;
+  text-align: center;
+  font-size: 1.5rem;
+  position: relative;
+  z-index: 2;
+}
+
+.btn3:hover {
+  color: #fff;
+  background-color: #000000;
+  outline: 0;
+}
+
+.topLayer {
+  height:0;
+  z-index: 2;
+  background-color: #00ACD5;
 }
 
 .logo {
