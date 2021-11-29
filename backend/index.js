@@ -3,38 +3,56 @@
 const express = require('express');
 const path = require('path');
 const app = express();
-require('./startup/routes')(app);
-// require('./startup/firebase-stream');
 
 // Set up server for Socket IO.
 const server = require('http').createServer(app);
 const sockets = require('./startup/socket-handler');
+const port = process.env.PORT || 8080;
 
 rooms = {};
 
-app.get('*', (req, res, next) => {
-  if(req.headers['x-forwarded-proto'] != 'https' && req.hostname !== 'localhost') {
-    res.redirect('https://' + req.hostname);
-  } else {
+app.get('/', (req, res, next) => {
+  let protocol = req.headers['x-forwarded-proto'];
+  let hostname = req.hostname;
+  let originalUrl = req.originalUrl;
+  const urlModified = false;
+
+  if (hostname === 'localhost') {
     next();
+    return;
+  }
+  
+  if (hostname === 'herokuapp.com') {
+    hostname = 'inkee.io';
+    urlModified = true;
+  }
+
+  if (protocol !== 'https') {
+    protocol = 'https';
+    urlModified = true;
+  }
+  protocol += '://';
+
+  if (urlModified) {
+    res.redirect(301, protocol + hostname + originalUrl);
+  }
+  next();
+});
+
+app.get('/:gameId', (req, res) => {
+  if(rooms[req.params.gameId] === undefined) {
+    res.redirect('/');
+  } else {
+    res.redirect('/?gameId=' + req.params.gameId);
   }
 });
 
 // App Initialization.
-const port = process.env.PORT || 8080;
-app.use(express.static(path.join(__dirname, 'build')));
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+app.use(express.static(path.join(__dirname, "build")));
+app.use((req, res, next) => {
+  res.sendFile(path.join(__dirname, "build", "index.html"));
+  next();
 });
-
-app.get('/:gameId', (req, res) => {
-  res.redirect('/?gameId=' + req.params.gameId);
-});
-
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'build', 'index.html'));
-});
-
 
 const io = sockets.init(server);
 const config = require('./config');

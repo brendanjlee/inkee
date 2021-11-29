@@ -1,10 +1,11 @@
 import React, { useContext, useRef, useState } from 'react';
-
 const CanvasContext = React.createContext();
 
 export const CanvasProvider = ({ children, socket = null }) => {
   const canvasRef = useRef(null);
   const contextRef = useRef(null);
+  const undoList = useRef([]);
+  const strokeCount = useRef(-1);
   const [isDrawing, setIsDrawing] = useState(false);
   const [canvasEmpty, setCanvasEmpty] = useState(true);
   const [currentState, setCurrentState] = useState({
@@ -13,7 +14,8 @@ export const CanvasProvider = ({ children, socket = null }) => {
     color: 'black',
     lineThickness: 5,
   });
-
+  
+  
   const prepareCanvas = () => {
     const canvas = canvasRef.current;
     canvas.style.width ='100%';
@@ -68,6 +70,13 @@ export const CanvasProvider = ({ children, socket = null }) => {
     draw(currentState.x, currentState.y, offsetX, offsetY,
       currentState.lineThickness, currentState.color, true);
     setIsDrawing(false);
+
+    // Push drawing into list
+    const drawing = document.getElementById('canvas').toDataURL();
+    undoList.current.push(drawing);
+    strokeCount.current++;
+    //console.log(`undoList Len: ${undoList.current.length}`);
+    //console.log(`strokeCount: ${strokeCount.current}`)
   };
 
   const inDrawing = ({ nativeEvent }) => {
@@ -107,7 +116,23 @@ export const CanvasProvider = ({ children, socket = null }) => {
   };
 
   const undoStroke = (emit) => {
-    contextRef.current.undo();
+    //contextRef.current.undo();
+    if (!(strokeCount.current > 0)) return;
+    strokeCount.current--;
+
+    // Pop last image from list and set as source
+    const canvas = canvasRef.current;
+    const context = canvas.getContext('2d');
+    const drawing = new Image(canvas.width, canvas.height);
+    //const newsrc =  undoList.current.pop();
+    const newsrc =  undoList.current[strokeCount.current];
+    // TODO: undo does not render on the first button click
+    drawing.src = newsrc;
+    drawing.crossOrigin = 'anonymous';
+    drawing.onload = () => {
+      context.clearRect(0, 0, canvas.width, canvas.height);
+      context.drawImage(drawing, 0, 0, canvas.width / 2, canvas.height / 2);
+    };
 
     if (emit && socket) {
       socket.emit('undo');
@@ -115,7 +140,18 @@ export const CanvasProvider = ({ children, socket = null }) => {
   };
 
   const redoStroke = (emit) => {
-    contextRef.current.undo();
+    //contextRef.current.undo();
+    if (!(strokeCount.current < undoList.current.length - 1)) return;
+    strokeCount.current++;
+    const canvas = canvasRef.current;
+    const context = canvas.getContext('2d');
+    const drawing = new Image(canvas.width, canvas.height);
+    drawing.src = undoList.current[strokeCount.current];
+    drawing.crossOrigin = 'anonymous';
+    drawing.onload = () => {
+      context.clearRect(0, 0, canvas.width, canvas.height);
+      context.drawImage(drawing, 0, 0, canvas.width / 2, canvas.height / 2); 
+    };
 
     if (emit && socket) {
       socket.emit('redo');
@@ -129,6 +165,13 @@ export const CanvasProvider = ({ children, socket = null }) => {
     context.clearRect(0, 0, canvas.width, canvas.height);
     setCanvasEmpty(true);
     document.getElementById('canvas').changed = false;
+
+    // TODO: update the cleared image onto the list instad of clearing the list
+    //const drawing = document.getElementById('canvas').toDataURL();
+    //undoList.current.push(drawing);
+    //strokeCount.current++;
+    undoList.current = [];
+    strokeCount.current = -1;
 
     if (socket && emit) {
       socket.emit('clearCanvas');

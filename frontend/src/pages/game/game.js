@@ -8,6 +8,8 @@ import { ClearCanvasButton } from '../../components/ClearCanvasButton';
 import { ColorPalette } from '../../components/ColorPalette';
 import { UserProfile } from '../../components/UserProfile';
 import { StrokeThickness } from '../../components/StrokeThickness';
+//import {hideWord} from '../../../backend/controllers/helpers.js';
+let hints = [];
 
 function Game({socket, history}) {
   const [messages, setMessages] = useState([]);
@@ -59,16 +61,7 @@ function Game({socket, history}) {
     };
 
     socket.on('disconnection', disconnectPlayer);
-
     socket.emit('getPlayers');
-
-    // socket.on('updateScore', ({
-    //   playerID,
-    //   score
-    // }) => {
-    //   //Change score on frontent
-    //   document.querySelector().textContent = `Score: ${score}`;
-    // });
 
     return () => {
       socket.off('getPlayers', loadPlayers);
@@ -174,6 +167,36 @@ function Game({socket, history}) {
     };
   }, [socket, messages]);
 
+  //On hide word Test
+  useEffect(() => {
+    socket.on('hideWord', ({ word }) => {
+      const p = document.createElement('p');
+      p.textContent = word;
+      p.classList.add('lead', 'fw-bold', 'mb-0');
+      p.style.letterSpacing = '0.5em';
+      document.querySelector('#word').textContent = 'TESTTEST';
+      document.querySelector('#word').innerHTML = '';
+      document.querySelector('#word').append(p);
+      document.querySelector('#word').textContent = 'TESTTEST';
+    });
+    return () => {
+    };
+  }, [socket]);
+
+  // On drawing and choosing alert
+  useEffect(() => {
+    socket.on('choosing', ({ name }) => {
+      const p = document.createElement('p');
+      p.textContent = `${name[0]} and ${name[1]} are drawing`;
+      p.classList.add('lead', 'fw-bold', 'mb-0');
+      document.querySelector('#topContainer').innerHTML = '';
+      document.querySelector('#topContainer').append(p);
+
+    });
+    return () => {
+    };
+  }, [socket]);
+
   return (
     <div className='gameRoot'>
       <CanvasProvider socket={socket}>
@@ -181,7 +204,7 @@ function Game({socket, history}) {
           <div className='limeSplat'>
             <div className='inkeeLogo'>
               <div className="topContainer" >
-                <div className="word" >word</div>
+                <div className="word" ></div>
                 <div className="time" id="timer"> 3:19 </div>
               </div>
               <div className="middleContainer">
@@ -245,5 +268,14 @@ const writeMessage = ({ name = '', message}, {correctGuess = false, closeGuess =
   messages.appendChild(p);
   messages.scrollTop = messages.scrollHeight;
 };
+
+// function populateHints() {
+//   //Secs will be the time on the clock
+//   let secs = 5;
+//   const word = 'TestWord';
+//   if (hints[0] && secs === hints[0].displayTime) {
+    
+//   }
+// }
 
 export default Game;
