@@ -24,7 +24,9 @@
     "uuid": "^8.3.2"
   },
   "jest": {
-    "testPathIgnorePatterns": ["assert.js"]
+    "testPathIgnorePatterns": [
+      "assert.js"
+    ]
   },
   "scripts": {
     "start": "nodemon index.js",
