@@ -8,7 +8,7 @@ import { ClearCanvasButton } from '../../components/ClearCanvasButton';
 import { ColorPalette } from '../../components/ColorPalette';
 import { UserProfile } from '../../components/UserProfile';
 import { StrokeThickness } from '../../components/StrokeThickness';
-import {hideWord} from '../../../backend/controllers/helpers.js';
+//import {hideWord} from '../../../backend/controllers/helpers.js';
 let hints = [];
 
 function Game({socket, history}) {
