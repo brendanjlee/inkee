@@ -103,7 +103,7 @@ function CreateLobby({socket, history}) {
       avatar: sessionStorage.getItem('avatar'),
     };
     
-    console.log(userData.avatar);
+    //console.log(userData.avatar);
     socket.emit('createGame', {
       gameConfiguration,
       userData,
