@@ -5,6 +5,8 @@ import './game.css';
 import GameCanvas from '../../components/GameCanvas';
 import { CanvasProvider } from '../../components/CanvasContext';
 import { ClearCanvasButton } from '../../components/ClearCanvasButton';
+import { UndoStrokeButton } from '../../components/UndoStroke';
+import { RedoStrokeButton } from '../../components/RedoStrokeButton';
 import { ColorPalette } from '../../components/ColorPalette';
 import { UserProfile } from '../../components/UserProfile';
 import { StrokeThickness } from '../../components/StrokeThickness';
@@ -189,6 +191,8 @@ function Game({socket, history}) {
                 </div>
                 <div className="drawingTools">
                   <ClearCanvasButton/>
+                  <UndoStrokeButton/>
+                  <RedoStrokeButton/>
                   <StrokeThickness />
                 </div>
                   <ColorPalette/>
