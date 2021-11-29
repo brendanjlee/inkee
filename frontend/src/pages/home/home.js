@@ -64,7 +64,7 @@ function Home({socket, history}) {
   };
 
   const handleHomeSubmit = (path, inviteCode = null) => {
-    var ButtonClick = new Audio (Sound);
+    const ButtonClick = new Audio (Sound);
     ButtonClick.play();
     const userNameInput = document.getElementById('username_input');
     if (userNameInput.value !== '') {

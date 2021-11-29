@@ -31,7 +31,7 @@ function JoinLobby({socket, history}) {
   }, [socket, history]);
 
   const handleSubmit = (inviteCode = null, joinById) => {
-    var ButtonClick = new Audio (Sound);
+    const ButtonClick = new Audio (Sound);
     ButtonClick.play();
     const userData = {
       userData: {

@@ -1,7 +1,7 @@
 import { React } from 'react';
 
-export function UserProfile({users = [], check}) {
-  var listItems = users.map((user) =>
+export function UserProfile({users = [], isPrestartLobby}) {
+  let listItems = users.map((user) =>
     <div className="userProfile" key={user.uid}>
       <canvas className='avatar' id={user.uid + '-avatar'}/>
       <div className='userText'>
@@ -14,7 +14,7 @@ export function UserProfile({users = [], check}) {
       </div>
     </div>);
     
-  if (check == true) {
+  if (isPrestartLobby) {
     listItems = users.map((user) =>
     <div className="userProfile" key={user.uid}>
       <canvas className='avatar' id={user.uid + '-avatar'}/>
