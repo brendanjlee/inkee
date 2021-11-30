@@ -16,15 +16,15 @@ export function UserProfile({users = [], isPrestartLobby}) {
     
   if (isPrestartLobby) {
     listItems = users.map((user) =>
-    <div className="userProfile" key={user.uid}>
-      <canvas className='avatar' id={user.uid + '-avatar'}/>
-      <div className='userText'>
-        <div>
-          <b>{user.uid}</b>
+      <div className="userProfile" key={user.uid}>
+        <canvas className='avatar' id={user.uid + '-avatar'}/>
+        <div className='userText'>
+          <div>
+            <b>{user.uid}</b>
+          </div>
         </div>
-      </div>
-      <button className='removePlayer'>X</button>
-    </div>);
+        <button className='removePlayer'>X</button>
+      </div>);
 
     return (
       <div className="profilesTwo">
