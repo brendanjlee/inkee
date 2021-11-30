@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { Button } from 'react-bootstrap';
 import CreateHeader from '../../components/header/header';
 import './joinLobby.css';
+import Sound from '../../assets/buttonClick.mp3';
 
 function JoinLobby({socket, history}) {
   window.history.replaceState(null, 'Inkee Join Lobby', '/');
@@ -30,6 +31,8 @@ function JoinLobby({socket, history}) {
   }, [socket, history]);
 
   const handleSubmit = (inviteCode = null, joinById) => {
+    const ButtonClick = new Audio (Sound);
+    ButtonClick.play();
     const userData = {
       userData: {
         uid: sessionStorage.getItem('username'),

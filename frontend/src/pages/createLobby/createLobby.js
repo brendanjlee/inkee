@@ -3,6 +3,7 @@ import { Link, history } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 import CreateHeader from '../../components/header/header';
 import './createLobby.css';
+import Sound from '../../assets/buttonClick.mp3';
 
 function CreateLobby({socket, history}) {
   // Game Settings
@@ -69,6 +70,8 @@ function CreateLobby({socket, history}) {
    * @param {onClick} event 
    */
   const handleSubmit = (event) => {
+    const ButtonClick = new Audio (Sound);
+    ButtonClick.play();
     event.preventDefault();
 
     // create gameConfiguration
@@ -84,10 +87,10 @@ function CreateLobby({socket, history}) {
     const custom_words = document.getElementById('custom_words').value.split(/[ ,]+/);
     
     if (usingCustomWords === 'yes') {
-      if (custom_words.length > 10) {
+      if (custom_words.length >= 10) {
         gameConfiguration.customWords = custom_words; 
       } else {
-        alert('There must be more than 10 custom words!');
+        alert('There must be at least 10 custom words!');
         return;
       }
     } else if (custom_words.length > 0) {

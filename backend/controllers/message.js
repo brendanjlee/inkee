@@ -32,42 +32,45 @@ class Message {
       return;
     }
 
-    const distance = leven.get(messageData.toLowerCase(), rooms[roomId].currentWord.toLowerCase());
-    if (distance === 0 && rooms[roomId].users[userId].guessedWord === false) {
-      const scoreUpdate = getGuesserScore(rooms[roomId].roundLength, rooms[roomId].currentTime);
-      rooms[roomId].users[userId].score += scoreUpdate;
-      
-      this.socket.emit('correctGuess', {
-        uid: userId,
-        message: 'You guessed correctly!!',
-      });
-      
-      this.socket.broadcast.to(this.socket.roomId).emit('userCorrectGuess', {
-        message: `${userId} has guessed the word!`,
-      });
-
-      this.io.to(this.socket.roomId).emit('scoreUpdate',
-        {
+    if (rooms[roomId].roundData.currentWord) {
+      const distance = leven.get(messageData.toLowerCase(), rooms[roomId].roundData.currentWord.toLowerCase());
+      if (distance === 0 && rooms[roomId].users[userId].guessedWord === false) {
+        const scoreUpdate = getGuesserScore(rooms[roomId].settings.roundLength, rooms[roomId].roundData.currentTime);
+        rooms[roomId].users[userId].score += scoreUpdate;
+        rooms[roomId].roundData.totalScore += scoreUpdate;
+        
+        this.socket.emit('correctGuess', {
           uid: userId,
-          score: rooms[roomId].users[userId].score,
+          message: 'You guessed correctly!!',
+        });
+        
+        this.socket.broadcast.to(this.socket.roomId).emit('userCorrectGuess', {
+          message: `${userId} has guessed the word!`,
         });
 
-      rooms[roomId].users[userId].guessedWord = true;
-      return;
-    }
+        this.io.to(this.socket.roomId).emit('scoreUpdate',
+          {
+            uid: userId,
+            score: rooms[roomId].users[userId].score,
+          });
 
-    if (distance < 3 && rooms[roomId].users[userId].guessedWord === false) {
-      this.socket.emit('closeGuess', {
-        uid: userId,
-        message: `${messageData} is close, keep trying!`,
-      });
+        rooms[roomId].users[userId].guessedWord = true;
+        return;
+      }
 
-      this.socket.broadcast.to(this.socket.roomId).emit('chatMessage',
-      {
-        uid: userId,
-        message: messageData,
-      });
-      return;
+      if (distance < 3 && rooms[roomId].users[userId].guessedWord === false) {
+        this.socket.emit('closeGuess', {
+          uid: userId,
+          message: `${messageData} is close, keep trying!`,
+        });
+
+        this.socket.broadcast.to(this.socket.roomId).emit('chatMessage',
+        {
+          uid: userId,
+          message: messageData,
+        });
+        return;
+      }
     }
 
     let eventType = 'chatMessage';

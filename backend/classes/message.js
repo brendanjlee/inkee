@@ -30,17 +30,6 @@ class Message {
       today.getDate();
     return date + '/' + time;
   }
-
-  /**
-   * Constructs a Message object from deserialized JSON object.
-   *
-   * @param {Object} obj deserialized object that has been parsed from JSON.
-   * @return {Object} a Message object.
-   */
-  deserialize(obj) {
-    return new Message(obj.uid, obj.username, obj.messageId, obj.gameId,
-        obj.message);
-  }
 }
 
 module.exports = {
