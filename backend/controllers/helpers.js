@@ -49,3 +49,22 @@ module.exports = {
   getHints,
   hideWord,
 }
+  // Secondary Hints Function**********************************************************
+  // let hints = [];
+  // let displayTime = [];
+  // let returner = [];
+  // const length = word.length;
+  // const hintsCount = Math.floor(0.5 * length);
+  // let counter = 0;
+  // let prevHint = hints[counter];
+  // while(hints.length !== hintsCount) {
+  //   const loc = chance.integer({ min: 0, max: wordLength - 1 });
+  //   hints[counter] = word.charAt(loc);
+  //   counter++;
+  // }
+  // const time = Math.floor(rooms[roomId].currentTime / 2);
+  // const hintInterval = Math.floor(time / (hints.length * 2));
+  // return hints.map((hint, i) => ({
+  //     hint,
+  //     displayTime: Math.floor((time - (i * hintInterval)) / 1000),
+  // }));
