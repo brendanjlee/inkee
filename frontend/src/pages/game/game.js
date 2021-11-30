@@ -185,9 +185,13 @@ function Game({socket, history}) {
                 <div className="sendMessage">
                   <input type='text' id='sendMessage' placeholder="enter guess..."/>
                 </div>
-                <ClearCanvasButton/>
-                <StrokeThickness />
-                <ColorPalette/>
+                {isDrawer &&
+                  <div>
+                    <ClearCanvasButton/>
+                    <StrokeThickness />
+                    <ColorPalette/>
+                  </div>
+                }
               </div>
             </div>
           </div>
