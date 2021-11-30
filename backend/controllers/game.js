@@ -167,7 +167,6 @@ class Game {
     rooms[this.socket.roomId].roundData.secondaryDrawer = secondaryDrawerIdx;
   }
 }
-
 module.exports = {
   Game,
 };

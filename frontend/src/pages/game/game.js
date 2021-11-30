@@ -61,7 +61,6 @@ function Game({socket, history}) {
     };
 
     socket.on('disconnection', disconnectPlayer);
-
     socket.emit('getPlayers');
 
     return () => {
@@ -71,6 +70,7 @@ function Game({socket, history}) {
     };
   }, [socket]);
 
+  /* Send Message Routine */
   useEffect(() => {
     const sendMessage = document.querySelector('#sendMessage');
     const keyPressFunc = (e) => {
@@ -140,6 +140,15 @@ function Game({socket, history}) {
     };
     socket.on('guessedMessage', guessedMessageHandler);
 
+
+    // On drawing and choosing alert
+    socket.on('drawingTeam', ( messageData ) => {
+      setMessages([...messages, messageData]);
+      writeMessage({
+        message: messageData.message,
+      }, { serverMessage: true});
+    });
+
     const scoreUpdateHandler = (scoreUpdate) => {
       const uid = scoreUpdate.uid;
       const newScore = scoreUpdate.score;
@@ -164,6 +173,23 @@ function Game({socket, history}) {
       sendMessage.removeEventListener('keypress', keyPressFunc);
     };
   }, [socket, messages]);
+
+  //On hide word Test
+  useEffect(() => {
+    socket.on('hideWord', ({ word }) => {
+      const p = document.createElement('p');
+      p.textContent = word;
+      p.classList.add('lead', 'fw-bold', 'mb-0');
+      p.style.letterSpacing = '0.5em';
+      document.querySelector('#word').textContent = 'TESTTEST';
+      document.querySelector('#word').innerHTML = '';
+      document.querySelector('#word').append(p);
+      document.querySelector('#word').textContent = 'TESTTEST';
+    });
+    return () => {
+    };
+  }, [socket]);
+
 
   return (
     <div className='gameRoot'>
@@ -202,7 +228,7 @@ function Game({socket, history}) {
   );
 }
 
-const writeMessage = ({ name = '', message}, {correctGuess = false, closeGuess = false, guessedMessage = false} = {}) => {
+const writeMessage = ({ name = '', message}, {correctGuess = false, closeGuess = false, guessedMessage = false, serverMessage = false} = {}) => {
   const p = document.createElement('p');
   const chatBox = document.createTextNode(`${message}`);
   const messages = document.getElementById('chat');
@@ -215,6 +241,13 @@ const writeMessage = ({ name = '', message}, {correctGuess = false, closeGuess =
   }
 
   p.classList.add('p-2', 'mb-0');
+  if (closeGuess) {
+    p.classList.add('closeAnswer');
+  }
+
+  if (correctGuess) {
+    p.classList.add('correctAnswer');
+  }
   p.append(chatBox);
   
   if (closeGuess) {
@@ -227,6 +260,10 @@ const writeMessage = ({ name = '', message}, {correctGuess = false, closeGuess =
 
   if (guessedMessage) {
     p.classList.add('guessedMessage');
+  }
+
+  if (serverMessage) {
+    p.classList.add('serverMessage');
   }
 
   messages.appendChild(p);
