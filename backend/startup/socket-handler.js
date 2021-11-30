@@ -34,15 +34,6 @@ module.exports.init = (server) => {
       new Room(io, socket).joinRandomRoom(joinData.userData);
     });
 
-    socket.on('getSettings', () => {
-      new Room(io, socket).sendSettings();
-    });
-
-    /* Settings change event */
-    socket.on('settingsUpdate', (settingData) => {
-      new Room(io, socket).updateSettings(settingData.settingUpdate);
-    });
-
     /* Canvas related events */
     /* Drawing event */
     socket.on('drawingEvent', (drawingData) => {
@@ -57,7 +48,8 @@ module.exports.init = (server) => {
     /* Game logic and message events */
     /* Start timer on the running game instnace */
     socket.on('startTimer', () => {
-      new Game(io, socket).startTimer();
+      new Game(io, socket).startTimer(rooms[socket.roomId].settings.roundLength,
+        true);
     });
 
     /* User chat message event */

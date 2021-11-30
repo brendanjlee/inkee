@@ -15,6 +15,7 @@ import { WordSelector } from '../../components/WordSelector';
 function Game({socket, history}) {
   const [messages, setMessages] = useState([]);
   const [users, setUsers] = useState([]);
+  const [isDrawer, setIsDrawer] = useState(false);
   window.history.replaceState(null, 'Inkee',
     `/${sessionStorage.getItem('inviteCode')}`);
 
@@ -62,7 +63,6 @@ function Game({socket, history}) {
     };
 
     socket.on('disconnection', disconnectPlayer);
-
     socket.emit('getPlayers');
 
     return () => {
@@ -72,6 +72,7 @@ function Game({socket, history}) {
     };
   }, [socket]);
 
+  /* Send Message Routine */
   useEffect(() => {
     const sendMessage = document.querySelector('#sendMessage');
     const keyPressFunc = (e) => {
@@ -119,11 +120,9 @@ function Game({socket, history}) {
     socket.on('correctGuess', correctGuessHandler);
 
     const timerHandler = (timerValue) => {
-      const minute = timerValue / 60;
-      let second = timerValue % 60;
-      const secondTimer = Math.round(second * 100) / 100;
-      document.getElementById('timer').innerHTML = ` ${minute}:${secondTimer} `;
+      document.getElementById('timer').innerHTML = `  ${timerValue}  `;
     };
+
     socket.on('timer', timerHandler);
 
     const userCorrectGuessHandler = (messageData) => {
@@ -142,6 +141,15 @@ function Game({socket, history}) {
       }, { guessedMessage: true });
     };
     socket.on('guessedMessage', guessedMessageHandler);
+
+
+    // On drawing and choosing alert
+    socket.on('drawingTeam', ( messageData ) => {
+      setMessages([...messages, messageData]);
+      writeMessage({
+        message: messageData.message,
+      }, { serverMessage: true});
+    });
 
     const scoreUpdateHandler = (scoreUpdate) => {
       const uid = scoreUpdate.uid;
@@ -168,35 +176,54 @@ function Game({socket, history}) {
     };
   }, [socket, messages]);
 
+  //On hide word Test
+  useEffect(() => {
+    socket.on('hideWord', ({ word }) => {
+      const p = document.createElement('p');
+      p.textContent = word;
+      p.classList.add('lead', 'fw-bold', 'mb-0');
+      p.style.letterSpacing = '0.5em';
+      document.querySelector('#word').textContent = 'TESTTEST';
+      document.querySelector('#word').innerHTML = '';
+      document.querySelector('#word').append(p);
+      document.querySelector('#word').textContent = 'TESTTEST';
+    });
+    return () => {
+    };
+  }, [socket]);
+
+
   return (
     <div className='gameRoot'>
       <CanvasProvider socket={socket}>
         <div className='purpleSplatTwo'>
           <div className='limeSplat'>
-              <div className="topContainer" >
-              <div className='inkeeLogo'/>
-                <WordSelector></WordSelector>
-                <div className="time" id="timer"> 3:19 </div>
+            <div className="topContainer" >
+              <div className='inkeeLogo' />
+              <WordSelector></WordSelector>
+              <div className="time" id="timer"> 3:19 </div>
+            </div>
+            <div className="middleContainer">
+              <UserProfile users={users} check={false}/>
+              <div className="drawArea">
+                <GameCanvas socket={socket} isDrawer={isDrawer} />
               </div>
-              <div className="middleContainer">
-                <UserProfile users={users} check={false}/>
-                <div className="drawArea">
-                  <GameCanvas socket={socket}/>
-                </div>
-                <div className="chat" id='chat'></div>
+              <div className="chat" id='chat'></div>
+            </div>
+            <div className="bottomContainer">
+              <div className="sendMessage">
+                <input type='text' id='sendMessage' placeholder="enter guess..."/>
               </div>
-              <div className="bottomContainer">
-                <div className="sendMessage">
-                  <input type='text' id='sendMessage' placeholder="enter guess..."/>
-                </div>
-                <div className="drawingTools">
+              {isDrawer &&
+                <div className='drawingTools'>
                   <ClearCanvasButton/>
                   <UndoStrokeButton/>
                   <RedoStrokeButton/>
                   <StrokeThickness />
-                </div>
                   <ColorPalette/>
-              </div>
+                </div>
+              }
+            </div>
           </div>
         
         </div>
@@ -205,7 +232,7 @@ function Game({socket, history}) {
   );
 }
 
-const writeMessage = ({ name = '', message}, {correctGuess = false, closeGuess = false, guessedMessage = false} = {}) => {
+const writeMessage = ({ name = '', message}, {correctGuess = false, closeGuess = false, guessedMessage = false, serverMessage = false} = {}) => {
   const p = document.createElement('p');
   const chatBox = document.createTextNode(`${message}`);
   const messages = document.getElementById('chat');
@@ -218,6 +245,13 @@ const writeMessage = ({ name = '', message}, {correctGuess = false, closeGuess =
   }
 
   p.classList.add('p-2', 'mb-0');
+  if (closeGuess) {
+    p.classList.add('closeAnswer');
+  }
+
+  if (correctGuess) {
+    p.classList.add('correctAnswer');
+  }
   p.append(chatBox);
   
   if (closeGuess) {
@@ -230,6 +264,10 @@ const writeMessage = ({ name = '', message}, {correctGuess = false, closeGuess =
 
   if (guessedMessage) {
     p.classList.add('guessedMessage');
+  }
+
+  if (serverMessage) {
+    p.classList.add('serverMessage');
   }
 
   messages.appendChild(p);
