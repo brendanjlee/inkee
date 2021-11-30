@@ -13,7 +13,12 @@ import { WordSelector } from '../../components/WordSelector';
 function Game({socket, history}) {
   const [messages, setMessages] = useState([]);
   const [users, setUsers] = useState([]);
+  
+  // Round specific states.
   const [isDrawer, setIsDrawer] = useState(false);
+  const [choosingWords, setChoosingWords] = useState(false);
+  const [words, setWords] = useState([]);
+
   window.history.replaceState(null, 'Inkee',
     `/${sessionStorage.getItem('inviteCode')}`);
 
@@ -64,10 +69,19 @@ function Game({socket, history}) {
 
     socket.emit('getPlayers');
 
+    const handleWordChoices = (words) => {
+      console.log(words);
+      setWords(words);
+      setChoosingWords(true);
+    };
+
+    socket.on('chooseWord', handleWordChoices);
+
     return () => {
       socket.off('getPlayers', loadPlayers);
       socket.off('newPlayer', loadNewPlayer);
       socket.off('disconnection', disconnectPlayer);
+      socket.off('chooseWord', handleWordChoices);
     };
   }, [socket]);
 
@@ -131,6 +145,12 @@ function Game({socket, history}) {
     };
     socket.on('userCorrectGuess', userCorrectGuessHandler);
 
+    const handleSelectedDrawing = () => {
+      document.getElementById('word').innerHTML = 'Your teammate is picking the word!';
+    };
+  
+    socket.on('selectedDrawing', handleSelectedDrawing);
+
     const guessedMessageHandler = (messageData) => {
       setMessages([...messages, messageData]);
       writeMessage({
@@ -140,11 +160,42 @@ function Game({socket, history}) {
     };
     socket.on('guessedMessage', guessedMessageHandler);
 
+    const handleWord = (word) => {
+      setIsDrawer(true);
+      setChoosingWords(false);
+      document.getElementById('word').innerHTML = word;
+    };
+
+    socket.on('word', handleWord);
+
+    const handleWordToGuess = (word) => {
+      console.log(word);
+      const hiddenWord = word.join(' ');
+      document.getElementById('word').innerHTML = hiddenWord;
+    };
+    socket.on('wordToGuess', handleWordToGuess);
+
+    const handleEndRound = () => {
+      setIsDrawer(false);
+      setChoosingWords(false);
+      setWords([]);
+    };
+    socket.on('endRound', handleEndRound);
+
+    // On drawing and choosing alert
+    socket.on('drawingTeam', (messageData) => {
+      setMessages([...messages, messageData]);
+      console.log(messageData);
+      writeMessage({
+        message: messageData,
+      }, {serverMessage: true});
+    });
+
     const scoreUpdateHandler = (scoreUpdate) => {
       const uid = scoreUpdate.uid;
       const newScore = scoreUpdate.score;
 
-      const tempUsers = users;
+      const tempUsers = [...users];
       const matchingUserIdx = tempUsers.findIndex((user => user.uid === uid));
       tempUsers[matchingUserIdx].score = newScore;
 
@@ -155,12 +206,16 @@ function Game({socket, history}) {
 
     return () => {
       socket.off('correctGuess', correctGuessHandler);
+      socket.off('word', handleWord);
+      socket.off('wordToGuess', handleWordToGuess);
       socket.off('closeGuess', closeGuessHandler);
       socket.off('chatMessage', chatMessageHandler);
       socket.off('guessedMessage', guessedMessageHandler);
       socket.off('timer', timerHandler);
       socket.off('userCorrectGuess', userCorrectGuessHandler);
       socket.off('scoreUpdate', scoreUpdateHandler);
+      socket.off('selectedDrawing', handleSelectedDrawing);
+      socket.off('endRound', handleEndRound);
       sendMessage.removeEventListener('keypress', keyPressFunc);
     };
   }, [socket, messages]);
@@ -172,8 +227,14 @@ function Game({socket, history}) {
           <div className='limeSplat'>
             <div className="topContainer" >
               <div className='inkeeLogo' />
-              <WordSelector></WordSelector>
-              <div className="time" id="timer"> 3:19 </div>
+              {
+                choosingWords ?
+                  <WordSelector words={words} socket={socket}></WordSelector> :
+                  <div id='word' className='word'>
+                    Drawer is selecting word.
+                  </div>
+              }
+              <div className="time" id="timer"> 10 </div>
             </div>
             <div className="middleContainer">
               <UserProfile users={users} check={false}/>
