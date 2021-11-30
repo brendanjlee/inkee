@@ -56,6 +56,7 @@ function Home({socket, history}) {
 
     if (canvas.changed === false) {
       console.log('You haven\'t drawn an avatar! Drawing something nice!');
+      alert('You haven\'t drawn an avatar! Drawing something nice!');
       return false;
     }
 
