@@ -2,10 +2,11 @@ const { assert } = require('./assert');
 const { createServer } = require('http');
 const Client = require('socket.io-client');
 const sockets = require('../../startup/socket-handler');
+const {Game} = require('../game');
 
 rooms = {};
 
-describe('Room Test', () => {
+describe('Disconnect Test', () => {
   let io;
   let clientSocket1;
   let clientSocket2;
@@ -78,25 +79,7 @@ describe('Room Test', () => {
     });
   });
 
-  test('Join room same username', (done) => {
-    const testUserData = {
-      uid: 'admin',
-      avatar: 'test',
-    };
-
-    clientSocket2.on('ERROR', (msg) => {
-      assert(rooms[createdInviteCode].users[testUserData.uid].uid === testUserData.uid);
-      assert(rooms[createdInviteCode].users[testUserData.uid].avatar !== testUserData.avatar);
-      done();
-    });
-
-    clientSocket2.emit('joinRoom', {
-      inviteCode: createdInviteCode,
-      userData: testUserData,
-    });
-  });
-
-  test('Join room event different username', (done) => {
+  test('Join room event client 2', (done) => {
     const testUserData = {
       uid: 'client1',
       avatar: 'temp',
@@ -115,39 +98,23 @@ describe('Room Test', () => {
     });
   });
 
-  test('Join random room same username', (done) => {
-    const testUserData = {
-      uid: 'admin',
-      avatar: 'test',
-    };
-
-    clientSocket2.on('ERROR', (msg) => {
-      assert(rooms[createdInviteCode].users[testUserData.uid].uid === testUserData.uid);
-      assert(rooms[createdInviteCode].users[testUserData.uid].avatar !== testUserData.avatar);
+  test('Test Start Game', (done) => {
+    clientSocket1.on('startGame', () => {
+      assert(rooms[createdInviteCode].inProgress);
       done();
     });
 
-    clientSocket2.emit('joinRoom', {
-      inviteCode: createdInviteCode,
-      userData: testUserData,
-    });
+    clientSocket1.emit('startGame');
   });
 
-  test('Join random room different username', (done) => {
-    const testUserData = {
-      uid: 'client2',
-      avatar: 'temp',
-    };
-
-    clientSocket2.on('inviteCode', (inviteCode) => {
-      assert(rooms[inviteCode].users[testUserData.uid].uid === testUserData.uid);
-      assert(rooms[inviteCode].users[testUserData.uid].avatar === testUserData.avatar);
-      done();
+  test('Test Game Timer', (done) => {
+    clientSocket1.on('timer', (val) => {
+      if (val === rooms[createdInviteCode].settings.roundLength - 1) {
+        rooms[createdInviteCode].currentTime = 1;
+        done();
+      }
     });
 
-    clientSocket2.emit('joinRoom', {
-      inviteCode: createdInviteCode,
-      userData: testUserData,
-    });
+    clientSocket1.emit('startTimer');
   });
 });

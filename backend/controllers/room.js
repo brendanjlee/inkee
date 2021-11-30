@@ -38,9 +38,17 @@ class Room {
 
     this.socket.join(inviteCode);
     this.socket.emit('inviteCode', inviteCode);
+
+    console.log(gameConfiguration);
+    let customWordsOnly = gameConfiguration.customWordsOnly;
+    let customWords = gameConfiguration.customWords;
+    if (customWords.length < 10 && customWordsOnly) {
+      customWordsOnly = false;
+    }
+
     rooms[inviteCode] = new RoomInstance(newUser, gameConfiguration.numRounds,
       gameConfiguration.roundLength, gameConfiguration.isPrivate, 
-      gameConfiguration.customWords, gameConfiguration.customWordsOnly);
+      customWords, customWordsOnly);
   }
 
   /**
@@ -97,14 +105,6 @@ class Room {
   }
 
   /**
-   * Send settings to the connected user.
-   */
-  sendSettings() {
-    const {roomId} = this.socket;
-    this.socket.emit('loadSettings', rooms[roomId].settings);
-  }
-
-  /**
    * Send players to the connected user
    */
   sendUsers() {
@@ -115,20 +115,6 @@ class Room {
     });
 
     this.socket.emit('getPlayers', users);
-  }
-
-  /**
-   * Updates settings in the room.
-   *
-   * @param {object} data the settings data that has been updated.
-   */
-  updateSettings(data) {
-    if (this.socket.player.isAdmin) {
-      this.io.to(this.socket.roomId).emit('settingsUpdate', data);
-      return;
-    }
-
-    this.socket.emit('ERROR', 'Not authorized to update settings!');
   }
 }
 

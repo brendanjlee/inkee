@@ -13,6 +13,7 @@ import { WordSelector } from '../../components/WordSelector';
 function Game({socket, history}) {
   const [messages, setMessages] = useState([]);
   const [users, setUsers] = useState([]);
+  const [isDrawer, setIsDrawer] = useState(false);
   window.history.replaceState(null, 'Inkee',
     `/${sessionStorage.getItem('inviteCode')}`);
 
@@ -117,11 +118,9 @@ function Game({socket, history}) {
     socket.on('correctGuess', correctGuessHandler);
 
     const timerHandler = (timerValue) => {
-      const minute = timerValue / 60;
-      let second = timerValue % 60;
-      const secondTimer = Math.round(second * 100) / 100;
-      document.getElementById('timer').innerHTML = ` ${minute}:${secondTimer} `;
+      document.getElementById('timer').innerHTML = `  ${timerValue}  `;
     };
+
     socket.on('timer', timerHandler);
 
     const userCorrectGuessHandler = (messageData) => {
@@ -171,28 +170,30 @@ function Game({socket, history}) {
       <CanvasProvider socket={socket}>
         <div className='purpleSplatTwo'>
           <div className='limeSplat'>
-              <div className="topContainer" >
-              <div className='inkeeLogo'/>
-                <WordSelector></WordSelector>
-                <div className="time" id="timer"> 3:19 </div>
+            <div className="topContainer" >
+              <div className='inkeeLogo' />
+              <WordSelector></WordSelector>
+              <div className="time" id="timer"> 3:19 </div>
+            </div>
+            <div className="middleContainer">
+              <UserProfile users={users} check={false}/>
+              <div className="drawArea">
+                <GameCanvas socket={socket} isDrawer={isDrawer} />
               </div>
-              <div className="middleContainer">
-                <UserProfile users={users} check={false}/>
-                <div className="drawArea">
-                  <GameCanvas socket={socket}/>
-                </div>
-                <div className="chat" id='chat'></div>
+              <div className="chat" id='chat'></div>
+            </div>
+            <div className="bottomContainer">
+              <div className="sendMessage">
+                <input type='text' id='sendMessage' placeholder="enter guess..."/>
               </div>
-              <div className="bottomContainer">
-                <div className="sendMessage">
-                  <input type='text' id='sendMessage' placeholder="enter guess..."/>
-                </div>
-                <div className="drawingTools">
+              {isDrawer &&
+                <div className='drawingTools'>
                   <ClearCanvasButton/>
                   <StrokeThickness />
-                </div>
                   <ColorPalette/>
-              </div>
+                </div>
+              }
+            </div>
           </div>
         
         </div>
