@@ -76,7 +76,6 @@ class Game {
       sendUserMessage(this.socket.roomId, secondaryDrawer, 'word', word);
     }
 
-    this.clearTimer();
     this.startTimer(rooms[this.socket.roomId].settings.roundLength, true);
 
     const currentWordHidden = [];
@@ -118,6 +117,10 @@ class Game {
    * @param {boolean} isRoundTimer true if the timer applies to round.
    */
   startTimer(length, isRoundTimer = false) {
+    if (rooms[this.socket.roomId].roundData.currentTimer !== 0) {
+      this.clearTimer();
+    }
+
     rooms[this.socket.roomId].roundData.currentTime = length;
     this.io.to(this.socket.roomId).emit('timer',
       rooms[this.socket.roomId].roundData.currentTime);
@@ -152,6 +155,7 @@ class Game {
 
       if (!isRoundTimer && rooms[this.socket.roomId].roundData.currentTime === 0) {
         const wordIdx = Math.trunc(Math.random() * 3);
+        this.clearTimer();
         this.selectWord(rooms[this.socket.roomId].roundData.wordChoices[wordIdx]);
       }
       
@@ -160,7 +164,6 @@ class Game {
       }
     }, 1000);
     rooms[this.socket.roomId].roundData.currentTimer = intervalID;
-    console.log('intervalID ' + intervalID);
   }
 
   /**
@@ -232,9 +235,10 @@ class Game {
     if (newDrawer >= Object.keys(users).length) {
       newDrawer = 0;
     }
+
+    this.clearTimer();
     rooms[this.socket.roomId].roundData.primaryDrawer = newDrawer;
     rooms[this.socket.roomId].roundData = new Round(newDrawer);
-    this.clearTimer();
 
     const userIds = Object.keys(users);
     userIds.forEach((userId) => {
@@ -252,8 +256,8 @@ class Game {
   }
 
   clearTimer() {
+    console.log('Clearing: ' + rooms[this.socket.roomId].roundData.currentTimer);
     clearInterval(rooms[this.socket.roomId].roundData.currentTimer);
-    rooms[this.socket.roomId].roundData.currentTimer = 0;
     this.io.to(this.socket.roomId).emit('timer', 0);
   }
 }

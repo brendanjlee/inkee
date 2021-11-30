@@ -1,3 +1,7 @@
+/* global rooms */
+const GraphemeSplitter = require('grapheme-splitter');
+const splitter = new GraphemeSplitter();
+
 const getGuesserScore = (gameLength, currentGameTime) => {
   return Math.floor((currentGameTime / gameLength) * 500);
 };
