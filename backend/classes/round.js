@@ -8,6 +8,7 @@ class Round {
     this.wordChoices = [];
     this.primaryDrawer = 0;
     this.secondaryDrawer = 0;
+    this.totalScore = 0;
   }
 };
 

@@ -36,6 +36,7 @@ class Message {
       if (distance === 0 && rooms[roomId].users[userId].guessedWord === false) {
         const scoreUpdate = getGuesserScore(rooms[roomId].settings.roundLength, rooms[roomId].roundData.currentTime);
         rooms[roomId].users[userId].score += scoreUpdate;
+        rooms[roomId].roundData.totalScore += scoreUpdate;
         
         this.socket.emit('correctGuess', {
           uid: userId,
@@ -45,7 +46,7 @@ class Message {
         this.socket.broadcast.to(this.socket.roomId).emit('userCorrectGuess', {
           message: `${userId} has guessed the word!`,
         });
-        
+
         this.io.to(this.socket.roomId).emit('scoreUpdate',
           {
             uid: userId,
