@@ -52,6 +52,9 @@ class Message {
           {
             uid: userId,
             score: rooms[roomId].users[userId].score,
+            primaryDrawerId: rooms[roomId].roundData.primaryDrawer,
+            secondaryDrawerId: rooms[roomId].roundData.secondaryDrawer,
+            totalUsers: rooms[roomId].users.length
           });
 
         rooms[roomId].users[userId].guessedWord = true;
