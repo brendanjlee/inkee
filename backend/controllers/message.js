@@ -34,7 +34,7 @@ class Message {
     if (rooms[roomId].roundData.currentWord) {
       const distance = leven.get(messageData.toLowerCase(), rooms[roomId].roundData.currentWord.toLowerCase());
       if (distance === 0 && rooms[roomId].users[userId].guessedWord === false) {
-        const scoreUpdate = getGuesserScore(rooms[roomId].roundLength, rooms[roomId].currentTime);
+        const scoreUpdate = getGuesserScore(rooms[roomId].settings.roundLength, rooms[roomId].roundData.currentTime);
         rooms[roomId].users[userId].score += scoreUpdate;
         
         this.socket.emit('correctGuess', {
@@ -45,7 +45,7 @@ class Message {
         this.socket.broadcast.to(this.socket.roomId).emit('userCorrectGuess', {
           message: `${userId} has guessed the word!`,
         });
-
+        
         this.io.to(this.socket.roomId).emit('scoreUpdate',
           {
             uid: userId,

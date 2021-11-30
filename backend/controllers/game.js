@@ -78,35 +78,35 @@ class Game {
    * @param {boolean} isRoundTimer true if the timer applies to round.
    */
   startTimer(length, isRoundTimer = false) {
-    rooms[this.socket.roomId].currentTime = length;
+    rooms[this.socket.roomId].roundData.currentTime = length;
     this.io.to(this.socket.roomId).emit('timer',
-      rooms[this.socket.roomId].currentTime);
+      rooms[this.socket.roomId].roundData.currentTime);
 
     const interval = setInterval(() => {
-      rooms[this.socket.roomId].currentTime--;
+      rooms[this.socket.roomId].roundData.currentTime--;
       this.io.to(this.socket.roomId).emit('timer',
-        rooms[this.socket.roomId].currentTime);
+        rooms[this.socket.roomId].roundData.currentTime);
       
-      if (isRoundTimer && rooms[this.socket.roomId].currentTime - 1 % 15 === 0) {
+      if (isRoundTimer && rooms[this.socket.roomId].roundData.currentTime - 1 % 15 === 0) {
         // TODO: SEND HINT.
       }
       
-      if (isRoundTimer && rooms[this.socket.roomId].currentTime === 0) {
+      if (isRoundTimer && rooms[this.socket.roomId].roundData.currentTime === 0) {
         this.io.to(this.socket.roomId).emit('endRound');
         rooms[this.socket.roomId].roundData.roundInProgress = false;
       }
 
-      if (!isRoundTimer && rooms[this.socket.roomId].currentTime === 0) {
+      if (!isRoundTimer && rooms[this.socket.roomId].roundData.currentTime === 0) {
         const wordIdx = Math.trunc(Math.random() * 3);
         this.selectWord(rooms[this.socket.roomId].roundData.wordChoices[wordIdx]);
       }
       
-      if (rooms[this.socket.roomId].currentTime === 0) {
-        rooms[this.socket.roomId].currentTimer = 0;
+      if (rooms[this.socket.roomId].roundData.currentTime === 0) {
+        rooms[this.socket.roomId].roundData.currentTimer = 0;
         clearInterval(interval);
       }
     }, 1000);
-    rooms[this.socket.roomId].currentTimer = interval;
+    rooms[this.socket.roomId].roundData.currentTimer = interval;
   }
 
   /**
