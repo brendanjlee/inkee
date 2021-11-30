@@ -40,9 +40,9 @@ class Game {
     const users = rooms[this.socket.roomId].users;
     const userIds = Object.keys(users);
 
-    let message = `${users[userIds[primaryDrawer]].uid}`
+    let message = `<b>${users[userIds[primaryDrawer]].uid}<b>`
     if (secondaryDrawer) {
-      message += ` and ${users[userIds[secondaryDrawer]].uid} are drawing!`;
+      message += ` and <b>${users[userIds[secondaryDrawer]].uid}<b> are drawing!`;
     } else {
       message += ' is drawing!';
     }
