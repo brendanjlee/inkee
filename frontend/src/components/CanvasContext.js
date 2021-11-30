@@ -42,7 +42,7 @@ export const CanvasProvider = ({ children, socket = null }) => {
       drawing.onload = () => {
         context.drawImage(drawing, 0, 0, canvas.width / 2, canvas.height / 2);
       };
-      drawing.src = 'https://i.ibb.co/z4Gb7Sw/output-onlinepngtools-1.png';
+      drawing.src = 'https://i.imgur.com/XhUhmR7.png';
     }
   };
 
