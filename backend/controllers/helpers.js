@@ -6,65 +6,48 @@ const getGuesserScore = (gameLength, currentGameTime) => {
   return Math.floor((currentGameTime / gameLength) * 500);
 };
 
-function hideWord() {
-  this.socket.to(this.socket.roomId).emit('hideWord', { word: splitter.splitGraphemes('TestWord').map((char) => (char !== ' ' ? '_' : char)).join('') });
-}
-
-function getHints(word, roomId) {
+function getHints(word) {
   let hints = [];
   const length = splitter.countGraphemes(word);
   const hintsCount = Math.floor(0.5 * length);
   const graphemes = splitter.splitGraphemes(word);
   let prevHint = graphemes.map((char) => (char !== ' ' ? '_' : ' '));
+  
   while (hints.length !== hintsCount) {
-    const loc = chance.integer({ min: 0, max: wordLength - 1 });
+    const loc = Math.trunc(Math.random() * word.length);
     if (prevHint[loc] !== '_') {
       continue;
     }
     prevHint = [...prevHint.slice(0, loc), graphemes[loc], ...prevHint.slice(loc + 1)];
     hints.push(prevHint);
   }
-  hints = hints.map((hint) => hint.join(''));
-  const time = Math.floor(rooms[roomId].currentTime / 2);
-  const hintInterval = Math.floor(time / (hints.length * 2));
-  return hints.map((hint, i) => ({
-      hint,
-      displayTime: Math.floor((time - (i * hintInterval)) / 1000),
-  }));
+  return hints;
 }
-
-const pickDrawingTeam = (users) => {
-
-};
 
 const prepareUser = (user) => {
   const cleanUser = Object.assign({}, user);
   delete cleanUser.socket;
   return cleanUser;
-}
+};
+
+const sendUserMessage = (roomId, index, type, data = undefined) => {
+  const users = rooms[roomId].users;
+  const userIds = Object.keys(users);
+
+  if (!users[userIds[index]]) {
+    return;
+  }
+
+  if (data) {
+    users[userIds[index]].socket.emit(type, data);
+  } else {
+    users[userIds[index]].socket.emit(type);
+  }
+};
 
 module.exports = {
   getGuesserScore,
   prepareUser,
   getHints,
-  hideWord,
-}
-  // Secondary Hints Function**********************************************************
-  // let hints = [];
-  // let displayTime = [];
-  // let returner = [];
-  // const length = word.length;
-  // const hintsCount = Math.floor(0.5 * length);
-  // let counter = 0;
-  // let prevHint = hints[counter];
-  // while(hints.length !== hintsCount) {
-  //   const loc = chance.integer({ min: 0, max: wordLength - 1 });
-  //   hints[counter] = word.charAt(loc);
-  //   counter++;
-  // }
-  // const time = Math.floor(rooms[roomId].currentTime / 2);
-  // const hintInterval = Math.floor(time / (hints.length * 2));
-  // return hints.map((hint, i) => ({
-  //     hint,
-  //     displayTime: Math.floor((time - (i * hintInterval)) / 1000),
-  // }));
+  sendUserMessage,
+};
