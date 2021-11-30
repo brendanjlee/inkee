@@ -5,6 +5,9 @@ class Round {
     this.currentTime = 0;
     this.roundInProgress = false;
     this.currentWord = 'TestWord';
+    this.wordChoices = [];
+    this.primaryDrawer = 0;
+    this.secondaryDrawer = 0;
   }
 };
 

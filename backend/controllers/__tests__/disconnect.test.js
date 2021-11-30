@@ -72,6 +72,8 @@ describe('Disconnect Test', () => {
       gameConfiguration: {
         numRounds: 30,
         roundLength: 30,
+        customWordsOnly: false,
+        customWords: [],
       },
       userData: testUserData,
     });

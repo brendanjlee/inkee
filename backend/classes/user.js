@@ -18,16 +18,6 @@ class User {
     this.guessedWord = false;
     this.socket = socket;
   }
-
-  /**
-   * Constructs a User object from deserialized JSON object.
-   *
-   * @param {Object} obj deserialized object that has been parsed from JSON.
-   * @return {Object} a User object.
-   */
-  deserialize(obj) {
-    return new User(obj.uid, obj.avatar, obj.score, obj.isDrawing, obj.isAdmin, obj.guessedWord, obj.socket);
-  }
 }
 
 module.exports = {

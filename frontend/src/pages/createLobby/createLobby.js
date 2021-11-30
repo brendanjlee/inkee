@@ -84,10 +84,10 @@ function CreateLobby({socket, history}) {
     const custom_words = document.getElementById('custom_words').value.split(/[ ,]+/);
     
     if (usingCustomWords === 'yes') {
-      if (custom_words.length > 10) {
+      if (custom_words.length >= 10) {
         gameConfiguration.customWords = custom_words; 
       } else {
-        alert('There must be more than 10 custom words!');
+        alert('There must be at least 10 custom words!');
         return;
       }
     } else if (custom_words.length > 0) {

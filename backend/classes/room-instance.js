@@ -21,6 +21,7 @@ class RoomInstance {
     this.settings = new GameConfiguration(numRounds, roundLength, isPrivate,
       customWords, customWordsOnly);
     this.roundData = new Round();
+    this.wordsUsed = [];
   }
 };
 
