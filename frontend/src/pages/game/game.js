@@ -152,11 +152,17 @@ function Game({socket, history}) {
     const scoreUpdateHandler = (scoreUpdate) => {
       const uid = scoreUpdate.uid;
       const newScore = scoreUpdate.score;
-
+      const primaryDrawerIdx = scoreUpdate.primaryDrawerId;
+      const secondaryDrawerId = scoreUpdate.secondaryDrawerId;
+      const totalUsers = scoreUpdate.totalUsers;
+      const drawerScore = Math.floor(newScore / totalUsers);
       const tempUsers = users;
       const matchingUserIdx = tempUsers.findIndex((user => user.uid === uid));
       tempUsers[matchingUserIdx].score = newScore;
 
+      //Set Drawer Score
+      tempUsers[primaryDrawerId].score = drawerScore;
+      tempUsers[secondaryDrawerId].score = drawerScore;
       setUsers(tempUsers);
     };
 
