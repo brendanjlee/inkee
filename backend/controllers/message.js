@@ -1,4 +1,6 @@
 const leven = require('fast-levenshtein');
+const GraphemeSplitter = require('grapheme-splitter');
+const splitter = new GraphemeSplitter();
 const {getGuesserScore} = require('./helpers');
 const {Game} = require('./game');
 
@@ -25,7 +27,6 @@ class Message {
    */
   onMessage(messageData) {
     const {roomId, player} = this.socket;
-
     const userId = player.uid;
     if (messageData === '') {
       this.socket.emit('ERROR', 'Message cannot be empty!');

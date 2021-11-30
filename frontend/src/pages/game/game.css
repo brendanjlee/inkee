@@ -17,11 +17,11 @@
 }
 
 .inkeeLogo {
-  display:inline-block;
+  float: left;
   max-width: fit-content;
   content: url(../../assets/inkee-logo.png);
-  width: 20rem;
-  height: 6rem;
+  width: 12rem;
+  height: 3rem;
 }
 
 .topContainer {
@@ -61,7 +61,7 @@
 }
 
 .time {
-  display:inline-block;
+  float: right;
   max-width: fit-content;
   font-size: 4rem;
   font-family: 'Montserrat', sans-serif;
@@ -179,7 +179,7 @@
 }
 
 .closeAnswer {
-  color: #e00d0d;
+  color: #df7513;
   background-color: #fff3cd !important;
   border-color: #ffecb5;
 }
@@ -188,6 +188,12 @@
   color: #bf03f8;
   background-color: #ecbbff !important;
   border-color: #d690ff;
+}
+
+.serverMessage {
+  color: rgb(255, 255, 255);
+  background-color: rgb(0, 118, 243) !important;
+  border-color: #9da7e6;
 }
 
 .middleContainer img {

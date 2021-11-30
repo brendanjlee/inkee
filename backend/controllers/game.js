@@ -257,7 +257,6 @@ class Game {
     this.io.to(this.socket.roomId).emit('timer', 0);
   }
 }
-
 module.exports = {
   Game,
 };
