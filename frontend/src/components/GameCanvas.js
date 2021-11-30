@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useCanvas } from './CanvasContext';
 
-export function GameCanvas({socket = null}) {
+export function GameCanvas({socket = null, isDrawer = true}) {
   const {
     canvasRef,
     prepareCanvas,
@@ -43,9 +43,9 @@ export function GameCanvas({socket = null}) {
   return (
     <canvas
       id='canvas'
-      onMouseDown={startDrawing}
-      onMouseUp={finishDrawing}
-      onMouseMove={inDrawing}
+      onMouseDown={isDrawer ? startDrawing : undefined}
+      onMouseUp={isDrawer ? finishDrawing : undefined}
+      onMouseMove={isDrawer ? inDrawing : undefined}
       ref={canvasRef}
     />
   );
