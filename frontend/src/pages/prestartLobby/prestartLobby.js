@@ -97,33 +97,6 @@ function PrestartLobby({socket, history}) {
     };
   }, [socket]);
 
-  // Setting routines.
-  useEffect(() => {
-    
-    const settingListener = (settingUpdate) => {
-      setSettings((prevSettings) => {
-        const key = settingUpdate.key;
-        const value = settingUpdate.value;
-
-        prevSettings[key] = value;
-        return prevSettings;
-      });
-    };
-
-    const populateSettings = (settingsData) => {
-      setSettings(settingsData.settings);
-    };
-
-    socket.on('settingUpdate', settingListener);
-    socket.on('loadSettings', populateSettings);
-    socket.emit('getSettings');
-
-    return () => {
-      socket.off('settingUpdate', settingListener);
-      socket.off('loadSettings', populateSettings);
-    };
-  }, [socket]);
-
   // Start-game routines.
   useEffect(() => {
     const startGame = () => {

@@ -17,17 +17,6 @@ class GameConfiguration {
     this.customWords = customWords;
     this.customWordsOnly = customWordsOnly;
   }
-
-  /**
-   * Constructs a GameConfiguration object from deserialized JSON object.
-   *
-   * @param {Object} obj deserialized object that has been parsed from JSON.
-   * @return {Object} a GameConfiguration object.
-   */
-  deserialize(obj) {
-    return new GameConfiguration(obj.numRounds, obj.roundLength, obj.lobbySize,
-      obj.isPrivate, obj.customWords, obj.customWordsOnly);
-  }
 }
 
 module.exports = {
