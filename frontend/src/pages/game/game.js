@@ -12,6 +12,8 @@ import { StrokeThickness } from '../../components/StrokeThickness';
 function Game({socket, history}) {
   const [messages, setMessages] = useState([]);
   const [users, setUsers] = useState([]);
+  const [isDrawer, setIsDrawer] = useState(false);
+
   window.history.replaceState(null, 'Inkee',
     `/${sessionStorage.getItem('inviteCode')}`);
 
@@ -116,10 +118,7 @@ function Game({socket, history}) {
     socket.on('correctGuess', correctGuessHandler);
 
     const timerHandler = (timerValue) => {
-      const minute = timerValue / 60;
-      let second = timerValue % 60;
-      const secondTimer = Math.round(second * 100) / 100;
-      document.getElementById('timer').innerHTML = ` ${minute}:${secondTimer} `;
+      document.getElementById('timer').innerHTML = `${timerValue}`;
     };
     socket.on('timer', timerHandler);
 
@@ -178,7 +177,7 @@ function Game({socket, history}) {
               <div className="middleContainer">
                 <UserProfile users={users}/>
                 <div className="drawArea">
-                  <GameCanvas socket={socket}/>
+                  <GameCanvas socket={socket} isDrawer={isDrawer} />
                 </div>
                 <div className="chat" id='chat'></div>
               </div>
