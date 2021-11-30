@@ -7,11 +7,11 @@ export const StrokeThickness = () => {
 
   return (
     <div>
-      <input id="typeinp"
+      <input className="slider" id="typeinp"
         type="range"
         min="1"
-        max="15"
-        defaultValue="5"
+        max="30"
+        defaultValue="15"
         step="1"
         onChange={(event) => {
           let slider = (parseInt(event.target.value));
