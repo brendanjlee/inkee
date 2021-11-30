@@ -17,11 +17,11 @@
 }
 
 .inkeeLogo {
-  display:inline-block;
+  float: left;
   max-width: fit-content;
   content: url(../../assets/inkee-logo.png);
-  width: 20rem;
-  height: 6rem;
+  width: 12rem;
+  height: 3rem;
 }
 
 .topContainer {
@@ -51,7 +51,7 @@
 }
 
 .time {
-  display:inline-block;
+  float: right;
   max-width: fit-content;
   font-size: 4rem;
   font-family: 'Montserrat', sans-serif;
