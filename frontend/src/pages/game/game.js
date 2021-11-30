@@ -171,7 +171,7 @@ function Game({socket, history}) {
         <div className='purpleSplatTwo'>
           <div className='limeSplat'>
             <div className="topContainer" >
-              <div className='inkeeLogo'/>
+              <div className='inkeeLogo' />
               <WordSelector></WordSelector>
               <div className="time" id="timer"> 3:19 </div>
             </div>
