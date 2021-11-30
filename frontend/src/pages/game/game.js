@@ -263,7 +263,7 @@ function Game({socket, history}) {
   );
 }
 
-const writeMessage = ({ name = '', message}, {correctGuess = false, closeGuess = false, guessedMessage = false} = {}) => {
+const writeMessage = ({ name = '', message}, {correctGuess = false, closeGuess = false, guessedMessage = false, serverMessage = false} = {}) => {
   const p = document.createElement('p');
   const chatBox = document.createTextNode(`${message}`);
   const messages = document.getElementById('chat');
@@ -276,6 +276,13 @@ const writeMessage = ({ name = '', message}, {correctGuess = false, closeGuess =
   }
 
   p.classList.add('p-2', 'mb-0');
+  if (closeGuess) {
+    p.classList.add('closeAnswer');
+  }
+
+  if (correctGuess) {
+    p.classList.add('correctAnswer');
+  }
   p.append(chatBox);
   
   if (closeGuess) {
@@ -288,6 +295,10 @@ const writeMessage = ({ name = '', message}, {correctGuess = false, closeGuess =
 
   if (guessedMessage) {
     p.classList.add('guessedMessage');
+  }
+
+  if (serverMessage) {
+    p.classList.add('serverMessage');
   }
 
   messages.appendChild(p);
