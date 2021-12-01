@@ -44,7 +44,9 @@ class Game {
 
     users[userIds[primaryDrawer]].isDrawing = true;
 
-    let message = `${users[userIds[primaryDrawer]].uid}`
+    const currentRound = rooms[this.socket.roomId].currentRound;
+    const totalRounds = rooms[this.socket.roomId].settings.numRounds;
+    let message = `Round ${currentRound}/${totalRounds}: ${users[userIds[primaryDrawer]].uid}`
     if (secondaryDrawer) {
       users[userIds[secondaryDrawer]].isDrawing = true;
       message += ` and ${users[userIds[secondaryDrawer]].uid} are drawing!`;
@@ -229,7 +231,7 @@ class Game {
   endRound() {
     this.io.to(this.socket.roomId).emit('endRound');
     rooms[this.socket.roomId].roundData.roundInProgress = false;
-    
+
     // Send score to the drawing team.
     const users = rooms[this.socket.roomId].users;
 
@@ -282,6 +284,7 @@ class Game {
     });
 
     if (rooms[this.socket.roomId].currentRound < rooms[this.socket.roomId].settings.numRounds - 1) {
+      rooms[this.socket.roomId].currentRound++;
       this.prepareRound();
     } else {
       this.io.to(this.socket.roomId).emit('endGame');
