@@ -5,6 +5,7 @@ class Round {
     this.roundInProgress = false;
     this.currentWord = 'TestWord';
     this.hints = [];
+    this.currentHint = [];
     this.wordChoices = [];
     this.primaryDrawer = primaryDrawer;
     this.secondaryDrawer = 0;
