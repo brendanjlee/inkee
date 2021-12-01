@@ -24,7 +24,8 @@ function PrestartLobby({socket, history}) {
   const [inviteCode, setInviteCode] = useState('');
   const [inviteCodeURL, setInviteCodeURL] = useState(window.location.origin);
   const [users, setUsers] = useState([]);
-  const [settings, setSettings] = useState({});
+  const [isAdmin, setIsAdmin] = useState(false);
+
   window.history.replaceState(null, 'Inkee Prestart Lobby',
     `/${sessionStorage.getItem('inviteCode')}`);
 
@@ -163,7 +164,11 @@ function PrestartLobby({socket, history}) {
           ButtonClick.play();
           socket.emit('startGame');
         }} variant='primary'>ready</Button>
-        <UserProfile users={users} isPrestartLobby={true}/>
+        <UserProfile users={users}
+          isAdmin={sessionStorage.getItem('isAdmin')}
+          currentUser={sessionStorage.getItem('username')}
+          isPrestartLobby={true}
+          socket={socket} />
       </div>
     </div>
   );
