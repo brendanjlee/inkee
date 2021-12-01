@@ -81,7 +81,7 @@ class Game {
     const currentWordHidden = [];
     const currentWord = rooms[this.socket.roomId].roundData.currentWord;
     for (let i = 0; i < currentWord.length; i++) {
-      currentWordHidden.push('_');
+      currentWordHidden.push(currentWord[i] !== ' ' ? '_' : ' ');
     }
 
     rooms[this.socket.roomId].roundData.currentHint = currentWordHidden;
@@ -143,7 +143,7 @@ class Game {
             if (i === primaryDrawer || i === secondaryDrawer) {
               continue;
             }
-  
+
             sendUserMessage(this.socket.roomId, i, 'wordToGuess', currentHint);
           } 
         }
@@ -243,24 +243,28 @@ class Game {
     const userIds = Object.keys(rooms[this.socket.roomId].users);
     const primaryDrawerIdx = rooms[this.socket.roomId].roundData.primaryDrawer;
     const primaryDrawer = rooms[this.socket.roomId].users[userIds[primaryDrawerIdx]];
-    rooms[this.socket.roomId].users[primaryDrawer.uid].score += drawingScore;
-
-    this.io.to(this.socket.roomId).emit('scoreUpdate',
-      {
-        uid: primaryDrawer.uid,
-        score: rooms[this.socket.roomId].users[primaryDrawer.uid].score,
-      });
+    
+    if (primaryDrawer) {
+      rooms[this.socket.roomId].users[primaryDrawer.uid].score += drawingScore;
+      this.io.to(this.socket.roomId).emit('scoreUpdate',
+        {
+          uid: primaryDrawer.uid,
+          score: rooms[this.socket.roomId].users[primaryDrawer.uid].score,
+        });
+    }
 
     if (rooms[this.socket.roomId].roundData.secondaryDrawer) {
       const secondaryDrawerIdx = rooms[this.socket.roomId].roundData.secondaryDrawer;
       const secondaryDrawer = rooms[this.socket.roomId].users[userIds[secondaryDrawerIdx]];
-      rooms[this.socket.roomId].users[secondaryDrawer.uid].score += drawingScore;
       
-      this.io.to(this.socket.roomId).emit('scoreUpdate',
-      {
-        uid: secondaryDrawer.uid,
-        score: rooms[this.socket.roomId].users[secondaryDrawer.uid].score,
-      });
+      if (secondaryDrawer) {
+        rooms[this.socket.roomId].users[secondaryDrawer.uid].score += drawingScore;
+        this.io.to(this.socket.roomId).emit('scoreUpdate',
+          {
+            uid: secondaryDrawer.uid,
+            score: rooms[this.socket.roomId].users[secondaryDrawer.uid].score,
+          });
+      }
     }
 
     let newDrawer = rooms[this.socket.roomId].roundData.primaryDrawer + 1;
