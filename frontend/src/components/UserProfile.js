@@ -1,6 +1,6 @@
 import { React } from 'react';
 
-export function UserProfile({users = [], isPrestartLobby, currentUser = null, isAdmin = false}) {
+export function UserProfile({users = [], isPrestartLobby, currentUser = null, isAdmin = false, socket = null}) {
   let listItems = users.map((user) =>
     <div className="userProfile" key={user.uid}>
       <canvas className='avatar' id={user.uid + '-avatar'}/>
@@ -25,7 +25,9 @@ export function UserProfile({users = [], isPrestartLobby, currentUser = null, is
         </div>
         { 
           currentUser !== user.uid && isAdmin &&
-          <button className='removePlayer'>X</button>
+          <button className='removePlayer' onClick={() => {
+            socket.emit('disconnectPlayer', user.uid);
+          }}>X</button>
         }
       </div>);
 

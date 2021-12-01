@@ -165,7 +165,8 @@ function PrestartLobby({socket, history}) {
         <UserProfile users={users}
           isAdmin={sessionStorage.getItem('isAdmin')}
           currentUser={sessionStorage.getItem('username')}
-          isPrestartLobby={true}/>
+          isPrestartLobby={true}
+          socket={socket} />
       </div>
     </div>
   );
