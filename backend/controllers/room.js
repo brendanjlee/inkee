@@ -123,6 +123,7 @@ class Room {
   disconnectUser(userId) {
     this.io.to(this.socket.roomId).emit('disconnection', userId);
     rooms[this.socket.roomId].users[userId].socket.emit('disconnectPlayer');
+    delete rooms[this.socket.roomId].users[userId];
   }
 }
 

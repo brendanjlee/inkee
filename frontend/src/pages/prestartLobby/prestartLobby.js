@@ -165,11 +165,14 @@ function PrestartLobby({socket, history}) {
             </WhatsappShareButton>
           </div>
         </div>
-        <Button onClick={() => {
-          const ButtonClick = new Audio (Sound);
-          ButtonClick.play();
-          socket.emit('startGame');
-        }} variant='primary'>ready</Button>
+        {
+          sessionStorage.getItem('isAdmin') &&
+          <Button onClick={() => {
+            const ButtonClick = new Audio (Sound);
+            ButtonClick.play();
+            socket.emit('startGame');
+          }} variant='primary'>ready</Button>
+        }
         <UserProfile users={users}
           isAdmin={sessionStorage.getItem('isAdmin')}
           currentUser={sessionStorage.getItem('username')}

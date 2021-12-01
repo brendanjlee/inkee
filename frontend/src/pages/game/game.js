@@ -171,9 +171,11 @@ function Game({socket, history}) {
     socket.on('word', handleWord);
 
     const handleWordToGuess = (word) => {
-      console.log(word);
-      const hiddenWord = word.join(' ');
+      let hiddenWord = word.join('&nbsp;');
+      hiddenWord = hiddenWord.replace(/\s/g, '&nbsp;');
+
       document.getElementById('word').innerHTML = hiddenWord;
+      console.log(hiddenWord);
     };
     socket.on('wordToGuess', handleWordToGuess);
 
@@ -184,16 +186,19 @@ function Game({socket, history}) {
     };
     socket.on('endRound', handleEndRound);
 
-    // On drawing and choosing alert
-    socket.on('drawingTeam', (messageData) => {
+    const handleServerMessage = (messageData) => {
       setMessages([...messages, messageData]);
       console.log(messageData);
       writeMessage({
         message: messageData,
       }, {serverMessage: true});
-    });
+    };
+
+    // On drawing and choosing alert
+    socket.on('drawingTeam', handleServerMessage);
 
     const scoreUpdateHandler = (scoreUpdate) => {
+      console.log(scoreUpdate);
       const uid = scoreUpdate.uid;
       const newScore = scoreUpdate.score;
 
@@ -218,6 +223,7 @@ function Game({socket, history}) {
       socket.off('scoreUpdate', scoreUpdateHandler);
       socket.off('selectedDrawing', handleSelectedDrawing);
       socket.off('endRound', handleEndRound);
+      socket.off('drawingTeam', handleServerMessage);
       sendMessage.removeEventListener('keypress', keyPressFunc);
     };
   }, [socket, messages]);
