@@ -1,6 +1,6 @@
 import { React } from 'react';
 
-export function UserProfile({users = [], isPrestartLobby}) {
+export function UserProfile({users = [], isPrestartLobby, currentUser = null, isAdmin = false}) {
   let listItems = users.map((user) =>
     <div className="userProfile" key={user.uid}>
       <canvas className='avatar' id={user.uid + '-avatar'}/>
@@ -23,7 +23,10 @@ export function UserProfile({users = [], isPrestartLobby}) {
             <b>{user.uid}</b>
           </div>
         </div>
-        <button className='removePlayer'>X</button>
+        { 
+          currentUser !== user.uid && isAdmin &&
+          <button className='removePlayer'>X</button>
+        }
       </div>);
 
     return (
