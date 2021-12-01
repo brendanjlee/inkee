@@ -22,6 +22,7 @@ class RoomInstance {
       customWords, customWordsOnly);
     this.roundData = new Round();
     this.wordsUsed = [];
+    this.currentRound = 0;
   }
 };
 

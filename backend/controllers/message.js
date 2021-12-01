@@ -2,6 +2,7 @@ const leven = require('fast-levenshtein');
 const GraphemeSplitter = require('grapheme-splitter');
 const splitter = new GraphemeSplitter();
 const {getGuesserScore} = require('./helpers');
+const {Game} = require('./game');
 
 /**
  * Handles storing messages for the game.
@@ -32,7 +33,7 @@ class Message {
       return;
     }
 
-    if (rooms[roomId].roundData.currentWord) {
+    if (rooms[roomId].roundData.currentWord && !rooms[roomId].users[userId].isDrawing) {
       const distance = leven.get(messageData.toLowerCase(), rooms[roomId].roundData.currentWord.toLowerCase());
       if (distance === 0 && rooms[roomId].users[userId].guessedWord === false) {
         const scoreUpdate = getGuesserScore(rooms[roomId].settings.roundLength, rooms[roomId].roundData.currentTime);
@@ -55,6 +56,29 @@ class Message {
           });
 
         rooms[roomId].users[userId].guessedWord = true;
+        
+        const users = rooms[this.socket.roomId].users;
+        const userIds = Object.keys(users);
+        
+        let allGuessed = true;
+        for (let i = 0; i < userIds.length; i++) {
+          const primaryDrawer = rooms[this.socket.roomId].roundData.primaryDrawer;
+          const secondaryDrawer = rooms[this.socket.roomId].roundData.secondaryDrawer;
+
+          if (i === primaryDrawer || i === secondaryDrawer) {
+            continue;
+          }
+          
+          const userId = userIds[i];
+          if (!rooms[roomId].users[userId].isDrawing && !rooms[roomId].users[userId].guessedWord) {
+            allGuessed = false;
+          }
+        }
+
+        if (allGuessed) {
+          new Game(this.io, this.socket).endRound();
+        }
+
         return;
       }
 
