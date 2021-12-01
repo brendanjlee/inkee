@@ -230,7 +230,7 @@ class Game {
     this.io.to(this.socket.roomId).emit('endRound');
     rooms[this.socket.roomId].roundData.roundInProgress = false;
     
-    const newDrawer = rooms[this.socket.roomId].roundData.primaryDrawer + 1;
+    let newDrawer = rooms[this.socket.roomId].roundData.primaryDrawer + 1;
     const users = rooms[this.socket.roomId].users;
     if (newDrawer >= Object.keys(users).length) {
       newDrawer = 0;
