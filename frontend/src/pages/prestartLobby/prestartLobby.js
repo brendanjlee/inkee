@@ -91,6 +91,7 @@ function PrestartLobby({socket, history}) {
     socket.on('disconnection', disconnectPlayer);
 
     const handleDisconnectPlayer = () => {
+      sessionStorage.clear();
       history.push({
         pathname: '/',
       });
