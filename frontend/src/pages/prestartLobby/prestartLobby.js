@@ -163,7 +163,7 @@ function PrestartLobby({socket, history}) {
           ButtonClick.play();
           socket.emit('startGame');
         }} variant='primary'>ready</Button>
-        <UserProfile users={users} isPrestartLobby={true} userSocket={socket}/>
+        <UserProfile users={users} isPrestartLobby={true}/>
       </div>
     </div>
   );
