@@ -85,6 +85,7 @@ class Game {
     }
 
     console.log(getHints(rooms[this.socket.roomId].roundData.currentWord));
+    rooms[this.socket.roomId].roundData.currentHint = currentWordHidden;
     for (let i = 0; i < userIds.length; i++) {
       if (i === primaryDrawer || i === rooms[this.socket.roomId].roundData.secondaryDrawer) {
         continue;
@@ -138,7 +139,7 @@ class Game {
         
         const currentHint = rooms[this.socket.roomId].roundData.hints.shift();
         if (currentHint) {
-          console.log(currentHint);
+          rooms[this.socket.roomId].roundData.currentHint = currentHint;
           for (let i = 0; i < userIds.length; i++) {
             if (i === primaryDrawer || i === secondaryDrawer) {
               continue;

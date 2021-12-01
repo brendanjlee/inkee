@@ -24,12 +24,26 @@ function getHints(word) {
   return hints;
 }
 
+/**
+ * Sanitizes the user object so it can be sent over socket.
+ * 
+ * @param {object} user the user object being sanitized.
+ * @returns {object} the sanitized user.
+ */
 const prepareUser = (user) => {
   const cleanUser = Object.assign({}, user);
   delete cleanUser.socket;
   return cleanUser;
 };
 
+/**
+ * Sends a socket message to the specified user (by index).
+ * 
+ * @param {object} roomId the room ID of the user.
+ * @param {int} index the index of the user in the user map.
+ * @param {string} type the type of the socket event.
+ * @param {object} data the data being sent over the socket.
+ */
 const sendUserMessage = (roomId, index, type, data = undefined) => {
   const users = rooms[roomId].users;
   const userIds = Object.keys(users);
