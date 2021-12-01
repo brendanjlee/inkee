@@ -84,7 +84,6 @@ class Game {
       currentWordHidden.push('_');
     }
 
-    console.log(getHints(rooms[this.socket.roomId].roundData.currentWord));
     rooms[this.socket.roomId].roundData.currentHint = currentWordHidden;
     for (let i = 0; i < userIds.length; i++) {
       if (i === primaryDrawer || i === rooms[this.socket.roomId].roundData.secondaryDrawer) {
@@ -245,8 +244,7 @@ class Game {
     const primaryDrawerIdx = rooms[this.socket.roomId].roundData.primaryDrawer;
     const primaryDrawer = rooms[this.socket.roomId].users[userIds[primaryDrawerIdx]];
     rooms[this.socket.roomId].users[primaryDrawer.uid].score += drawingScore;
-    
-    console.log(primaryDrawer);
+
     this.io.to(this.socket.roomId).emit('scoreUpdate',
       {
         uid: primaryDrawer.uid,
