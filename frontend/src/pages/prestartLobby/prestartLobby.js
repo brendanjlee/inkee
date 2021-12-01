@@ -18,6 +18,8 @@ import {
 } from 'react-share';
 import Sound from '../../assets/buttonClick.mp3';
 
+
+
 function PrestartLobby({socket, history}) {
   const [inviteCode, setInviteCode] = useState('');
   const [inviteCodeURL, setInviteCodeURL] = useState(window.location.origin);
@@ -161,7 +163,7 @@ function PrestartLobby({socket, history}) {
           ButtonClick.play();
           socket.emit('startGame');
         }} variant='primary'>ready</Button>
-        <UserProfile users={users} isPrestartLobby={true}/>
+        <UserProfile users={users} isPrestartLobby={true} userSocket={socket}/>
       </div>
     </div>
   );
