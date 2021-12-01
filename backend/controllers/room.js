@@ -121,7 +121,8 @@ class Room {
    * Disconnect provided user from game.
    */
   disconnectUser(userId) {
-    rooms[this.socket.roomId].users[userId].socket.disconnect();
+    this.io.to(this.socket.roomId).emit('disconnection', userId);
+    rooms[this.socket.roomId].users[userId].socket.emit('disconnectPlayer');
   }
 }
 
