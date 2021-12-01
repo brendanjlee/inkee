@@ -169,9 +169,11 @@ function Game({socket, history}) {
     socket.on('word', handleWord);
 
     const handleWordToGuess = (word) => {
-      console.log(word);
-      const hiddenWord = word.join(' ');
+      let hiddenWord = word.join('&nbsp;');
+      hiddenWord = hiddenWord.replace(/\s/g, '&nbsp;');
+
       document.getElementById('word').innerHTML = hiddenWord;
+      console.log(hiddenWord);
     };
     socket.on('wordToGuess', handleWordToGuess);
 
