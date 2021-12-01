@@ -194,6 +194,7 @@ function Game({socket, history}) {
     socket.on('drawingTeam', handleServerMessage);
 
     const scoreUpdateHandler = (scoreUpdate) => {
+      console.log(scoreUpdate);
       const uid = scoreUpdate.uid;
       const newScore = scoreUpdate.score;
 
