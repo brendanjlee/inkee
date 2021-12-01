@@ -26,6 +26,13 @@
   "jest": {
     "testPathIgnorePatterns": [
       "assert.js"
+    ],
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "**/classes/*.{js,jsx}",
+      "**/controllers/*.{js,jsx}",
+      "!**/node_modules/**",
+      "!**/game.js"
     ]
   },
   "scripts": {

@@ -1,5 +1,7 @@
 /* global rooms */
+const { Round } = require('../classes/round');
 const words = require('../words.json');
+const {sendUserMessage, getHints} = require('./helpers');
 
 /**
  * Handles game logic for the game.
@@ -40,16 +42,20 @@ class Game {
     const users = rooms[this.socket.roomId].users;
     const userIds = Object.keys(users);
 
-    let message = `<b>${users[userIds[primaryDrawer]].uid}<b>`
+    users[userIds[primaryDrawer]].isDrawing = true;
+
+    let message = `${users[userIds[primaryDrawer]].uid}`
     if (secondaryDrawer) {
-      message += ` and <b>${users[userIds[secondaryDrawer]].uid}<b> are drawing!`;
+      users[userIds[secondaryDrawer]].isDrawing = true;
+      message += ` and ${users[userIds[secondaryDrawer]].uid} are drawing!`;
+      sendUserMessage(this.socket.roomId, secondaryDrawer, 'selectedDrawing');
     } else {
       message += ' is drawing!';
     }
 
     this.io.to(this.socket.roomId).emit('drawingTeam', message);
     rooms[this.socket.roomId].roundData.wordChoices = wordChoices;
-    users[userIds[primaryDrawer]].socket.emit('chooseWord', wordChoices);
+    sendUserMessage(this.socket.roomId, primaryDrawer, 'chooseWord', wordChoices);
     this.startTimer(10, false);
   }
 
@@ -58,7 +64,37 @@ class Game {
    */
   selectWord(word) {
     rooms[this.socket.roomId].roundData.currentWord = word;
-    // TODO: Emit the appropriate data to drawers/guessers.
+
+    const users = rooms[this.socket.roomId].users;
+    const userIds = Object.keys(users);
+
+    const primaryDrawer = rooms[this.socket.roomId].roundData.primaryDrawer;
+    sendUserMessage(this.socket.roomId, primaryDrawer, 'word', word);
+
+    if (rooms[this.socket.roomId].roundData.secondaryDrawer) {
+      const secondaryDrawer = rooms[this.socket.roomId].roundData.secondaryDrawer;
+      sendUserMessage(this.socket.roomId, secondaryDrawer, 'word', word);
+    }
+
+    this.startTimer(rooms[this.socket.roomId].settings.roundLength, true);
+
+    const currentWordHidden = [];
+    const currentWord = rooms[this.socket.roomId].roundData.currentWord;
+    for (let i = 0; i < currentWord.length; i++) {
+      currentWordHidden.push('_');
+    }
+
+    console.log(getHints(rooms[this.socket.roomId].roundData.currentWord));
+    rooms[this.socket.roomId].roundData.currentHint = currentWordHidden;
+    for (let i = 0; i < userIds.length; i++) {
+      if (i === primaryDrawer || i === rooms[this.socket.roomId].roundData.secondaryDrawer) {
+        continue;
+      }
+
+      sendUserMessage(this.socket.roomId, i, 'wordToGuess', currentWordHidden);
+    }
+
+    rooms[this.socket.roomId].roundData.hints = getHints(word);
   }
 
   /**
@@ -67,6 +103,10 @@ class Game {
   startRound() {
     const {roomId} = this.socket;
     this.io.to(roomId).emit('startRound');
+
+    if (rooms[this.socket.roomId].roundData.currentTimer !== 0) {
+      this.clearTimer();
+    }
     this.startTimer(rooms[this.socket.roomId].roundLength, true);
     rooms[this.socket.roomId].roundData.roundInProgress = true;
   }
@@ -78,35 +118,53 @@ class Game {
    * @param {boolean} isRoundTimer true if the timer applies to round.
    */
   startTimer(length, isRoundTimer = false) {
+    if (rooms[this.socket.roomId].roundData.currentTimer !== 0) {
+      this.clearTimer();
+    }
+
     rooms[this.socket.roomId].roundData.currentTime = length;
     this.io.to(this.socket.roomId).emit('timer',
       rooms[this.socket.roomId].roundData.currentTime);
 
-    const interval = setInterval(() => {
+    const intervalID = setInterval(() => {
       rooms[this.socket.roomId].roundData.currentTime--;
       this.io.to(this.socket.roomId).emit('timer',
         rooms[this.socket.roomId].roundData.currentTime);
       
-      if (isRoundTimer && rooms[this.socket.roomId].roundData.currentTime - 1 % 15 === 0) {
-        // TODO: SEND HINT.
+      if (isRoundTimer && (rooms[this.socket.roomId].roundData.currentTime - 1) % 15 === 0) {
+        const users = rooms[this.socket.roomId].users;
+        const userIds = Object.keys(users);
+        const primaryDrawer = rooms[this.socket.roomId].roundData.primaryDrawer;
+        const secondaryDrawer = rooms[this.socket.roomId].roundData.secondaryDrawer;
+        
+        const currentHint = rooms[this.socket.roomId].roundData.hints.shift();
+        if (currentHint) {
+          rooms[this.socket.roomId].roundData.currentHint = currentHint;
+          for (let i = 0; i < userIds.length; i++) {
+            if (i === primaryDrawer || i === secondaryDrawer) {
+              continue;
+            }
+  
+            sendUserMessage(this.socket.roomId, i, 'wordToGuess', currentHint);
+          } 
+        }
       }
       
       if (isRoundTimer && rooms[this.socket.roomId].roundData.currentTime === 0) {
-        this.io.to(this.socket.roomId).emit('endRound');
-        rooms[this.socket.roomId].roundData.roundInProgress = false;
+        this.endRound();
       }
 
       if (!isRoundTimer && rooms[this.socket.roomId].roundData.currentTime === 0) {
         const wordIdx = Math.trunc(Math.random() * 3);
+        this.clearTimer();
         this.selectWord(rooms[this.socket.roomId].roundData.wordChoices[wordIdx]);
       }
       
       if (rooms[this.socket.roomId].roundData.currentTime === 0) {
-        rooms[this.socket.roomId].roundData.currentTimer = 0;
-        clearInterval(interval);
+        this.clearTimer();
       }
     }, 1000);
-    rooms[this.socket.roomId].roundData.currentTimer = interval;
+    rooms[this.socket.roomId].roundData.currentTimer = intervalID;
   }
 
   /**
@@ -146,6 +204,7 @@ class Game {
       allWords.splice(wordIdx, 1);
     }
 
+    console.log(wordChoices);
     return wordChoices;
   }
 
@@ -158,13 +217,49 @@ class Game {
     
     const primaryDrawerIdx = rooms[this.socket.roomId].roundData.primaryDrawer;
     let secondaryDrawerIdx = undefined;
+    
     if (numPlayers > 2) {
       do {
         secondaryDrawerIdx = Math.trunc(Math.random() * numPlayers);
-      } while (primaryDrawerIdx !== secondaryDrawerIdx);
+      } while (primaryDrawerIdx === secondaryDrawerIdx);
     }
 
     rooms[this.socket.roomId].roundData.secondaryDrawer = secondaryDrawerIdx;
+  }
+
+  endRound() {
+    this.io.to(this.socket.roomId).emit('endRound');
+    rooms[this.socket.roomId].roundData.roundInProgress = false;
+    
+    let newDrawer = rooms[this.socket.roomId].roundData.primaryDrawer + 1;
+    const users = rooms[this.socket.roomId].users;
+    if (newDrawer >= Object.keys(users).length) {
+      newDrawer = 0;
+    }
+
+    this.clearTimer();
+    rooms[this.socket.roomId].roundData.primaryDrawer = newDrawer;
+    rooms[this.socket.roomId].roundData = new Round(newDrawer);
+
+    const userIds = Object.keys(users);
+    userIds.forEach((userId) => {
+      users[userId].isDrawing = false;
+      users[userId].guessedWord = false;
+    });
+
+    console.log(rooms[this.socket.roomId].currentRound);
+    console.log(rooms[this.socket.roomId].settings.numRounds);
+    if (rooms[this.socket.roomId].currentRound < rooms[this.socket.roomId].settings.numRounds - 1) {
+      this.prepareRound();
+    } else {
+      this.io.to(this.socket.roomId).emit('endGame');
+    }
+  }
+
+  clearTimer() {
+    console.log('Clearing: ' + rooms[this.socket.roomId].roundData.currentTimer);
+    clearInterval(rooms[this.socket.roomId].roundData.currentTimer);
+    this.io.to(this.socket.roomId).emit('timer', 0);
   }
 }
 module.exports = {

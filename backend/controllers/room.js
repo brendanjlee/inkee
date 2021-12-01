@@ -116,6 +116,14 @@ class Room {
 
     this.socket.emit('getPlayers', users);
   }
+
+  /**
+   * Disconnect provided user from game.
+   */
+  disconnectUser(userId) {
+    this.io.to(this.socket.roomId).emit('disconnection', userId);
+    rooms[this.socket.roomId].users[userId].socket.emit('disconnectPlayer');
+  }
 }
 
 module.exports = {
