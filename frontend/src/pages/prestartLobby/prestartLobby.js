@@ -22,7 +22,6 @@ function PrestartLobby({socket, history}) {
   const [inviteCode, setInviteCode] = useState('');
   const [inviteCodeURL, setInviteCodeURL] = useState(window.location.origin);
   const [users, setUsers] = useState([]);
-  const [isAdmin, setIsAdmin] = useState(false);
 
   window.history.replaceState(null, 'Inkee Prestart Lobby',
     `/${sessionStorage.getItem('inviteCode')}`);
@@ -89,12 +88,20 @@ function PrestartLobby({socket, history}) {
 
     socket.on('disconnection', disconnectPlayer);
 
+    const handleDisconnectPlayer = () => {
+      history.push({
+        pathname: '/',
+      });
+    };
+    socket.on('disconnectPlayer', handleDisconnectPlayer);
+
     socket.emit('getPlayers');
 
     return () => {
       socket.off('getPlayers', loadPlayers);
       socket.off('newPlayer', loadNewPlayer);
       socket.off('disconnection', disconnectPlayer);
+      socket.off('disconnectPlayer', handleDisconnectPlayer);
     };
   }, [socket]);
 

@@ -37,11 +37,6 @@ function App() {
       console.log(msg);
     });
 
-    newSocket.on('disconnect', () => {
-      history.push({
-        pathname: '/',
-      });
-    });
     setSocket(newSocket);
 
     // Clean-up routine for socket.
