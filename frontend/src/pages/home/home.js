@@ -1,5 +1,5 @@
 import './home.css';
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import Logo from '../../assets/inkee-logo.png';
 import GameCanvas from '../../components/GameCanvas';
 import { Button } from 'react-bootstrap';

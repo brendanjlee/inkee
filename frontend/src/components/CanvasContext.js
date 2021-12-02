@@ -60,6 +60,10 @@ export const CanvasProvider = ({ children, socket = null }) => {
     tempState.y = offsetY;
     setCurrentState(tempState);
     saveCanvasState();
+    
+    if (socket) {
+      socket.emit('saveCanvasState');
+    }
   };
 
   const finishDrawing = ({ nativeEvent }) => {
@@ -88,7 +92,7 @@ export const CanvasProvider = ({ children, socket = null }) => {
     setCurrentState(tempState);
   };
 
-  const draw = (x0, y0, x1, y1, lineThickness, color, emit) => { //{ nativeEvent }) => {
+  const draw = (x0, y0, x1, y1, lineThickness, color, emit) => {
     contextRef.current.beginPath();
     contextRef.current.moveTo(x0, y0);
     contextRef.current.lineTo(x1, y1);
@@ -111,12 +115,14 @@ export const CanvasProvider = ({ children, socket = null }) => {
 
   // Saves the current state of canvas
   const saveCanvasState = (list, keep_redo) => {
+    console.log(undoList.current);
     keep_redo = keep_redo || false;
     if (!keep_redo) {
-      redoList.current = []
+      redoList.current = [];
     }
     (list || undoList.current).push(document.getElementById('canvas').toDataURL());
-  }
+    console.log(undoList);
+  };
 
   // Restore the canvas for redo or undo
   const restoreCanvasState = (pop, push) => {
@@ -130,9 +136,9 @@ export const CanvasProvider = ({ children, socket = null }) => {
       drawing.onload = () => {
         context.clearRect(0, 0, canvas.width, canvas.height);
         context.drawImage(drawing, 0, 0, canvas.width / 2, canvas.height / 2);
-      }
+      };
     }
-  }
+  };
 
   const undo = (emit) => {
     console.log('undo');
@@ -144,7 +150,7 @@ export const CanvasProvider = ({ children, socket = null }) => {
   };
 
   const redo = (emit) => {
-    console.log('redo')
+    console.log('redo');
     restoreCanvasState(redoList.current, undoList.current);
 
     if (emit && socket) {
@@ -194,6 +200,7 @@ export const CanvasProvider = ({ children, socket = null }) => {
         draw,
         undo,
         redo,
+        saveCanvasState,
       }}
     >
       {children}

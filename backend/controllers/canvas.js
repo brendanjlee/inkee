@@ -51,6 +51,15 @@ class Canvas {
     const {socket} = this;
     socket.broadcast.to(socket.roomId).emit('redo');
   }
+
+  /**
+   * Saves user's canvas state.
+   */
+  /* istanbul ignore next */
+  emitSaveCanvasState() {
+    const {socket} = this;
+    socket.broadcast.to(socket.roomId).emit('saveCanvasState');
+  }
 }
 
 module.exports = {

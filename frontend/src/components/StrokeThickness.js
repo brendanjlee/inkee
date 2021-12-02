@@ -1,5 +1,4 @@
 import React from 'react';
-import { useState } from 'react';
 import { useCanvas } from './CanvasContext';
 
 export const StrokeThickness = () => {

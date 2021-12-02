@@ -10,6 +10,9 @@ export function GameCanvas({socket = null, isDrawer = true}) {
     inDrawing,
     draw,
     clearCanvas,
+    redo,
+    undo,
+    saveCanvasState,
   } = useCanvas();
 
   useEffect(() => {
@@ -27,15 +30,30 @@ export function GameCanvas({socket = null, isDrawer = true}) {
       clearCanvas(false);
     };
 
+    const handleUndo = () => {
+      undo(false);
+    };
+
+    const handleRedo = () => {
+      console.log('redo');
+      redo(false);
+    };
+
     if (socket) {
       socket.on('drawingEvent', onDrawingEvent);
       socket.on('clearCanvas', onClearCanvas);
+      socket.on('undo', handleUndo);
+      socket.on('redo', handleRedo);
+      socket.on('saveCanvasState', saveCanvasState);
     }
     
     return () => {
       if (socket) {
         socket.off('drawingEvent', onDrawingEvent);
         socket.off('clearCanvas', onClearCanvas);
+        socket.off('undo', handleUndo);
+        socket.off('redo', handleRedo);
+        socket.off('saveCanvasState', saveCanvasState);
       }
     };
   }, [socket]);
