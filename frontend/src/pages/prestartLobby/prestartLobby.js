@@ -138,7 +138,7 @@ function PrestartLobby({socket, history}) {
           <button className="copyBtn" type="button" id="copy">Copy Link</button>
           <div className="shareBtn">
             <EmailShareButton
-              url={inviteCodeURL}
+              url={window.location.origin + '/' + inviteCode}
               quote={'Join my Inkee.io game!'}
             >
               <EmailIcon size={43} />
