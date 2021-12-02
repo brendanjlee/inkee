@@ -9,6 +9,7 @@ class User {
    * @param {boolean} isDrawing user is drawing.
    * @param {boolean} isAdmin user is admin of game.
    */
+  /* istanbul ignore next */
   constructor(uid, avatar, isAdmin = false, socket = null) {
     this.uid = uid;
     this.avatar = avatar;
