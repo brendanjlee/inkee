@@ -42,23 +42,28 @@ class Game {
     const users = rooms[this.socket.roomId].users;
     const userIds = Object.keys(users);
 
-    users[userIds[primaryDrawer]].isDrawing = true;
+    if (rooms[this.socket.roomId].users[userIds[primaryDrawer]]) {
+      rooms[this.socket.roomId].users[userIds[primaryDrawer]].isDrawing = true;
+    }
 
     const currentRound = rooms[this.socket.roomId].currentRound;
     const totalRounds = rooms[this.socket.roomId].settings.numRounds;
-    let message = `Round ${currentRound}/${totalRounds}: ${users[userIds[primaryDrawer]].uid}`
-    if (secondaryDrawer) {
-      users[userIds[secondaryDrawer]].isDrawing = true;
-      message += ` and ${users[userIds[secondaryDrawer]].uid} are drawing!`;
-      sendUserMessage(this.socket.roomId, secondaryDrawer, 'selectedDrawing');
-    } else {
-      message += ' is drawing!';
-    }
 
-    this.io.to(this.socket.roomId).emit('drawingTeam', message);
-    rooms[this.socket.roomId].roundData.wordChoices = wordChoices;
-    sendUserMessage(this.socket.roomId, primaryDrawer, 'chooseWord', wordChoices);
-    this.startTimer(10, false);
+    if (users[userIds[primaryDrawer]]) {
+      let message = `Round ${currentRound + 1}/${totalRounds}: ${users[userIds[primaryDrawer]].uid}`
+      if (secondaryDrawer) {
+        users[userIds[secondaryDrawer]].isDrawing = true;
+        message += ` and ${users[userIds[secondaryDrawer]].uid} are drawing!`;
+        sendUserMessage(this.socket.roomId, secondaryDrawer, 'selectedDrawing');
+      } else {
+        message += ' is drawing!';
+      }
+
+      this.io.to(this.socket.roomId).emit('drawingTeam', message);
+      rooms[this.socket.roomId].roundData.wordChoices = wordChoices;
+      sendUserMessage(this.socket.roomId, primaryDrawer, 'chooseWord', wordChoices);
+      this.startTimer(10, false);
+    }
   }
 
   /**
@@ -151,17 +156,17 @@ class Game {
         }
       }
       
-      if (isRoundTimer && rooms[this.socket.roomId].roundData.currentTime === 0) {
+      if (isRoundTimer && rooms[this.socket.roomId] && rooms[this.socket.roomId].roundData.currentTime === 0) {
         this.endRound();
       }
 
-      if (!isRoundTimer && rooms[this.socket.roomId].roundData.currentTime === 0) {
+      if (!isRoundTimer && rooms[this.socket.roomId] && rooms[this.socket.roomId].roundData.currentTime === 0) {
         const wordIdx = Math.trunc(Math.random() * 3);
         this.clearTimer();
         this.selectWord(rooms[this.socket.roomId].roundData.wordChoices[wordIdx]);
       }
       
-      if (rooms[this.socket.roomId].roundData.currentTime === 0) {
+      if (rooms[this.socket.roomId] && rooms[this.socket.roomId].roundData.currentTime === 0) {
         this.clearTimer();
       }
     }, 1000);
@@ -240,7 +245,11 @@ class Game {
     if (rooms[this.socket.roomId].roundData.secondaryDrawer) {
       numGuessingTeam -= 1;
     }
+
     drawingScore /= numGuessingTeam;
+    if (numGuessingTeam === 0) {
+      drawingScore = 0;
+    }
     
     const userIds = Object.keys(rooms[this.socket.roomId].users);
     const primaryDrawerIdx = rooms[this.socket.roomId].roundData.primaryDrawer;
@@ -248,11 +257,7 @@ class Game {
     
     if (primaryDrawer) {
       rooms[this.socket.roomId].users[primaryDrawer.uid].score += drawingScore;
-      this.io.to(this.socket.roomId).emit('scoreUpdate',
-        {
-          uid: primaryDrawer.uid,
-          score: rooms[this.socket.roomId].users[primaryDrawer.uid].score,
-        });
+      this.io.to(this.socket.roomId).emit('scoreUpdate');
     }
 
     if (rooms[this.socket.roomId].roundData.secondaryDrawer) {
@@ -261,11 +266,7 @@ class Game {
       
       if (secondaryDrawer) {
         rooms[this.socket.roomId].users[secondaryDrawer.uid].score += drawingScore;
-        this.io.to(this.socket.roomId).emit('scoreUpdate',
-          {
-            uid: secondaryDrawer.uid,
-            score: rooms[this.socket.roomId].users[secondaryDrawer.uid].score,
-          });
+        this.io.to(this.socket.roomId).emit('scoreUpdate');
       }
     }
 

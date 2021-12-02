@@ -25,7 +25,7 @@ class Disconnect {
     const {roomId, player} = this.socket;
 
     // User disconnected from a live game.
-    if (roomId !== undefined && player !== undefined) {
+    if (roomId !== undefined && player !== undefined && rooms[roomId]) {
       if (Object.keys(rooms[roomId].users).length === 0) {
         new Game(this.io, this.socket).clearTimer();
         delete rooms[roomId];
