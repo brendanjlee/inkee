@@ -22,7 +22,7 @@ function PrestartLobby({socket, history}) {
   const [inviteCode, setInviteCode] = useState('');
   const [inviteCodeURL, setInviteCodeURL] = useState(window.location.origin);
   const [users, setUsers] = useState([]);
-  const [settings, setSettings] = useState({});
+
   window.history.replaceState(null, 'Inkee Prestart Lobby',
     `/${sessionStorage.getItem('inviteCode')}`);
 
@@ -88,12 +88,21 @@ function PrestartLobby({socket, history}) {
 
     socket.on('disconnection', disconnectPlayer);
 
+    const handleDisconnectPlayer = () => {
+      sessionStorage.clear();
+      history.push({
+        pathname: '/',
+      });
+    };
+    socket.on('disconnectPlayer', handleDisconnectPlayer);
+
     socket.emit('getPlayers');
 
     return () => {
       socket.off('getPlayers', loadPlayers);
       socket.off('newPlayer', loadNewPlayer);
       socket.off('disconnection', disconnectPlayer);
+      socket.off('disconnectPlayer', handleDisconnectPlayer);
     };
   }, [socket]);
 
@@ -156,12 +165,19 @@ function PrestartLobby({socket, history}) {
             </WhatsappShareButton>
           </div>
         </div>
-        <Button onClick={() => {
-          const ButtonClick = new Audio (Sound);
-          ButtonClick.play();
-          socket.emit('startGame');
-        }} variant='primary'>ready</Button>
-        <UserProfile users={users} isPrestartLobby={true}/>
+        {
+          sessionStorage.getItem('isAdmin') &&
+          <Button onClick={() => {
+            const ButtonClick = new Audio (Sound);
+            ButtonClick.play();
+            socket.emit('startGame');
+          }} variant='primary'>ready</Button>
+        }
+        <UserProfile users={users}
+          isAdmin={sessionStorage.getItem('isAdmin')}
+          currentUser={sessionStorage.getItem('username')}
+          isPrestartLobby={true}
+          socket={socket} />
       </div>
     </div>
   );

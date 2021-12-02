@@ -65,6 +65,14 @@ module.exports.init = (server) => {
     socket.on('getPlayers', () => {
       new Room(io, socket).sendUsers();
     });
+
+    socket.on('chooseWord', (word) => {
+      new Game(io, socket).selectWord(word);
+    });
+
+    socket.on('disconnectPlayer', (userId) => {
+      new Room(io, socket).disconnectUser(userId);
+    });
   });
 
   return io;
