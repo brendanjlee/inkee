@@ -33,6 +33,22 @@ class Canvas {
     const {socket} = this;
     socket.broadcast.to(socket.roomId).emit('clearCanvas');
   }
+
+  /**
+   * Handles propagating the undo action to all the game users.
+   */
+  emitUndo() {
+    const {socket} = this;
+    socket.broadcast.to(socket.roomId).emit('undo');
+  }
+
+  /**
+   * Handles propagating the redo action to all the game users.
+   */
+  emitRedo() {
+    const {socket} = this;
+    socket.broadcast.to(socket.roomId).emit('redo');
+  }
 }
 
 module.exports = {

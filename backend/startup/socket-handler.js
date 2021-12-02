@@ -45,6 +45,16 @@ module.exports.init = (server) => {
       new Canvas(io, socket).clearCanvas();
     });
 
+    /* Undo Canvas event */
+    socket.on('undo', () => {
+      new Canvas(io, socket).emitUndo();
+    });
+
+    /* Redo Canvas event */
+    socket.on('redo', () => {
+      new Canvas(io, socket).emitRedo();
+    });
+
     /* Game logic and message events */
     /* Start timer on the running game instnace */
     socket.on('startTimer', () => {
