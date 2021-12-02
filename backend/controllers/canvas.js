@@ -37,6 +37,7 @@ class Canvas {
   /**
    * Handles propagating the undo action to all the game users.
    */
+  /* istanbul ignore next */
   emitUndo() {
     const {socket} = this;
     socket.broadcast.to(socket.roomId).emit('undo');
@@ -45,6 +46,7 @@ class Canvas {
   /**
    * Handles propagating the redo action to all the game users.
    */
+  /* istanbul ignore next */
   emitRedo() {
     const {socket} = this;
     socket.broadcast.to(socket.roomId).emit('redo');
