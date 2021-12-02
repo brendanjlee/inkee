@@ -5,7 +5,7 @@ export const CanvasProvider = ({ children, socket = null }) => {
   const canvasRef = useRef(null);
   const contextRef = useRef(null);
   const undoList = useRef([]);
-  const strokeCount = useRef(-1);
+  const redoList = useRef([]);
   const [isDrawing, setIsDrawing] = useState(false);
   const [canvasEmpty, setCanvasEmpty] = useState(true);
   const [currentState, setCurrentState] = useState({
@@ -59,6 +59,7 @@ export const CanvasProvider = ({ children, socket = null }) => {
     tempState.x = offsetX;
     tempState.y = offsetY;
     setCurrentState(tempState);
+    saveCanvasState();
   };
 
   const finishDrawing = ({ nativeEvent }) => {
@@ -70,13 +71,6 @@ export const CanvasProvider = ({ children, socket = null }) => {
     draw(currentState.x, currentState.y, offsetX, offsetY,
       currentState.lineThickness, currentState.color, true);
     setIsDrawing(false);
-
-    // Push drawing into list
-    const drawing = document.getElementById('canvas').toDataURL();
-    undoList.current.push(drawing);
-    strokeCount.current++;
-    //console.log(`undoList Len: ${undoList.current.length}`);
-    //console.log(`strokeCount: ${strokeCount.current}`)
   };
 
   const inDrawing = ({ nativeEvent }) => {
@@ -115,43 +109,43 @@ export const CanvasProvider = ({ children, socket = null }) => {
     }
   };
 
-  const undoStroke = (emit) => {
-    //contextRef.current.undo();
-    if (!(strokeCount.current > 0)) return;
-    strokeCount.current--;
+  // Saves the current state of canvas
+  const saveCanvasState = (list, keep_redo) => {
+    keep_redo = keep_redo || false;
+    if (!keep_redo) {
+      redoList.current = []
+    }
+    (list || undoList.current).push(document.getElementById('canvas').toDataURL());
+  }
 
-    // Pop last image from list and set as source
-    const canvas = canvasRef.current;
-    const context = canvas.getContext('2d');
-    const drawing = new Image(canvas.width, canvas.height);
-    //const newsrc =  undoList.current.pop();
-    const newsrc =  undoList.current[strokeCount.current];
-    // TODO: undo does not render on the first button click
-    drawing.src = newsrc;
-    drawing.crossOrigin = 'anonymous';
-    drawing.onload = () => {
-      context.clearRect(0, 0, canvas.width, canvas.height);
-      context.drawImage(drawing, 0, 0, canvas.width / 2, canvas.height / 2);
-    };
+  // Restore the canvas for redo or undo
+  const restoreCanvasState = (pop, push) => {
+    if (pop.length) {
+      saveCanvasState(push, true);
+      let restore_state = pop.pop();
+      const canvas = canvasRef.current;
+      const context = canvas.getContext('2d');
+      let drawing = new Image(canvas.width, canvas.height);
+      drawing.src = restore_state;
+      drawing.onload = () => {
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        context.drawImage(drawing, 0, 0, canvas.width / 2, canvas.height / 2);
+      }
+    }
+  }
+
+  const undo = (emit) => {
+    console.log('undo');
+    restoreCanvasState(undoList.current, redoList.current);
 
     if (emit && socket) {
       socket.emit('undo');
     }
   };
 
-  const redoStroke = (emit) => {
-    //contextRef.current.undo();
-    if (!(strokeCount.current < undoList.current.length - 1)) return;
-    strokeCount.current++;
-    const canvas = canvasRef.current;
-    const context = canvas.getContext('2d');
-    const drawing = new Image(canvas.width, canvas.height);
-    drawing.src = undoList.current[strokeCount.current];
-    drawing.crossOrigin = 'anonymous';
-    drawing.onload = () => {
-      context.clearRect(0, 0, canvas.width, canvas.height);
-      context.drawImage(drawing, 0, 0, canvas.width / 2, canvas.height / 2); 
-    };
+  const redo = (emit) => {
+    console.log('redo')
+    restoreCanvasState(redoList.current, undoList.current);
 
     if (emit && socket) {
       socket.emit('redo');
@@ -166,12 +160,8 @@ export const CanvasProvider = ({ children, socket = null }) => {
     setCanvasEmpty(true);
     document.getElementById('canvas').changed = false;
 
-    // TODO: update the cleared image onto the list instad of clearing the list
-    //const drawing = document.getElementById('canvas').toDataURL();
-    //undoList.current.push(drawing);
-    //strokeCount.current++;
     undoList.current = [];
-    strokeCount.current = -1;
+    redoList.current = [];
 
     if (socket && emit) {
       socket.emit('clearCanvas');
@@ -202,8 +192,8 @@ export const CanvasProvider = ({ children, socket = null }) => {
         changeColor,
         changeLineWidth,
         draw,
-        undoStroke,
-        redoStroke,
+        undo,
+        redo,
       }}
     >
       {children}

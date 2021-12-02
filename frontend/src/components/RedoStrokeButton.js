@@ -2,7 +2,7 @@ import React from 'react';
 import { useCanvas } from './CanvasContext';
 
 export const RedoStrokeButton = () => {
-  const { redoStroke} = useCanvas();
+  const { redo } = useCanvas();
 
-  return <button className='btn2' onClick={redoStroke}>redo</button>;
+  return <button className='btn2' onClick={redo}>redo</button>;
 };
