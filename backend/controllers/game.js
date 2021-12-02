@@ -231,8 +231,41 @@ class Game {
     this.io.to(this.socket.roomId).emit('endRound');
     rooms[this.socket.roomId].roundData.roundInProgress = false;
     
-    let newDrawer = rooms[this.socket.roomId].roundData.primaryDrawer + 1;
+    // Send score to the drawing team.
     const users = rooms[this.socket.roomId].users;
+
+    let drawingScore = rooms[this.socket.roomId].roundData.totalScore;
+    let numGuessingTeam = Object.keys(users).length - 1;
+    if (rooms[this.socket.roomId].roundData.secondaryDrawer) {
+      numGuessingTeam -= 1;
+    }
+    drawingScore /= numGuessingTeam;
+    
+    const userIds = Object.keys(rooms[this.socket.roomId].users);
+    const primaryDrawerIdx = rooms[this.socket.roomId].roundData.primaryDrawer;
+    const primaryDrawer = rooms[this.socket.roomId].users[userIds[primaryDrawerIdx]];
+    rooms[this.socket.roomId].users[primaryDrawer.uid].score += drawingScore;
+    
+    console.log(primaryDrawer);
+    this.io.to(this.socket.roomId).emit('scoreUpdate',
+      {
+        uid: primaryDrawer.uid,
+        score: rooms[this.socket.roomId].users[primaryDrawer.uid].score,
+      });
+
+    if (rooms[this.socket.roomId].roundData.secondaryDrawer) {
+      const secondaryDrawerIdx = rooms[this.socket.roomId].roundData.secondaryDrawer;
+      const secondaryDrawer = rooms[this.socket.roomId].users[userIds[secondaryDrawerIdx]];
+      rooms[this.socket.roomId].users[secondaryDrawer.uid].score += drawingScore;
+      
+      this.io.to(this.socket.roomId).emit('scoreUpdate',
+      {
+        uid: secondaryDrawer.uid,
+        score: rooms[this.socket.roomId].users[secondaryDrawer.uid].score,
+      });
+    }
+
+    let newDrawer = rooms[this.socket.roomId].roundData.primaryDrawer + 1;
     if (newDrawer >= Object.keys(users).length) {
       newDrawer = 0;
     }
@@ -241,14 +274,11 @@ class Game {
     rooms[this.socket.roomId].roundData.primaryDrawer = newDrawer;
     rooms[this.socket.roomId].roundData = new Round(newDrawer);
 
-    const userIds = Object.keys(users);
     userIds.forEach((userId) => {
       users[userId].isDrawing = false;
       users[userId].guessedWord = false;
     });
 
-    console.log(rooms[this.socket.roomId].currentRound);
-    console.log(rooms[this.socket.roomId].settings.numRounds);
     if (rooms[this.socket.roomId].currentRound < rooms[this.socket.roomId].settings.numRounds - 1) {
       this.prepareRound();
     } else {
