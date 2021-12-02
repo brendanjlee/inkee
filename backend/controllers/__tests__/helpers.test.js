@@ -1,4 +1,5 @@
-const {getGuesserScore} = require('../helpers');
+const { User } = require('../../classes/user');
+const {getGuesserScore, prepareUser, getHints} = require('../helpers');
 const {assert} = require('./assert');
 
 describe('Helpers Test', () => {
@@ -21,6 +22,18 @@ describe('Helpers Test', () => {
     assert(getGuesserScore(gameLength, currentTime) === expectedScore);
     // Assert that value is not a float.
     assert(getGuesserScore(gameLength, currentTime) % 1 === 0);
+    done();
+  });
+
+  test('prepareUser', (done) => {
+    const user = new User('test', 'test', false, 'someSocket');
+    assert(prepareUser(user).socket === undefined);
+    done();
+  });
+
+  test('getHints', (done) => {
+    const hints = getHints('test hello');
+    assert(hints.length !== 0);
     done();
   });
 });

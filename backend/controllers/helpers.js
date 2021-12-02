@@ -13,14 +13,16 @@ function getHints(word) {
   const graphemes = splitter.splitGraphemes(word);
   let prevHint = graphemes.map((char) => (char !== ' ' ? '_' : ' '));
   
+  const indices = Array.from(Array(word.length).keys());
+
   while (hints.length !== hintsCount) {
-    const loc = Math.trunc(Math.random() * word.length);
-    if (prevHint[loc] !== '_') {
-      continue;
-    }
+    const loc = Math.trunc(Math.random() * indices.length);
+    indices.splice(loc, 1);
+
     prevHint = [...prevHint.slice(0, loc), graphemes[loc], ...prevHint.slice(loc + 1)];
     hints.push(prevHint);
   }
+  
   return hints;
 }
 
@@ -44,6 +46,7 @@ const prepareUser = (user) => {
  * @param {string} type the type of the socket event.
  * @param {object} data the data being sent over the socket.
  */
+/* istanbul ignore next */
 const sendUserMessage = (roomId, index, type, data = undefined) => {
   const users = rooms[roomId].users;
   const userIds = Object.keys(users);
