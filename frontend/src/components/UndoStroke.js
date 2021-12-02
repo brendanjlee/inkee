@@ -1,8 +1,8 @@
-import React from "react";
-import { useCanvas } from "./CanvasContext";
+import React from 'react';
+import { useCanvas } from './CanvasContext';
 
 export const UndoStrokeButton = () => {
-  const { undoStroke} = useCanvas();
+  const { undo } = useCanvas();
 
-  return <button className='btn2' onClick={undoStroke}>undo</button>;
+  return <button className='btn2' onClick={undo}>undo</button>;
 };
