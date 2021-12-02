@@ -251,8 +251,8 @@ function Game({socket, history}) {
               {isDrawer &&
                 <div className='drawingTools'>
                   <ClearCanvasButton/>
-                  <UndoStrokeButton/>
-                  <RedoStrokeButton/>
+                  <UndoStrokeButton />
+                  <RedoStrokeButton />
                   <StrokeThickness />
                   <ColorPalette/>
                 </div>

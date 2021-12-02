@@ -1,7 +1,5 @@
 import {React, useEffect, useState} from 'react';
-import { Link, history } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
-import CreateHeader from '../../components/header/header';
 import './createLobby.css';
 import Sound from '../../assets/buttonClick.mp3';
 
