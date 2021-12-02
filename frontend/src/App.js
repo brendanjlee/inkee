@@ -12,7 +12,6 @@ import { PlaySound } from './components/PlaySound';
 
 function App() {
   const [socket, setSocket] = useState(null);
-  const [check, setCheck] = useState(false);
   const history = useHistory();
 
   useEffect(() => {
@@ -37,6 +36,7 @@ function App() {
     newSocket.on('ERROR', (msg) => {
       console.log(msg);
     });
+
     setSocket(newSocket);
 
     // Clean-up routine for socket.

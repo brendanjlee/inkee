@@ -1,16 +1,19 @@
 import { React } from 'react';
 
-export function WordSelector() {
-  const listWords = (
-    <div>
-      <button className="wordButton">Word1</button>
-      <button className="wordButton">Word2</button>
-      <button className="wordButton">Word1</button>
-    </div>);
+export function WordSelector({words = null, socket = null}) {
+  const listWords = words.map((word) =>
+    <button className="wordButton" key={word + '-selector'} onClick={() => {
+      socket.emit('chooseWord', word);
+    }}>
+      {word}
+    </button>
+  );
 
   return (
     <div className="wordSelector">
-      {listWords}
+      <div>
+        {listWords}
+      </div>
     </div>
   );
 }
