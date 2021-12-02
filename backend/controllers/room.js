@@ -103,6 +103,9 @@ class Room {
    */
   /* istanbul ignore next */
   leaveRoom() {
+    if (!rooms[this.socket.roomId]) {
+      return;
+    }
     const {roomId, player} = this.socket;
     this.socket.leave(roomId);
     delete rooms[roomId].users[player.uid];
@@ -113,6 +116,9 @@ class Room {
    */
   /* istanbul ignore next */
   sendUsers() {
+    if (!rooms[this.socket.roomId]) {
+      return;
+    }
     const userNames = Object.keys(rooms[this.socket.roomId].users);
     const users = [];
     userNames.map((userName) => {
@@ -127,6 +133,9 @@ class Room {
    */
   /* istanbul ignore next */
   disconnectUser(userId) {
+    if (!rooms[this.socket.roomId]) {
+      return;
+    }
     this.io.to(this.socket.roomId).emit('disconnection', userId);
     rooms[this.socket.roomId].users[userId].socket.emit('disconnectPlayer');
     delete rooms[this.socket.roomId].users[userId];
