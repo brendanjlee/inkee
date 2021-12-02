@@ -26,6 +26,7 @@ class Room {
    * @param {object} gameConfiguration
    * @param {object} userData
    */
+  /* istanbul ignore next */
   createRoom(gameConfiguration, userData) {
     let inviteCode;
     do {
@@ -57,6 +58,7 @@ class Room {
    * @param {object} userData
    * @param {string} inviteCode
    */
+  /* istanbul ignore next */
   joinRoom(userData, inviteCode) {
     const newUser = new User(userData.uid, userData.avatar, false, this.socket);
     this.socket.player = newUser;
@@ -83,6 +85,7 @@ class Room {
    *
    * @param {object} userData
    */
+  /* istanbul ignore next */
   joinRandomRoom(userData) {
     const gameCodes = Object.keys(rooms);
     if (gameCodes.length === 0) {
@@ -98,6 +101,7 @@ class Room {
   /**
    * Remove socket from current room.
    */
+  /* istanbul ignore next */
   leaveRoom() {
     const {roomId, player} = this.socket;
     this.socket.leave(roomId);
@@ -107,6 +111,7 @@ class Room {
   /**
    * Send players to the connected user
    */
+  /* istanbul ignore next */
   sendUsers() {
     const userNames = Object.keys(rooms[this.socket.roomId].users);
     const users = [];
@@ -120,6 +125,7 @@ class Room {
   /**
    * Disconnect provided user from game.
    */
+  /* istanbul ignore next */
   disconnectUser(userId) {
     this.io.to(this.socket.roomId).emit('disconnection', userId);
     rooms[this.socket.roomId].users[userId].socket.emit('disconnectPlayer');

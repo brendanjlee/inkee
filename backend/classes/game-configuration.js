@@ -9,7 +9,8 @@ class GameConfiguration {
    * @param {Array} customWords the custom words used in the game.
    * @param {boolean} customWordsOnly indicates that the user wants to only use custom words.
    */
-  constructor(numRounds = 1, roundLength = 60, isPrivate = false,
+  /* istanbul ignore next */
+  constructor(numRounds = 3, roundLength = 30, isPrivate = false,
     customWords = [], customWordsOnly = false) {
     this.numRounds = numRounds;
     this.roundLength = roundLength;

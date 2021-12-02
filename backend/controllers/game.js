@@ -287,12 +287,12 @@ class Game {
       rooms[this.socket.roomId].currentRound++;
       this.prepareRound();
     } else {
+      delete rooms[this.socket.roomId];
       this.io.to(this.socket.roomId).emit('endGame');
     }
   }
 
   clearTimer() {
-    console.log('Clearing: ' + rooms[this.socket.roomId].roundData.currentTimer);
     clearInterval(rooms[this.socket.roomId].roundData.currentTimer);
     this.io.to(this.socket.roomId).emit('timer', 0);
   }
