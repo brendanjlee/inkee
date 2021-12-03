@@ -32,6 +32,9 @@ function PrestartLobby({socket, history}) {
   useEffect(() => {
     const copyBtn = document.querySelector('#copy.copyBtn');
     const handleClick = (e) => {
+      const ButtonClick = new Audio(Sound);
+      ButtonClick.play();
+
       e.preventDefault();
       const gameLink = document.getElementById('gameLink').value;
       navigator.clipboard.writeText(gameLink);
