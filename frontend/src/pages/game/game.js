@@ -5,6 +5,8 @@ import './game.css';
 import GameCanvas from '../../components/GameCanvas';
 import { CanvasProvider } from '../../components/CanvasContext';
 import { ClearCanvasButton } from '../../components/ClearCanvasButton';
+import { UndoStrokeButton } from '../../components/UndoStroke';
+import { RedoStrokeButton } from '../../components/RedoStrokeButton';
 import { ColorPalette } from '../../components/ColorPalette';
 import { UserProfile } from '../../components/UserProfile';
 import { StrokeThickness } from '../../components/StrokeThickness';
@@ -41,6 +43,7 @@ function Game({socket, history}) {
     };
 
     const loadPlayers = (users) => {
+      console.log(users);
       setUsers(users);
       renderAvatars(users);
     };
@@ -194,17 +197,9 @@ function Game({socket, history}) {
 
     // On drawing and choosing alert
     socket.on('drawingTeam', handleServerMessage);
-
-    const scoreUpdateHandler = (scoreUpdate) => {
-      console.log(scoreUpdate);
-      const uid = scoreUpdate.uid;
-      const newScore = scoreUpdate.score;
-
-      const tempUsers = [...users];
-      const matchingUserIdx = tempUsers.findIndex((user => user.uid === uid));
-      tempUsers[matchingUserIdx].score = newScore;
-
-      setUsers(tempUsers);
+    
+    const scoreUpdateHandler = () => {
+      socket.emit('getPlayers');
     };
 
     socket.on('scoreUpdate', scoreUpdateHandler);
@@ -256,6 +251,8 @@ function Game({socket, history}) {
               {isDrawer &&
                 <div className='drawingTools'>
                   <ClearCanvasButton/>
+                  <UndoStrokeButton />
+                  <RedoStrokeButton />
                   <StrokeThickness />
                   <ColorPalette/>
                 </div>
