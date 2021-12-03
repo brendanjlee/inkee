@@ -4,7 +4,7 @@ import React, {useEffect, useState} from 'react';
 import UserProfile from '../../components/UserProfile';
 import Button from '../../components/Button';
 
-function FinalScores({socket, history}) {
+function FinalScores({history}) {
   const [users, setUsers] = useState([]);
   setUsers(sessionStorage.getItem('ranks'));
   window.history.replaceState(null, 'Inkee',
@@ -36,6 +36,7 @@ function FinalScores({socket, history}) {
       <div className='title'><h1>Score Board</h1></div>
       <UserProfile users={users} check={false}/>
       <Button variant='primary' onClick={() => {
+        sessionStorage.clear();
         history.push({
           pathname: '/',
         });
