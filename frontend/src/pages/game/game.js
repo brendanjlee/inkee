@@ -214,6 +214,7 @@ function Game({socket, history}) {
 
     const handleEndGame = (userRanks) => {
       console.log(userRanks);
+      sessionStorage.setItem('ranks', userRanks);
       // history.push({
       //   pathname: '/finalScore'
       // });
