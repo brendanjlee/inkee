@@ -31,15 +31,14 @@ function FinalScores({socket, history}) {
   }, []);
   
   return (
-    
-    <div className='finalScoreRoot'>
-      <div className='title'><h1>Score Board</h1></div>
-      <UserProfile users={users} check={false}/>
-      <Button variant='primary' onClick={() => {
-        history.push({
-          pathname: '/',
-        });
-      }}>return home</Button>
+    <div className='prestartRoot'>
+      <div className='form'>
+        <h1>Score Board</h1>
+        <UserProfile users={users} check={false}/>
+        <Button variant='primary' onClick={() => {
+          history.push({pathname: '/',});
+        }}>return home</Button>
+      </div>
     </div>
   );
 }
