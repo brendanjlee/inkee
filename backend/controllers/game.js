@@ -35,7 +35,8 @@ class Game {
     const wordChoices = this.randomlySelectWordChoices();
     const primaryDrawer = rooms[this.socket.roomId].roundData.primaryDrawer;
     let secondaryDrawer = undefined;
-    if (rooms[this.socket.roomId].roundData.secondaryDrawer) {
+
+    if (rooms[this.socket.roomId].roundData.secondaryDrawer !== undefined) {
       secondaryDrawer = rooms[this.socket.roomId].roundData.secondaryDrawer;
     }
 
@@ -51,16 +52,25 @@ class Game {
 
     if (users[userIds[primaryDrawer]]) {
       let message = `Round ${currentRound + 1}/${totalRounds}: ${users[userIds[primaryDrawer]].uid}`
-      if (secondaryDrawer) {
+      const drawingTeam = [];
+      drawingTeam.push(users[userIds[primaryDrawer]].uid);
+
+      if (secondaryDrawer !== undefined) {
         users[userIds[secondaryDrawer]].isDrawing = true;
         message += ` and ${users[userIds[secondaryDrawer]].uid} are drawing!`;
+        drawingTeam.push(users[userIds[secondaryDrawer]].uid);
         sendUserMessage(this.socket.roomId, secondaryDrawer, 'selectedDrawing');
       } else {
         message += ' is drawing!';
       }
 
+      const drawingTeamData = {
+        msg: message,
+        drawingTeam: drawingTeam,
+      };
+
       rooms[this.socket.roomId].roundData.drawerString = message;
-      this.io.to(this.socket.roomId).emit('drawingTeam', message);
+      this.io.to(this.socket.roomId).emit('drawingTeam', drawingTeamData);
       rooms[this.socket.roomId].roundData.wordChoices = wordChoices;
       sendUserMessage(this.socket.roomId, primaryDrawer, 'chooseWord', wordChoices);
       this.startTimer(10, false);
@@ -79,7 +89,7 @@ class Game {
     const primaryDrawer = rooms[this.socket.roomId].roundData.primaryDrawer;
     sendUserMessage(this.socket.roomId, primaryDrawer, 'word', word);
 
-    if (rooms[this.socket.roomId].roundData.secondaryDrawer) {
+    if (rooms[this.socket.roomId].roundData.secondaryDrawer !== undefined) {
       const secondaryDrawer = rooms[this.socket.roomId].roundData.secondaryDrawer;
       sendUserMessage(this.socket.roomId, secondaryDrawer, 'word', word);
     }
