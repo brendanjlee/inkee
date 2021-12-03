@@ -3,20 +3,22 @@ import { Button } from 'react-bootstrap';
 import './prestartLobby.css';
 import { UserProfile } from '../../components/UserProfile';
 import {
-  EmailShareButton,
+  LinkedinShareButton,
   FacebookMessengerShareButton,
   TelegramShareButton,
   TwitterShareButton,
   WhatsappShareButton
 } from 'react-share';
 import {
-  EmailIcon,
+  LinkedinIcon,
   FacebookMessengerIcon,
   TelegramIcon,
   TumblrIcon,
   WhatsappIcon
 } from 'react-share';
 import Sound from '../../assets/buttonClick.mp3';
+
+
 
 function PrestartLobby({socket, history}) {
   const [inviteCode, setInviteCode] = useState('');
@@ -137,12 +139,12 @@ function PrestartLobby({socket, history}) {
         <div className="shareContainer">
           <button className="copyBtn" type="button" id="copy">Copy Link</button>
           <div className="shareBtn">
-            <EmailShareButton
+            <LinkedinShareButton
               url={window.location.origin + '/' + inviteCode}
               quote={'Join my Inkee.io game!'}
             >
-              <EmailIcon size={43} />
-            </EmailShareButton>
+              <LinkedinIcon size={43} />
+            </LinkedinShareButton>
             <TwitterShareButton
               url={window.location.origin + '/' + inviteCode}
               quote={'Join my Inkee.io game!'}>

@@ -3,11 +3,12 @@ import React, {useEffect, useState} from "react";
 // Assetes
 import UserProfile from "../../components/UserProfile";
 
-function finalScores({socket, history}) {
+function FinalScores({socket, history}) {
   const [users, setUsers] = useState([]);
-  window.history.replaceState(null, 'Inkee Final Scores', '/scores');
 
-  /* Load player routine */
+  window.history.replaceState(null, 'Inkee',
+    `/${sessionStorage.getItem('inviteCode')}/finalScore`);
+
   useEffect(() => {
     const renderUserAvatar = (user) => {
       const userCanvas = document.getElementById(`${user.uid}-avatar`);
@@ -51,6 +52,7 @@ function finalScores({socket, history}) {
     };
 
     socket.on('disconnection', disconnectPlayer);
+
     socket.emit('getPlayers');
 
     return () => {
@@ -59,17 +61,15 @@ function finalScores({socket, history}) {
       socket.off('disconnection', disconnectPlayer);
     };
   }, [socket]);
-
   
   return (
-    <div className='root'>
-      <div className='userScoresContainer'>
-        <UserProfile 
-          users={users}
-          check={false}/>
-      </div>
+    
+    <div className='finalScoreRoot'>
+      <div className="time" id="timer"> 10 </div>
+      <div className='title'><h1>Score Board</h1></div>
+      <UserProfile users={users} check={false}/>
     </div>
   );
 }
 
-export default finalScores;
+export default FinalScores;
