@@ -10,6 +10,7 @@ class Round {
     this.primaryDrawer = primaryDrawer;
     this.secondaryDrawer = 0;
     this.totalScore = 0;
+    this.drawerString = '';
   }
 };
 

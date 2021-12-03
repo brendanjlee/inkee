@@ -88,6 +88,10 @@ module.exports.init = (server) => {
       new Room(io, socket).disconnectUser(userId);
     });
 
+    socket.on('getGameData', () => {
+      new Game(io, socket).sendGameData();
+    });
+
   });
 
   return io;
