@@ -212,6 +212,15 @@ function Game({socket, history}) {
 
     socket.on('scoreUpdate', scoreUpdateHandler);
 
+    const handleEndGame = (userRanks) => {
+      console.log(userRanks);
+      // history.push({
+      //   pathname: '/finalScore'
+      // });
+    };
+
+    socket.on('endGame', handleEndGame);
+
     return () => {
       socket.off('correctGuess', correctGuessHandler);
       socket.off('word', handleWord);
@@ -225,6 +234,7 @@ function Game({socket, history}) {
       socket.off('selectedDrawing', handleSelectedDrawing);
       socket.off('endRound', handleEndRound);
       socket.off('drawingTeam', handleDrawingTeamMessage);
+      socket.off('endGame', handleEndGame);
       sendMessage.removeEventListener('keypress', keyPressFunc);
     };
   }, [socket, messages]);
@@ -250,21 +260,6 @@ function Game({socket, history}) {
       socket.off('gameData', handleGameData);
     };
   }, []);
-
-  useEffect(() => {
-    const endGame = (userRanks) => {
-      
-      history.push({
-        pathname: '/finalScore'
-      })
-    }
-
-    socket.on('endGame', endGame);
-
-    return () => {
-      socket.off('endGame', endGame);
-    }
-  }, [socket, history])
 
   return (
     <div className='gameRoot'>
