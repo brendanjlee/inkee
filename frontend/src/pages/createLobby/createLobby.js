@@ -1,7 +1,5 @@
 import {React, useEffect, useState} from 'react';
-import { Link, history } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
-import CreateHeader from '../../components/header/header';
 import './createLobby.css';
 import Sound from '../../assets/buttonClick.mp3';
 
@@ -104,7 +102,7 @@ function CreateLobby({socket, history}) {
       avatar: sessionStorage.getItem('avatar'),
     };
     
-    console.log(userData.avatar);
+    //console.log(userData.avatar);
     socket.emit('createGame', {
       gameConfiguration,
       userData,

@@ -46,6 +46,7 @@ const prepareUser = (user) => {
  * @param {string} type the type of the socket event.
  * @param {object} data the data being sent over the socket.
  */
+/* istanbul ignore next */
 const sendUserMessage = (roomId, index, type, data = undefined) => {
   const users = rooms[roomId].users;
   const userIds = Object.keys(users);

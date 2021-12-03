@@ -49,14 +49,7 @@ class Message {
           message: `${userId} has guessed the word!`,
         });
 
-        this.io.to(this.socket.roomId).emit('scoreUpdate',
-          {
-            uid: userId,
-            score: rooms[roomId].users[userId].score,
-            primaryDrawerId: rooms[roomId].roundData.primaryDrawer,
-            secondaryDrawerId: rooms[roomId].roundData.secondaryDrawer,
-            totalUsers: rooms[roomId].users.length
-          });
+        this.io.to(this.socket.roomId).emit('scoreUpdate');
 
         rooms[roomId].users[userId].guessedWord = true;
         

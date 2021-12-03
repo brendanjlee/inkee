@@ -45,6 +45,20 @@ module.exports.init = (server) => {
       new Canvas(io, socket).clearCanvas();
     });
 
+    /* Undo Canvas event */
+    socket.on('undo', () => {
+      new Canvas(io, socket).emitUndo();
+    });
+
+    /* Redo Canvas event */
+    socket.on('redo', () => {
+      new Canvas(io, socket).emitRedo();
+    });
+
+    socket.on('saveCanvasState', () => {
+      new Canvas(io, socket).emitSaveCanvasState();
+    });
+
     /* Game logic and message events */
     /* Start timer on the running game instnace */
     socket.on('startTimer', () => {
@@ -73,6 +87,7 @@ module.exports.init = (server) => {
     socket.on('disconnectPlayer', (userId) => {
       new Room(io, socket).disconnectUser(userId);
     });
+
   });
 
   return io;
