@@ -293,8 +293,10 @@ class Game {
       });
       
       userRanks.sort((userA, userB) => (userA.score > userB.score) ? 1 : -1);
+      // userRanks:
+      // {uid, avatarimg, score, isAdmin, isDrawing guessedWord}
       this.io.to(this.socket.roomId).emit('endGame', userRanks);
-      delete rooms[this.socket.roomId];
+      //delete rooms[this.socket.roomId];
     }
   }
 
