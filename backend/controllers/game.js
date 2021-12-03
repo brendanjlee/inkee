@@ -207,7 +207,7 @@ class Game {
    */
   selectDrawingTeam() {
     const players = rooms[this.socket.roomId].users;
-    const numPlayers = Object.keys(players).length
+    const numPlayers = Object.keys(players).length;
     
     const primaryDrawerIdx = rooms[this.socket.roomId].roundData.primaryDrawer;
     let secondaryDrawerIdx = undefined;
