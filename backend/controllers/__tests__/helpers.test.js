@@ -40,6 +40,7 @@ describe('Helpers Test', () => {
     assert(getHints(word).length === length);
     // Assert that value is not a float.
     assert(getHints(word).length % 1 === 0);
+    done();
   });
 
   
