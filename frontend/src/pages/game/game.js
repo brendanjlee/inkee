@@ -247,6 +247,21 @@ function Game({socket, history}) {
     };
   }, []);
 
+  useEffect(() => {
+    const endGame = (userRanks) => {
+      
+      history.push({
+        pathname: '/finalScore'
+      })
+    }
+
+    socket.on('endGame', endGame);
+
+    return () => {
+      socket.off('endGame', endGame);
+    }
+  }, [socket, history])
+
   return (
     <div className='gameRoot'>
       <CanvasProvider socket={socket}>
