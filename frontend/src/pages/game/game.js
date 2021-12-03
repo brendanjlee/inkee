@@ -189,13 +189,17 @@ function Game({socket, history}) {
 
     const handleDrawingTeamMessage = (messageData) => {
       console.log(messageData);
-      if (!messageData.includes(sessionStorage.getItem('username'))) {
-        document.getElementById('word').innerHTML = 'Drawer(s) is selecting word.';
+      if (!messageData.drawingTeam.includes(sessionStorage.getItem('username'))) {
+        let wordStr ='Drawer is selecting word.';
+        if (messageData.drawingTeam.length > 1) {
+          wordStr = 'Drawers are selecting word.';
+        }
+
+        document.getElementById('word').innerHTML = wordStr;
       }
-      setMessages([...messages, messageData]);
-      console.log(messageData);
+      setMessages([...messages, messageData.msg]);
       writeMessage({
-        message: messageData,
+        message: messageData.msg,
       }, {serverMessage: true});
     };
 
