@@ -70,6 +70,7 @@ class Room {
         this.socket.join(inviteCode);
         this.socket.emit(rooms[inviteCode].inProgress ?
           'startGame' : 'inviteCode', inviteCode);
+
         rooms[inviteCode].users[newUser.uid] = newUser;
         return;
       }
