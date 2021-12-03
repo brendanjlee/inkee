@@ -187,7 +187,11 @@ function Game({socket, history}) {
     };
     socket.on('endRound', handleEndRound);
 
-    const handleServerMessage = (messageData) => {
+    const handleDrawingTeamMessage = (messageData) => {
+      console.log(messageData);
+      if (!messageData.includes(sessionStorage.getItem('username'))) {
+        document.getElementById('word').innerHTML = 'Drawer(s) is selecting word.';
+      }
       setMessages([...messages, messageData]);
       console.log(messageData);
       writeMessage({
@@ -196,7 +200,7 @@ function Game({socket, history}) {
     };
 
     // On drawing and choosing alert
-    socket.on('drawingTeam', handleServerMessage);
+    socket.on('drawingTeam', handleDrawingTeamMessage);
     
     const scoreUpdateHandler = () => {
       socket.emit('getPlayers');
@@ -216,10 +220,32 @@ function Game({socket, history}) {
       socket.off('scoreUpdate', scoreUpdateHandler);
       socket.off('selectedDrawing', handleSelectedDrawing);
       socket.off('endRound', handleEndRound);
-      socket.off('drawingTeam', handleServerMessage);
+      socket.off('drawingTeam', handleDrawingTeamMessage);
       sendMessage.removeEventListener('keypress', keyPressFunc);
     };
   }, [socket, messages]);
+
+  useEffect(() => {
+    const handleGameData = (gameData) => {
+      const msg = gameData.message;
+      setMessages([...messages, msg]);
+      console.log(msg);
+      writeMessage({
+        message: msg,
+      }, {serverMessage: true});
+
+      const currentHint = gameData.currentHint;
+      let hiddenWord = currentHint.join('&nbsp;');
+      hiddenWord = hiddenWord.replace(/\s/g, '&nbsp;');
+      document.getElementById('word').innerHTML = hiddenWord;
+    };
+    socket.on('gameData', handleGameData);
+    socket.emit('getGameData');
+
+    return () => {
+      socket.off('gameData', handleGameData);
+    };
+  }, []);
 
   return (
     <div className='gameRoot'>
@@ -232,7 +258,7 @@ function Game({socket, history}) {
                 choosingWords ?
                   <WordSelector words={words} socket={socket}></WordSelector> :
                   <div id='word' className='word'>
-                    Drawer is selecting word.
+                    Drawer(s) is selecting word.
                   </div>
               }
               <div className="time" id="timer"> 10 </div>
