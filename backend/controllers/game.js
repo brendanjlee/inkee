@@ -233,6 +233,7 @@ class Game {
 
   endRound() {
     this.io.to(this.socket.roomId).emit('endRound');
+    this.io.to(this.socket.roomId).emit('clearCanvas');
     rooms[this.socket.roomId].roundData.roundInProgress = false;
 
     // Send score to the drawing team.
@@ -293,10 +294,11 @@ class Game {
       });
       
       userRanks.sort((userA, userB) => (userA.score > userB.score) ? 1 : -1);
-      // userRanks:
-      // {uid, avatarimg, score, isAdmin, isDrawing guessedWord}
       this.io.to(this.socket.roomId).emit('endGame', userRanks);
-      //delete rooms[this.socket.roomId];
+      
+      if (rooms[this.socket.roomId]) {
+        delete rooms[this.socket.roomId];
+      }
     }
   }
 
