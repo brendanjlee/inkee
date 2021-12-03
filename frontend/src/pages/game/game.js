@@ -221,6 +221,28 @@ function Game({socket, history}) {
     };
   }, [socket, messages]);
 
+  useEffect(() => {
+    const handleGameData = (gameData) => {
+      const msg = gameData.message;
+      setMessages([...messages, msg]);
+      console.log(msg);
+      writeMessage({
+        message: msg,
+      }, {serverMessage: true});
+
+      const currentHint = gameData.currentHint;
+      let hiddenWord = currentHint.join('&nbsp;');
+      hiddenWord = hiddenWord.replace(/\s/g, '&nbsp;');
+      document.getElementById('word').innerHTML = hiddenWord;
+    };
+    socket.on('gameData', handleGameData);
+    socket.emit('getGameData');
+
+    return () => {
+      socket.off('gameData', handleGameData);
+    };
+  }, []);
+
   return (
     <div className='gameRoot'>
       <CanvasProvider socket={socket}>

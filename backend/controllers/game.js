@@ -1,7 +1,7 @@
 /* global rooms */
 const { Round } = require('../classes/round');
 const words = require('../words.json');
-const {sendUserMessage, getHints} = require('./helpers');
+const {sendUserMessage, getHints, prepareUser} = require('./helpers');
 
 /**
  * Handles game logic for the game.
@@ -59,6 +59,7 @@ class Game {
         message += ' is drawing!';
       }
 
+      rooms[this.socket.roomId].roundData.drawerString = message;
       this.io.to(this.socket.roomId).emit('drawingTeam', message);
       rooms[this.socket.roomId].roundData.wordChoices = wordChoices;
       sendUserMessage(this.socket.roomId, primaryDrawer, 'chooseWord', wordChoices);
@@ -84,6 +85,7 @@ class Game {
     }
 
     this.startTimer(rooms[this.socket.roomId].settings.roundLength, true);
+    rooms[this.socket.roomId].roundData.roundInProgress = true;
 
     const currentWordHidden = [];
     const currentWord = rooms[this.socket.roomId].roundData.currentWord;
@@ -101,20 +103,6 @@ class Game {
     }
 
     rooms[this.socket.roomId].roundData.hints = getHints(word);
-  }
-
-  /**
-   * Starts the round and notifies connected clients.
-   */
-  startRound() {
-    const {roomId} = this.socket;
-    this.io.to(roomId).emit('startRound');
-
-    if (rooms[this.socket.roomId].roundData.currentTimer !== 0) {
-      this.clearTimer();
-    }
-    this.startTimer(rooms[this.socket.roomId].roundLength, true);
-    rooms[this.socket.roomId].roundData.roundInProgress = true;
   }
 
   /**
@@ -288,14 +276,31 @@ class Game {
       rooms[this.socket.roomId].currentRound++;
       this.prepareRound();
     } else {
+      const userNames = Object.keys(rooms[this.socket.roomId].users);
+      const userRanks = [];
+      userNames.map((userName) => {
+        userRanks.push(prepareUser(rooms[this.socket.roomId].users[userName]));
+      });
+      
+      userRanks.sort((userA, userB) => (userA.score > userB.score) ? 1 : -1);
+      this.io.to(this.socket.roomId).emit('endGame', userRanks);
       delete rooms[this.socket.roomId];
-      this.io.to(this.socket.roomId).emit('endGame');
     }
   }
 
   clearTimer() {
     clearInterval(rooms[this.socket.roomId].roundData.currentTimer);
     this.io.to(this.socket.roomId).emit('timer', 0);
+  }
+
+  sendGameData() {
+    console.log(rooms[this.socket.roomId].roundData.roundInProgress);
+    if (rooms[this.socket.roomId].roundData.roundInProgress) {
+      this.socket.emit('gameData', {
+        currentHint: rooms[this.socket.roomId].roundData.currentHint,
+        message: rooms[this.socket.roomId].roundData.drawerString,
+      });
+    }
   }
 }
 module.exports = {
