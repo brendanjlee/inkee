@@ -25,6 +25,24 @@ describe('Helpers Test', () => {
     done();
   });
 
+  test('getHints 10', (done) => {
+    const word = 'TestTest10';
+    const length = 5;
+    assert(getHints(word).length === length);
+    // Assert that value is not a float.
+    assert(getHints(word).length % 1 === 0);
+    done();
+  });
+
+  test('getHints 20', (done) => {
+    const word = 'TestTest20TestTest20';
+    const length = 10;
+    assert(getHints(word).length === length);
+    // Assert that value is not a float.
+    assert(getHints(word).length % 1 === 0);
+  });
+
+  
   test('prepareUser', (done) => {
     const user = new User('test', 'test', false, 'someSocket');
     assert(prepareUser(user).socket === undefined);
