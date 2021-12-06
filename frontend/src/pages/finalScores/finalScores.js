@@ -1,8 +1,6 @@
-import React, {useEffect, useState} from 'react';
-// Style
-// Assetes
-import UserProfile from '../../components/UserProfile';
-import Button from '../../components/Button';
+import React, { useEffect, useState } from 'react';
+import { Button } from 'react-bootstrap';
+import { UserProfile } from '../../components/UserProfile';
 
 function FinalScores({history}) {
   const [users, setUsers] = useState([]);
@@ -31,14 +29,20 @@ function FinalScores({history}) {
   }, []);
   
   return (
-    <div className='finalScoreRoot'>
-      <div className='title'><h1>Score Board</h1></div>
-      <UserProfile users={users} check={false}/>
+    <div className='prestartRoot'>
+      <div className="formTwo">
+      <h1 className="score" >Final Scores</h1>
+      <div>
       <Button variant='primary' onClick={() => {
         history.push({
           pathname: '/',
         });
-      }}>return home</Button>
+      }}>play again</Button>
+      </div>
+      <div>
+      <UserProfile users={users} isPrestartLobby={false} isFinalScreen={true}/>
+      </div>
+      </div>
     </div>
   );
 }
