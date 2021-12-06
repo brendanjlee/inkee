@@ -135,7 +135,7 @@ function Game({socket, history}) {
     socket.on('correctGuess', correctGuessHandler);
 
     const timerHandler = (timerValue) => {
-      document.getElementById('timer').innerHTML = `  ${timerValue}  `;
+      document.getElementById('timer').innerHTML = `&nbsp;&nbsp;${timerValue}&nbsp;&nbsp;`;
     };
 
     socket.on('timer', timerHandler);
@@ -214,10 +214,12 @@ function Game({socket, history}) {
 
     const handleEndGame = (userRanks) => {
       console.log(userRanks);
-      sessionStorage.setItem('ranks', userRanks);
-      // history.push({
-      //   pathname: '/finalScore'
-      // });
+      history.push({
+        pathname: '/finalScore',
+        state: {
+          data: userRanks,
+        }
+      });
     };
 
     socket.on('endGame', handleEndGame);
@@ -276,7 +278,7 @@ function Game({socket, history}) {
                     Drawer(s) is selecting word.
                   </div>
               }
-              <div className="time" id="timer"> 10 </div>
+              <div className="time" id="timer">&nbsp;10&nbsp;</div>
             </div>
             <div className="middleContainer">
               <UserProfile users={users} check={false}/>
