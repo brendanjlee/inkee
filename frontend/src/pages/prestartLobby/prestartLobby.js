@@ -182,6 +182,7 @@ function PrestartLobby({socket, history}) {
           isAdmin={sessionStorage.getItem('isAdmin')}
           currentUser={sessionStorage.getItem('username')}
           isPrestartLobby={true}
+          isFinalScreen={false}
           socket={socket} />
       </div>
     </div>

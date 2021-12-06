@@ -281,7 +281,7 @@ function Game({socket, history}) {
               <div className="time" id="timer">&nbsp;10&nbsp;</div>
             </div>
             <div className="middleContainer">
-              <UserProfile users={users} check={false}/>
+              <UserProfile users={users} isPrestartLobby={false} isFinalScreen={false}/>
               <div className="drawArea">
                 <GameCanvas socket={socket} isDrawer={isDrawer} />
               </div>
