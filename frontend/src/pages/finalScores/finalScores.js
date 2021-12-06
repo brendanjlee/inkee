@@ -4,9 +4,8 @@ import React, {useEffect, useState} from 'react';
 import UserProfile from '../../components/UserProfile';
 import Button from '../../components/Button';
 
-function FinalScores({socket, history}) {
+function FinalScores({history}) {
   const [users, setUsers] = useState([]);
-  setUsers(sessionStorage.getItem('ranks'));
   window.history.replaceState(null, 'Inkee',
     `/${sessionStorage.getItem('inviteCode')}`);
 
@@ -27,18 +26,19 @@ function FinalScores({socket, history}) {
       });
     };
 
+    setUsers(history.location.state.data);
     renderAvatars(users);
   }, []);
   
   return (
-    <div className='prestartRoot'>
-      <div className='form'>
-        <h1>Score Board</h1>
-        <UserProfile users={users} check={false}/>
-        <Button variant='primary' onClick={() => {
-          history.push({pathname: '/',});
-        }}>return home</Button>
-      </div>
+    <div className='finalScoreRoot'>
+      <div className='title'><h1>Score Board</h1></div>
+      <UserProfile users={users} check={false}/>
+      <Button variant='primary' onClick={() => {
+        history.push({
+          pathname: '/',
+        });
+      }}>return home</Button>
     </div>
   );
 }
