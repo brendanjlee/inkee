@@ -43,7 +43,7 @@ class Room {
     console.log(gameConfiguration);
     let customWordsOnly = gameConfiguration.customWordsOnly;
     let customWords = gameConfiguration.customWords;
-    if (customWords.length < 10 && customWordsOnly) {
+    if (customWords.length < 3 && customWordsOnly) {
       customWordsOnly = false;
     }
 
