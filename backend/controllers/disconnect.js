@@ -23,16 +23,16 @@ class Disconnect {
   /* istanbul ignore next */
   onDisconnect() {
     const {roomId, player} = this.socket;
-
+  
     // User disconnected from a live game.
-    if (roomId !== undefined && player !== undefined && rooms[roomId]) {
-      if (Object.keys(rooms[roomId].users).length === 0) {
+    if (roomId !== undefined && rooms[roomId] !== undefined) {
+      if (Object.keys(rooms[roomId].users).length === 1) {
         new Game(this.io, this.socket).clearTimer();
         delete rooms[roomId];
-      } else {
+      } else if (player !== undefined) {
         delete rooms[roomId].users[player.uid];
       }
-
+      
       this.io.to(roomId).emit('disconnection', player.uid);
     }
   }

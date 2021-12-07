@@ -41,14 +41,15 @@ class Room {
     this.socket.emit('inviteCode', inviteCode);
 
     console.log(gameConfiguration);
-    let customWordsOnly = gameConfiguration.customWordsOnly;
+    let customWordsOnly = gameConfiguration.customWordsOnly === 'true';
     let customWords = gameConfiguration.customWords;
     if (customWords.length < 3 && customWordsOnly) {
       customWordsOnly = false;
     }
 
+    const gamePrivate = gameConfiguration.isPrivate === 'true';
     rooms[inviteCode] = new RoomInstance(newUser, gameConfiguration.numRounds,
-      gameConfiguration.roundLength, gameConfiguration.isPrivate, 
+      gameConfiguration.roundLength, gamePrivate, 
       customWords, customWordsOnly);
   }
 
@@ -95,8 +96,31 @@ class Room {
       return;
     }
 
-    const randIdx = Math.trunc(Math.random() * gameCodes.length);
-    this.joinRoom(userData, gameCodes[randIdx]);
+    let randIdx;
+    let count = 0;
+    do {
+      randIdx = Math.trunc(Math.random() * gameCodes.length);
+      count++
+    } while (rooms[gameCodes[randIdx]].settings.isPrivate === true && count < 3);
+
+    if (rooms[gameCodes[randIdx]].settings.isPrivate === true) {
+      for (let i = 0; i < gameCodes.length; i++) {
+        if (rooms[gameCodes[i]].settings.isPrivate === false) {
+          console.log('JOINING1');
+          console.log(rooms);
+          this.joinRoom(userData, gameCodes[randIdx]);
+          return;
+        }
+      }
+      this.socket.emit('ERROR', 'There are no available games right now, ' +
+        'try creating one!');
+      return;
+    } else {
+      console.log('test');
+      console.log(rooms);
+      this.joinRoom(userData, gameCodes[randIdx]);
+      return;
+    }
   }
 
   /**
