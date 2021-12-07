@@ -30,10 +30,10 @@ function Game({socket, history}) {
       const userCanvas = document.getElementById(`${user.uid}-avatar`);
       const context = userCanvas.getContext('2d');
       const image = new Image();
-      image.src = user.avatar;
       image.onload = () => {
         context.drawImage(image, 0, 0, userCanvas.width, userCanvas.height);
       };
+      image.src = user.avatar;
     };
 
     const renderAvatars = (users) => {
@@ -213,7 +213,6 @@ function Game({socket, history}) {
     socket.on('scoreUpdate', scoreUpdateHandler);
 
     const handleEndGame = (userRanks) => {
-      console.log(userRanks);
       history.push({
         pathname: '/finalScore',
         state: {
@@ -281,7 +280,7 @@ function Game({socket, history}) {
               <div className="time" id="timer">&nbsp;10&nbsp;</div>
             </div>
             <div className="middleContainer">
-              <UserProfile users={users} check={false}/>
+              <UserProfile users={users} isPrestartLobby={false} isFinalScreen={false}/>
               <div className="drawArea">
                 <GameCanvas socket={socket} isDrawer={isDrawer} />
               </div>
