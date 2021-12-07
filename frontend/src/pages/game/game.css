@@ -31,6 +31,26 @@
   margin-bottom: 1rem;
 }
 
+.formTwo {
+  margin: auto;
+  display: grid;
+  margin-top: 5rem;
+  justify-content: center;
+  outline: #000000;
+}
+
+.score {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: bold;
+  font-size: 90px;
+  color: white;
+  text-shadow:
+		-3px -3px 0 #000,
+		3px -3px 0 #000,
+		-3px 3px 0 #000,
+		3px 3px 0 #000;
+}
+
 .word {
   padding-left: 1rem;
   background-color: Transparent;
@@ -120,6 +140,7 @@
 }
 
 .userProfileTwo {
+  margin-left: 45%;
   margin-bottom: .5rem;
   border: .5rem solid black;
   width: inherit;

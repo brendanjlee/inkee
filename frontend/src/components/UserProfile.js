@@ -1,10 +1,10 @@
 import { React } from 'react';
 
-export function UserProfile({users = [], isPrestartLobby, currentUser = null, isAdmin = false, socket = null}) {
+export function UserProfile({users = [], isPrestartLobby, isFinalScreen, currentUser = null, isAdmin = false, socket = null}) {
   let listItems = users.map((user) =>
     <div className="userProfile" key={user.uid}>
       <canvas className='avatar' id={user.uid + '-avatar'}/>
-      <div className='userText' color='red'>
+      <div className='userText'>
         <div>
           <b>{user.uid}</b>
         </div>
@@ -36,6 +36,19 @@ export function UserProfile({users = [], isPrestartLobby, currentUser = null, is
         {listItems}
       </div>
     );
+  } else if (isFinalScreen) {
+    listItems = users.map((user) =>
+      <div className="userProfileTwo" key={user.uid}>
+        <canvas className='avatar' id={user.uid + '-avatar'}/>
+        <div className='userText'>
+          <div>
+            <b>{user.uid}</b>
+          </div>
+          <div>
+            Score: {user.score}
+          </div>
+        </div>
+      </div>);
   }
 
   return (
