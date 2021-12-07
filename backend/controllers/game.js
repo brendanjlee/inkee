@@ -191,7 +191,7 @@ class Game {
     const usedWords = rooms[this.socket.roomId].wordsUsed;
     allWords = allWords.filter(word1 => !usedWords.find(word2 => word1 === word2));
 
-    const wordChoices = [];
+    let wordChoices = [];
     if (allWords.length <= 3) {
       wordChoices = wordChoices.concat(allWords);
     }
