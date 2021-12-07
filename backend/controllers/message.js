@@ -1,5 +1,8 @@
 const leven = require('fast-levenshtein');
-const {getScore} = require('./helpers');
+const GraphemeSplitter = require('grapheme-splitter');
+const splitter = new GraphemeSplitter();
+const {getGuesserScore} = require('./helpers');
+const {Game} = require('./game');
 
 /**
  * Handles storing messages for the game.
@@ -24,49 +27,70 @@ class Message {
    */
   onMessage(messageData) {
     const {roomId, player} = this.socket;
-
     const userId = player.uid;
     if (messageData === '') {
       this.socket.emit('ERROR', 'Message cannot be empty!');
       return;
     }
 
-    const distance = leven.get(messageData.toLowerCase(), rooms[roomId].currentWord.toLowerCase());
-    if (distance === 0 && rooms[roomId].users[userId].guessedWord === false) {
-      const scoreUpdate = getScore(rooms[roomId].roundLength, rooms[roomId].currentTime);
-      rooms[roomId].users[userId].score += scoreUpdate;
-      
-      this.socket.emit('correctGuess', {
-        uid: userId,
-        message: 'You guessed correctly!!',
-      });
-      
-      this.socket.broadcast.to(this.socket.roomId).emit('userCorrectGuess', {
-        message: `${userId} has guessed the word!`,
-      });
-
-      this.io.to(this.socket.roomId).emit('scoreUpdate',
-        {
+    if (rooms[roomId].roundData.currentWord && !rooms[roomId].users[userId].isDrawing) {
+      const distance = leven.get(messageData.toLowerCase(), rooms[roomId].roundData.currentWord.toLowerCase());
+      if (distance === 0 && rooms[roomId].users[userId].guessedWord === false) {
+        const scoreUpdate = getGuesserScore(rooms[roomId].settings.roundLength, rooms[roomId].roundData.currentTime);
+        rooms[roomId].users[userId].score += scoreUpdate;
+        rooms[roomId].roundData.totalScore += scoreUpdate;
+        
+        this.socket.emit('correctGuess', {
           uid: userId,
-          score: rooms[roomId].users[userId].score,
+          message: 'You guessed correctly!!',
+        });
+        
+        this.socket.broadcast.to(this.socket.roomId).emit('userCorrectGuess', {
+          message: `${userId} has guessed the word!`,
         });
 
-      rooms[roomId].users[userId].guessedWord = true;
-      return;
-    }
+        this.io.to(this.socket.roomId).emit('scoreUpdate');
 
-    if (distance < 3 && rooms[roomId].users[userId].guessedWord === false) {
-      this.socket.emit('closeGuess', {
-        uid: userId,
-        message: `${messageData} is close, keep trying!`,
-      });
+        rooms[roomId].users[userId].guessedWord = true;
+        
+        const users = rooms[this.socket.roomId].users;
+        const userIds = Object.keys(users);
+        
+        let allGuessed = true;
+        for (let i = 0; i < userIds.length; i++) {
+          const primaryDrawer = rooms[this.socket.roomId].roundData.primaryDrawer;
+          const secondaryDrawer = rooms[this.socket.roomId].roundData.secondaryDrawer;
 
-      this.socket.broadcast.to(this.socket.roomId).emit('chatMessage',
-      {
-        uid: userId,
-        message: messageData,
-      });
-      return;
+          if (i === primaryDrawer || i === secondaryDrawer) {
+            continue;
+          }
+          
+          const userId = userIds[i];
+          if (!rooms[roomId].users[userId].isDrawing && !rooms[roomId].users[userId].guessedWord) {
+            allGuessed = false;
+          }
+        }
+
+        if (allGuessed) {
+          new Game(this.io, this.socket).endRound();
+        }
+
+        return;
+      }
+
+      if (distance < 3 && rooms[roomId].users[userId].guessedWord === false) {
+        this.socket.emit('closeGuess', {
+          uid: userId,
+          message: `${messageData} is close, keep trying!`,
+        });
+
+        this.socket.broadcast.to(this.socket.roomId).emit('chatMessage',
+        {
+          uid: userId,
+          message: messageData,
+        });
+        return;
+      }
     }
 
     let eventType = 'chatMessage';

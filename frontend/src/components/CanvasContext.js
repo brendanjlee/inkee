@@ -1,10 +1,11 @@
 import React, { useContext, useRef, useState } from 'react';
-
 const CanvasContext = React.createContext();
 
 export const CanvasProvider = ({ children, socket = null }) => {
   const canvasRef = useRef(null);
   const contextRef = useRef(null);
+  const undoList = useRef([]);
+  const redoList = useRef([]);
   const [isDrawing, setIsDrawing] = useState(false);
   const [canvasEmpty, setCanvasEmpty] = useState(true);
   const [currentState, setCurrentState] = useState({
@@ -13,7 +14,8 @@ export const CanvasProvider = ({ children, socket = null }) => {
     color: 'black',
     lineThickness: 5,
   });
-
+  
+  
   const prepareCanvas = () => {
     const canvas = canvasRef.current;
     canvas.style.width ='100%';
@@ -40,7 +42,7 @@ export const CanvasProvider = ({ children, socket = null }) => {
       drawing.onload = () => {
         context.drawImage(drawing, 0, 0, canvas.width / 2, canvas.height / 2);
       };
-      drawing.src = 'https://i.ibb.co/z4Gb7Sw/output-onlinepngtools-1.png';
+      drawing.src = 'https://i.imgur.com/XhUhmR7.png';
     }
   };
 
@@ -57,6 +59,11 @@ export const CanvasProvider = ({ children, socket = null }) => {
     tempState.x = offsetX;
     tempState.y = offsetY;
     setCurrentState(tempState);
+    saveCanvasState();
+    
+    if (socket) {
+      socket.emit('saveCanvasState');
+    }
   };
 
   const finishDrawing = ({ nativeEvent }) => {
@@ -85,7 +92,7 @@ export const CanvasProvider = ({ children, socket = null }) => {
     setCurrentState(tempState);
   };
 
-  const draw = (x0, y0, x1, y1, lineThickness, color, emit) => { //{ nativeEvent }) => {
+  const draw = (x0, y0, x1, y1, lineThickness, color, emit) => {
     contextRef.current.beginPath();
     contextRef.current.moveTo(x0, y0);
     contextRef.current.lineTo(x1, y1);
@@ -106,16 +113,45 @@ export const CanvasProvider = ({ children, socket = null }) => {
     }
   };
 
-  const undoStroke = (emit) => {
-    contextRef.current.undo();
+  // Saves the current state of canvas
+  const saveCanvasState = (list, keep_redo) => {
+    console.log(undoList.current);
+    keep_redo = keep_redo || false;
+    if (!keep_redo) {
+      redoList.current = [];
+    }
+    (list || undoList.current).push(document.getElementById('canvas').toDataURL());
+    console.log(undoList);
+  };
+
+  // Restore the canvas for redo or undo
+  const restoreCanvasState = (pop, push) => {
+    if (pop.length) {
+      saveCanvasState(push, true);
+      let restore_state = pop.pop();
+      const canvas = canvasRef.current;
+      const context = canvas.getContext('2d');
+      let drawing = new Image(canvas.width, canvas.height);
+      drawing.src = restore_state;
+      drawing.onload = () => {
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        context.drawImage(drawing, 0, 0, canvas.width / 2, canvas.height / 2);
+      };
+    }
+  };
+
+  const undo = (emit) => {
+    console.log('undo');
+    restoreCanvasState(undoList.current, redoList.current);
 
     if (emit && socket) {
       socket.emit('undo');
     }
   };
 
-  const redoStroke = (emit) => {
-    contextRef.current.undo();
+  const redo = (emit) => {
+    console.log('redo');
+    restoreCanvasState(redoList.current, undoList.current);
 
     if (emit && socket) {
       socket.emit('redo');
@@ -129,6 +165,9 @@ export const CanvasProvider = ({ children, socket = null }) => {
     context.clearRect(0, 0, canvas.width, canvas.height);
     setCanvasEmpty(true);
     document.getElementById('canvas').changed = false;
+
+    undoList.current = [];
+    redoList.current = [];
 
     if (socket && emit) {
       socket.emit('clearCanvas');
@@ -159,8 +198,9 @@ export const CanvasProvider = ({ children, socket = null }) => {
         changeColor,
         changeLineWidth,
         draw,
-        undoStroke,
-        redoStroke,
+        undo,
+        redo,
+        saveCanvasState,
       }}
     >
       {children}

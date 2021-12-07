@@ -9,23 +9,15 @@ class User {
    * @param {boolean} isDrawing user is drawing.
    * @param {boolean} isAdmin user is admin of game.
    */
-  constructor(uid, avatar, score = 0, isDrawing = false, isAdmin = false, guessedWord = false) {
+  /* istanbul ignore next */
+  constructor(uid, avatar, isAdmin = false, socket = null) {
     this.uid = uid;
     this.avatar = avatar;
-    this.score = score;
-    this.isDrawing = isDrawing;
+    this.score = 0;
     this.isAdmin = isAdmin;
-    this.guessedWord = guessedWord;
-  }
-
-  /**
-   * Constructs a User object from deserialized JSON object.
-   *
-   * @param {Object} obj deserialized object that has been parsed from JSON.
-   * @return {Object} a User object.
-   */
-  deserialize(obj) {
-    return new User(obj.uid, obj.avatar, obj.score, obj.isDrawing, obj.isAdmin, obj.guessedWord);
+    this.isDrawing = false;
+    this.guessedWord = false;
+    this.socket = socket;
   }
 }
 

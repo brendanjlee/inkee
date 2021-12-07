@@ -1,26 +1,30 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import './prestartLobby.css';
+import { UserProfile } from '../../components/UserProfile';
 import {
-  EmailShareButton,
+  LinkedinShareButton,
   FacebookMessengerShareButton,
   TelegramShareButton,
   TwitterShareButton,
   WhatsappShareButton
 } from 'react-share';
 import {
-  EmailIcon,
+  LinkedinIcon,
   FacebookMessengerIcon,
   TelegramIcon,
   TumblrIcon,
   WhatsappIcon
 } from 'react-share';
+import Sound from '../../assets/buttonClick.mp3';
+
+
 
 function PrestartLobby({socket, history}) {
   const [inviteCode, setInviteCode] = useState('');
   const [inviteCodeURL, setInviteCodeURL] = useState(window.location.origin);
   const [users, setUsers] = useState([]);
-  const [settings, setSettings] = useState({});
+
   window.history.replaceState(null, 'Inkee Prestart Lobby',
     `/${sessionStorage.getItem('inviteCode')}`);
 
@@ -28,6 +32,9 @@ function PrestartLobby({socket, history}) {
   useEffect(() => {
     const copyBtn = document.querySelector('#copy.copyBtn');
     const handleClick = (e) => {
+      const ButtonClick = new Audio(Sound);
+      ButtonClick.play();
+
       e.preventDefault();
       const gameLink = document.getElementById('gameLink').value;
       navigator.clipboard.writeText(gameLink);
@@ -43,59 +50,64 @@ function PrestartLobby({socket, history}) {
   
   // User routines.
   useEffect(() => {
-    const userListener = (userToAdd) => {
-      setUsers((prevUsers) => {
-        const newUsers = [...prevUsers, userToAdd];
-        return newUsers;
+    const renderUserAvatar = (user) => {
+      const userCanvas = document.getElementById(`${user.uid}-avatar`);
+      const context = userCanvas.getContext('2d');
+      const image = new Image();
+      image.onload = () => {
+        context.drawImage(image, 0, 0, userCanvas.width, userCanvas.height);
+      };
+      image.src = user.avatar;
+    };
+
+    const renderAvatars = (users) => {
+      users.map((user) => {
+        renderUserAvatar(user);
       });
     };
-    
-    const deleteUser = (userId) => {
+
+    const loadPlayers = (users) => {
+      setUsers(users);
+      renderAvatars(users);
+    };
+
+    socket.on('getPlayers', loadPlayers);
+  
+    const loadNewPlayer = (userData) => {
+      setUsers((prevUsers) => {
+        const newUsers = [...prevUsers, userData];
+        return newUsers;
+      });
+      console.log(userData);
+      renderUserAvatar(userData);
+    };
+
+    socket.on('newPlayer', loadNewPlayer);
+
+    const disconnectPlayer = (userId) => {
       setUsers((prevUsers) => {
         const newUsers = prevUsers.filter((user) => user.uid !== userId);
         return newUsers;
       });
     };
 
-    const getPlayersListener = (users) => {
-      setUsers(users);
+    socket.on('disconnection', disconnectPlayer);
+
+    const handleDisconnectPlayer = () => {
+      sessionStorage.clear();
+      history.push({
+        pathname: '/',
+      });
     };
-    
-    socket.on('getPlayers', getPlayersListener);
-    socket.on('newUser', userListener);
-    socket.on('disconnection', deleteUser);
+    socket.on('disconnectPlayer', handleDisconnectPlayer);
+
     socket.emit('getPlayers');
 
     return () => {
-      socket.off('getPlayers', getPlayersListener);
-      socket.off('newUser', userListener);
-      socket.off('disconnection', deleteUser);
-    };
-  }, [socket]);
-
-  // Setting routines.
-  useEffect(() => {
-    const settingListener = (settingUpdate) => {
-      setSettings((prevSettings) => {
-        const key = settingUpdate.key;
-        const value = settingUpdate.value;
-
-        prevSettings[key] = value;
-        return prevSettings;
-      });
-    };
-
-    const populateSettings = (settingsData) => {
-      setSettings(settingsData.settings);
-    };
-
-    socket.on('settingUpdate', settingListener);
-    socket.on('loadSettings', populateSettings);
-    socket.emit('getSettings');
-
-    return () => {
-      socket.off('settingUpdate', settingListener);
-      socket.off('loadSettings', populateSettings);
+      socket.off('getPlayers', loadPlayers);
+      socket.off('newPlayer', loadNewPlayer);
+      socket.off('disconnection', disconnectPlayer);
+      socket.off('disconnectPlayer', handleDisconnectPlayer);
     };
   }, [socket]);
 
@@ -130,12 +142,12 @@ function PrestartLobby({socket, history}) {
         <div className="shareContainer">
           <button className="copyBtn" type="button" id="copy">Copy Link</button>
           <div className="shareBtn">
-            <EmailShareButton
-              url={inviteCodeURL}
+            <LinkedinShareButton
+              url={window.location.origin + '/' + inviteCode}
               quote={'Join my Inkee.io game!'}
             >
-              <EmailIcon size={43} />
-            </EmailShareButton>
+              <LinkedinIcon size={43} />
+            </LinkedinShareButton>
             <TwitterShareButton
               url={window.location.origin + '/' + inviteCode}
               quote={'Join my Inkee.io game!'}>
@@ -158,9 +170,20 @@ function PrestartLobby({socket, history}) {
             </WhatsappShareButton>
           </div>
         </div>
-        <Button onClick={() => {
-          socket.emit('startGame');
-        }} variant='primary'>ready</Button>
+        {
+          sessionStorage.getItem('isAdmin') &&
+          <Button onClick={() => {
+            const ButtonClick = new Audio (Sound);
+            ButtonClick.play();
+            socket.emit('startGame');
+          }} variant='primary'>ready</Button>
+        }
+        <UserProfile users={users}
+          isAdmin={sessionStorage.getItem('isAdmin')}
+          currentUser={sessionStorage.getItem('username')}
+          isPrestartLobby={true}
+          isFinalScreen={false}
+          socket={socket} />
       </div>
     </div>
   );

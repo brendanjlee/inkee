@@ -24,11 +24,20 @@
     "uuid": "^8.3.2"
   },
   "jest": {
-    "testPathIgnorePatterns": ["assert.js"]
+    "testPathIgnorePatterns": [
+      "assert.js"
+    ],
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "**/classes/*.{js,jsx}",
+      "**/controllers/*.{js,jsx}",
+      "!**/node_modules/**",
+      "!**/game.js"
+    ]
   },
   "scripts": {
     "start": "nodemon index.js",
-    "test": "jest --detectOpenHandles"
+    "test": "jest"
   },
   "devDependencies": {
     "@babel/preset-react": "^7.16.0",

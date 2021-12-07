@@ -34,15 +34,6 @@ module.exports.init = (server) => {
       new Room(io, socket).joinRandomRoom(joinData.userData);
     });
 
-    socket.on('getSettings', () => {
-      new Room(io, socket).sendSettings();
-    });
-
-    /* Settings change event */
-    socket.on('settingsUpdate', (settingData) => {
-      new Room(io, socket).updateSettings(settingData.settingUpdate);
-    });
-
     /* Canvas related events */
     /* Drawing event */
     socket.on('drawingEvent', (drawingData) => {
@@ -54,10 +45,25 @@ module.exports.init = (server) => {
       new Canvas(io, socket).clearCanvas();
     });
 
+    /* Undo Canvas event */
+    socket.on('undo', () => {
+      new Canvas(io, socket).emitUndo();
+    });
+
+    /* Redo Canvas event */
+    socket.on('redo', () => {
+      new Canvas(io, socket).emitRedo();
+    });
+
+    socket.on('saveCanvasState', () => {
+      new Canvas(io, socket).emitSaveCanvasState();
+    });
+
     /* Game logic and message events */
     /* Start timer on the running game instnace */
     socket.on('startTimer', () => {
-      new Game(io, socket).startTimer();
+      new Game(io, socket).startTimer(rooms[socket.roomId].settings.roundLength,
+        true);
     });
 
     /* User chat message event */
@@ -73,6 +79,19 @@ module.exports.init = (server) => {
     socket.on('getPlayers', () => {
       new Room(io, socket).sendUsers();
     });
+
+    socket.on('chooseWord', (word) => {
+      new Game(io, socket).selectWord(word);
+    });
+
+    socket.on('disconnectPlayer', (userId) => {
+      new Room(io, socket).disconnectUser(userId);
+    });
+
+    socket.on('getGameData', () => {
+      new Game(io, socket).sendGameData();
+    });
+
   });
 
   return io;

@@ -1,6 +1,8 @@
 /* global rooms */
 const {Invite} = require('../classes/invite');
 const {User} = require('../classes/user');
+const {RoomInstance} = require('../classes/room-instance');
+const {prepareUser} = require('./helpers');
 
 /**
  * Handles game room creation/handling.
@@ -24,31 +26,30 @@ class Room {
    * @param {object} gameConfiguration
    * @param {object} userData
    */
+  /* istanbul ignore next */
   createRoom(gameConfiguration, userData) {
-    const inviteCode = new Invite().inviteCode;
-    const newUser = new User(userData.uid, userData.avatar, 0, false, true, false);
+    let inviteCode;
+    do {
+      inviteCode = new Invite().inviteCode;
+    } while (rooms[inviteCode] !== undefined);
+    
+    const newUser = new User(userData.uid, userData.avatar, true, this.socket);
     this.socket.player = newUser;
     this.socket.roomId = inviteCode;
 
     this.socket.join(inviteCode);
     this.socket.emit('inviteCode', inviteCode);
-    rooms[inviteCode] = {
-      inProgress: false,
-      users: {},
-      settings: {
-        roundLength: gameConfiguration.roundLength,
-        numRounds: gameConfiguration.numRounds,
-        customWords: gameConfiguration.customWords,
-        onlyCustomWords: gameConfiguration.onlyCustomWords,
-      },
-      currentRound: 1,
-      currentTimer: 0,
-      currentTime: 0,
-      roundInProgress: false,
-      currentWord: 'TestWord',
-    };
 
-    rooms[inviteCode].users[newUser.uid] = newUser;
+    console.log(gameConfiguration);
+    let customWordsOnly = gameConfiguration.customWordsOnly;
+    let customWords = gameConfiguration.customWords;
+    if (customWords.length < 10 && customWordsOnly) {
+      customWordsOnly = false;
+    }
+
+    rooms[inviteCode] = new RoomInstance(newUser, gameConfiguration.numRounds,
+      gameConfiguration.roundLength, gameConfiguration.isPrivate, 
+      customWords, customWordsOnly);
   }
 
   /**
@@ -57,18 +58,19 @@ class Room {
    * @param {object} userData
    * @param {string} inviteCode
    */
+  /* istanbul ignore next */
   joinRoom(userData, inviteCode) {
-    const newUser = new User(userData.uid, userData.avatar, 0, false, false, false);
+    const newUser = new User(userData.uid, userData.avatar, false, this.socket);
     this.socket.player = newUser;
 
     if (rooms[inviteCode] !== undefined) {
       if (rooms[inviteCode].users[newUser.uid] === undefined) {
         this.socket.roomId = inviteCode;
-        this.io.to(this.socket.roomId).emit('newPlayer',
-          newUser);
+        this.io.to(this.socket.roomId).emit('newPlayer', prepareUser(newUser));
         this.socket.join(inviteCode);
         this.socket.emit(rooms[inviteCode].inProgress ?
           'startGame' : 'inviteCode', inviteCode);
+
         rooms[inviteCode].users[newUser.uid] = newUser;
         return;
       }
@@ -84,6 +86,7 @@ class Room {
    *
    * @param {object} userData
    */
+  /* istanbul ignore next */
   joinRandomRoom(userData) {
     const gameCodes = Object.keys(rooms);
     if (gameCodes.length === 0) {
@@ -99,44 +102,44 @@ class Room {
   /**
    * Remove socket from current room.
    */
+  /* istanbul ignore next */
   leaveRoom() {
+    if (!rooms[this.socket.roomId]) {
+      return;
+    }
     const {roomId, player} = this.socket;
     this.socket.leave(roomId);
     delete rooms[roomId].users[player.uid];
   }
 
   /**
-   * Send settings to the connected user.
-   */
-  sendSettings() {
-    const {roomId} = this.socket;
-    this.socket.emit('loadSettings', rooms[roomId].settings);
-  }
-
-  /**
    * Send players to the connected user
    */
+  /* istanbul ignore next */
   sendUsers() {
+    if (!rooms[this.socket.roomId]) {
+      return;
+    }
     const userNames = Object.keys(rooms[this.socket.roomId].users);
     const users = [];
     userNames.map((userName) => {
-      users.push(rooms[this.socket.roomId].users[userName]);
+      users.push(prepareUser(rooms[this.socket.roomId].users[userName]));
     });
+
     this.socket.emit('getPlayers', users);
   }
 
   /**
-   * Updates settings in the room.
-   *
-   * @param {object} data the settings data that has been updated.
+   * Disconnect provided user from game.
    */
-  updateSettings(data) {
-    if (this.socket.player.isAdmin) {
-      this.io.to(this.socket.roomId).emit('settingsUpdate', data);
+  /* istanbul ignore next */
+  disconnectUser(userId) {
+    if (!rooms[this.socket.roomId]) {
       return;
     }
-
-    this.socket.emit('ERROR', 'Not authorized to update settings!');
+    this.io.to(this.socket.roomId).emit('disconnection', userId);
+    rooms[this.socket.roomId].users[userId].socket.emit('disconnectPlayer');
+    delete rooms[this.socket.roomId].users[userId];
   }
 }
 
