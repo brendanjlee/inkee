@@ -12,10 +12,10 @@ function FinalScores({history}) {
       const userCanvas = document.getElementById(`${user.uid}-avatar`);
       const context = userCanvas.getContext('2d');
       const image = new Image();
-      image.src = user.avatar;
       image.onload = () => {
         context.drawImage(image, 0, 0, userCanvas.width, userCanvas.height);
       };
+      image.src = user.avatar;
     };
 
     const renderAvatars = (users) => {
@@ -34,6 +34,7 @@ function FinalScores({history}) {
       <h1 className="score" >Final Scores</h1>
       <div>
       <Button variant='primary' onClick={() => {
+        sessionStorage.clear();
         history.push({
           pathname: '/',
         });
