@@ -213,7 +213,6 @@ function Game({socket, history}) {
     socket.on('scoreUpdate', scoreUpdateHandler);
 
     const handleEndGame = (userRanks) => {
-      console.log(userRanks);
       history.push({
         pathname: '/finalScore',
         state: {
