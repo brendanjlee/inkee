@@ -22,7 +22,7 @@ app.get('/', (req, res, next) => {
     return;
   }
   
-  if (hostname === 'herokuapp.com') {
+  if (hostname === 'inkee-io.herokuapp.com') {
     hostname = 'inkee.io';
     urlModified = true;
   }
