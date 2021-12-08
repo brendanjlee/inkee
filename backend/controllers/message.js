@@ -41,8 +41,8 @@ class Message {
       const distance = leven.get(messageData.toLowerCase(), rooms[roomId].roundData.currentWord.toLowerCase());
       if (distance === 0 && rooms[roomId].users[userId].guessedWord === false) {
         const scoreUpdate = getGuesserScore(rooms[roomId].settings.roundLength, rooms[roomId].roundData.currentTime);
-        rooms[roomId].users[userId].score += scoreUpdate;
-        rooms[roomId].roundData.totalScore += scoreUpdate;
+        rooms[roomId].users[userId].score += Math.floor(scoreUpdate);
+        rooms[roomId].roundData.totalScore += Math.floor(scoreUpdate);
         
         this.socket.emit('correctGuess', {
           uid: userId,
