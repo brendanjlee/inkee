@@ -14,6 +14,7 @@ import { PlaySound } from './components/PlaySound';
 function App() {
   const [socket, setSocket] = useState(null);
   const history = useHistory();
+  console.log(randomVar);
   
   useEffect(() => {
     // Initialize Socket connection.
