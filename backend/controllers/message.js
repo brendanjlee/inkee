@@ -27,7 +27,7 @@ class Message {
    */
   onMessage(messageData) {
     const {roomId, player} = this.socket;
-    if (player === undefined) {
+    if (player === undefined || roomId === undefined) {
       return;
     }
 
