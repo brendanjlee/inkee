@@ -15,7 +15,7 @@ app.get('/', (req, res, next) => {
   let protocol = req.headers['x-forwarded-proto'];
   let hostname = req.hostname;
   let originalUrl = req.originalUrl;
-  const urlModified = false;
+  let urlModified = false;
 
   if (hostname === 'localhost') {
     next();
