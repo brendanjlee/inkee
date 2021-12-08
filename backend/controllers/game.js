@@ -191,7 +191,7 @@ class Game {
     const usedWords = rooms[this.socket.roomId].wordsUsed;
     allWords = allWords.filter(word1 => !usedWords.find(word2 => word1 === word2));
 
-    const wordChoices = [];
+    let wordChoices = [];
     if (allWords.length <= 3) {
       wordChoices = wordChoices.concat(allWords);
     }
@@ -255,7 +255,7 @@ class Game {
     const primaryDrawer = rooms[this.socket.roomId].users[userIds[primaryDrawerIdx]];
     
     if (primaryDrawer) {
-      rooms[this.socket.roomId].users[primaryDrawer.uid].score += drawingScore;
+      rooms[this.socket.roomId].users[primaryDrawer.uid].score += Math.floor(drawingScore);
       this.io.to(this.socket.roomId).emit('scoreUpdate');
     }
 
@@ -293,7 +293,7 @@ class Game {
         userRanks.push(prepareUser(rooms[this.socket.roomId].users[userName]));
       });
       
-      userRanks.sort((userA, userB) => (userA.score > userB.score) ? 1 : -1);
+      userRanks.sort((userA, userB) => (userA.score < userB.score) ? 1 : -1);
       this.io.to(this.socket.roomId).emit('endGame', userRanks);
       
       if (rooms[this.socket.roomId]) {
