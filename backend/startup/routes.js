@@ -4,7 +4,7 @@ const cors = require('cors');
 const imageRouter = require('../routes/image-uploader');
 
 const corsOptions = {
-  origin: ['https://admin.socket.io', 'https://inkee-io.herokuapp.com'],
+  origin: ['https://admin.socket.io', 'https://inkee.io', 'https://inkee-io.herokuapp.com'],
   optionsSuccessStatus: 200,
   credentials: false,
 };
