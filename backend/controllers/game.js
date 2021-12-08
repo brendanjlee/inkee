@@ -73,7 +73,7 @@ class Game {
       this.io.to(this.socket.roomId).emit('drawingTeam', drawingTeamData);
       rooms[this.socket.roomId].roundData.wordChoices = wordChoices;
       sendUserMessage(this.socket.roomId, primaryDrawer, 'chooseWord', wordChoices);
-      this.startTimer(10, false);
+      this.startTimer(10, false, false, false, true);
     }
   }
 
@@ -94,7 +94,7 @@ class Game {
       sendUserMessage(this.socket.roomId, secondaryDrawer, 'word', word);
     }
 
-    this.startTimer(rooms[this.socket.roomId].settings.roundLength, true);
+    this.startTimer(rooms[this.socket.roomId].settings.roundLength, true, false, false, false);
     rooms[this.socket.roomId].roundData.roundInProgress = true;
 
     const currentWordHidden = [];
@@ -121,7 +121,7 @@ class Game {
    * @param {int} length length of the timer
    * @param {boolean} isRoundTimer true if the timer applies to round.
    */
-  startTimer(length, isRoundTimer = false) {
+  startTimer(length, isRoundTimer = false, isEndGameTimer = false, betweenRoundTimer = false, wordSelectionTimer = false) {
     if (rooms[this.socket.roomId].roundData.currentTimer !== 0) {
       this.clearTimer();
     }
@@ -135,6 +135,10 @@ class Game {
       this.io.to(this.socket.roomId).emit('timer',
         rooms[this.socket.roomId].roundData.currentTime);
       
+      if (betweenRoundTimer && rooms[this.socket.roomId] && rooms[this.socket.roomId].roundData.currentTime === 0) {
+        this.prepareRound();
+      }
+
       if (isRoundTimer && (rooms[this.socket.roomId].roundData.currentTime - 1) % 15 === 0) {
         const users = rooms[this.socket.roomId].users;
         const userIds = Object.keys(users);
@@ -158,14 +162,25 @@ class Game {
         this.endRound();
       }
 
-      if (!isRoundTimer && rooms[this.socket.roomId] && rooms[this.socket.roomId].roundData.currentTime === 0) {
+      if (wordSelectionTimer && rooms[this.socket.roomId] && rooms[this.socket.roomId].roundData.currentTime === 0) {
         const wordIdx = Math.trunc(Math.random() * 3);
         this.clearTimer();
         this.selectWord(rooms[this.socket.roomId].roundData.wordChoices[wordIdx]);
       }
-      
-      if (rooms[this.socket.roomId] && rooms[this.socket.roomId].roundData.currentTime === 0) {
+
+      if (isEndGameTimer && rooms[this.socket.roomId].roundData.currentTime === 0) {
+        const userNames = Object.keys(rooms[this.socket.roomId].users);
+        const userRanks = [];
+        userNames.map((userName) => {
+          userRanks.push(prepareUser(rooms[this.socket.roomId].users[userName]));
+        });
+        
+        userRanks.sort((userA, userB) => (userA.score < userB.score) ? 1 : -1);
         this.clearTimer();
+        if (rooms[this.socket.roomId]) {
+          delete rooms[this.socket.roomId];
+        }
+        this.io.to(this.socket.roomId).emit('endGame', userRanks);
       }
     }, 1000);
     rooms[this.socket.roomId].roundData.currentTimer = intervalID;
@@ -232,6 +247,7 @@ class Game {
   }
 
   endRound() {
+    this.io.to(this.socket.roomId).emit('wordReveal', rooms[this.socket.roomId].roundData.currentWord);
     this.io.to(this.socket.roomId).emit('endRound');
     this.io.to(this.socket.roomId).emit('clearCanvas');
     rooms[this.socket.roomId].roundData.roundInProgress = false;
@@ -285,20 +301,10 @@ class Game {
 
     if (rooms[this.socket.roomId].currentRound < rooms[this.socket.roomId].settings.numRounds - 1) {
       rooms[this.socket.roomId].currentRound++;
-      this.prepareRound();
+      this.startTimer(7, false, false, true, false);
     } else {
-      const userNames = Object.keys(rooms[this.socket.roomId].users);
-      const userRanks = [];
-      userNames.map((userName) => {
-        userRanks.push(prepareUser(rooms[this.socket.roomId].users[userName]));
-      });
-      
-      userRanks.sort((userA, userB) => (userA.score < userB.score) ? 1 : -1);
-      this.io.to(this.socket.roomId).emit('endGame', userRanks);
-      
-      if (rooms[this.socket.roomId]) {
-        delete rooms[this.socket.roomId];
-      }
+      this.io.to(this.socket.roomId).emit('endGameMsg', 'Nice job, let\'s see who won!');
+      this.startTimer(7, false, true, false, false);
     }
   }
 
