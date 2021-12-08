@@ -27,6 +27,10 @@ class Message {
    */
   onMessage(messageData) {
     const {roomId, player} = this.socket;
+    if (player === undefined) {
+      return;
+    }
+
     const userId = player.uid;
     if (messageData === '') {
       this.socket.emit('ERROR', 'Message cannot be empty!');
