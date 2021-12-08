@@ -281,7 +281,7 @@ class Game {
       const secondaryDrawer = rooms[this.socket.roomId].users[userIds[secondaryDrawerIdx]];
       
       if (secondaryDrawer) {
-        rooms[this.socket.roomId].users[secondaryDrawer.uid].score += drawingScore;
+        rooms[this.socket.roomId].users[secondaryDrawer.uid].score += Math.floor(drawingScore);
         this.io.to(this.socket.roomId).emit('scoreUpdate');
       }
     }
