@@ -206,6 +206,20 @@ function Game({socket, history}) {
     // On drawing and choosing alert
     socket.on('drawingTeam', handleDrawingTeamMessage);
     
+    const handleWordReveal = (messageData) => {
+      document.getElementById('word').innerHTML = messageData;
+    };
+    socket.on('wordReveal', handleWordReveal);
+
+    const handleEndGameMsg = (msg) => {
+      setMessages([...messages, msg]);
+      writeMessage({
+        message: msg,
+      }, {endGameMsg: true});
+    };
+
+    socket.on('endGameMsg', handleEndGameMsg);
+    
     const scoreUpdateHandler = () => {
       socket.emit('getPlayers');
     };
@@ -224,6 +238,8 @@ function Game({socket, history}) {
     socket.on('endGame', handleEndGame);
 
     return () => {
+      socket.off('endGameMsg', handleEndGameMsg);
+      socket.off('wordReveal', handleWordReveal);
       socket.off('correctGuess', correctGuessHandler);
       socket.off('word', handleWord);
       socket.off('wordToGuess', handleWordToGuess);
@@ -308,7 +324,7 @@ function Game({socket, history}) {
   );
 }
 
-const writeMessage = ({ name = '', message}, {correctGuess = false, closeGuess = false, guessedMessage = false, serverMessage = false} = {}) => {
+const writeMessage = ({ name = '', message}, {correctGuess = false, closeGuess = false, guessedMessage = false, serverMessage = false, endGameMsg = false} = {}) => {
   const p = document.createElement('p');
   const chatBox = document.createTextNode(`${message}`);
   const messages = document.getElementById('chat');
@@ -344,6 +360,10 @@ const writeMessage = ({ name = '', message}, {correctGuess = false, closeGuess =
 
   if (serverMessage) {
     p.classList.add('serverMessage');
+  }
+
+  if (endGameMsg) {
+    p.classList.add('endGameMsg');
   }
 
   messages.appendChild(p);

@@ -206,15 +206,27 @@
 }
 
 .guessedMessage {
-  color: #bf03f8;
-  background-color: #ecbbff !important;
-  border-color: #d690ff;
+  color: #b3ff00;
+  background-color: #cbffbb !important;
+  border-color: #deff90;
 }
 
 .serverMessage {
   color: rgb(255, 255, 255);
   background-color: rgb(0, 118, 243) !important;
   border-color: #9da7e6;
+}
+
+.wordReveal {
+  color: #ffffff;
+  background-color: #003380 !important;
+  border-color: #dbd3ba;
+}
+
+.endGameMsg {
+  color: #ffffff;
+  background-color: #fc9a06 !important;
+  border-color: #ffffff;
 }
 
 .middleContainer img {
