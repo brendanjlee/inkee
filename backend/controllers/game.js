@@ -136,6 +136,7 @@ class Game {
         rooms[this.socket.roomId].roundData.currentTime);
       
       if (betweenRoundTimer && rooms[this.socket.roomId] && rooms[this.socket.roomId].roundData.currentTime === 0) {
+        this.io.to(this.socket.roomId).emit('clearCanvas');
         this.prepareRound();
       }
 
@@ -180,6 +181,7 @@ class Game {
         if (rooms[this.socket.roomId]) {
           delete rooms[this.socket.roomId];
         }
+        this.io.to(this.socket.roomId).emit('clearCanvas');
         this.io.to(this.socket.roomId).emit('endGame', userRanks);
       }
     }, 1000);
@@ -249,7 +251,6 @@ class Game {
   endRound() {
     this.io.to(this.socket.roomId).emit('wordReveal', rooms[this.socket.roomId].roundData.currentWord);
     this.io.to(this.socket.roomId).emit('endRound');
-    this.io.to(this.socket.roomId).emit('clearCanvas');
     rooms[this.socket.roomId].roundData.roundInProgress = false;
 
     // Send score to the drawing team.
