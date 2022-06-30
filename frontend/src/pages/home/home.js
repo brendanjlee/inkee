@@ -128,6 +128,15 @@ function Home({socket, history}) {
                 }} className='btn' variant="outline-primary" size='lg'>create game</Button>
                 }
               </div>
+              <div>
+              <p>
+              Team:
+                Neel Bagora (@neelbagora),
+                Will Gerber (@WillGerber),
+                Rishi Seth (@Rishisheth),
+                Brendan Lee (@brendanjlee)
+              </p>
+              </div>
             </div>
           </div>
         </div>
