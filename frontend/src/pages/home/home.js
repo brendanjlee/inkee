@@ -129,13 +129,6 @@ function Home({socket, history}) {
                 }
               </div>
               <div>
-              <p>
-              Team:
-                Neel Bagora (@neelbagora),
-                Will Gerber (@WillGerber),
-                Rishi Seth (@Rishisheth),
-                Brendan Lee (@brendanjlee)
-              </p>
               </div>
             </div>
           </div>
